@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-display: var(--font-geist-sans);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+
+  --color-bg: #0a0a0a;
+  --color-surface: #111111;
+  --color-surface-2: #1a1a1a;
+  --color-border-subtle: #2a2a2a;
+  --color-purple: #582cff;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #aaaaaa;
+  --color-text-tertiary: #666666;
+  --color-accent-3: #888888;
+}
+
+/* ── Theme tokens ─────────────────────────────────── */
+:root {
+  /* Dark (default) */
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface-2: #181818;
+  --surface-3: #1a1a1a;
+  --section-alt: #080808;
+  --cta-bg: #000000;
+
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --text-tertiary: #666666;
+  --text-muted: #555555;
+
+  --border: rgba(255,255,255,0.11);
+  --border-subtle: #2a2a2a;
+  --border-light: #1e1e1e;
+  --border-faint: #141414;
+
+  --kicker: #888888;
+
+  --card-bg: rgba(255,255,255,0.051);
+  --card-border: rgba(255,255,255,0.11);
+  --card-shadow: 0 1px 0 rgba(255,255,255,0.1), 0 16px 48px rgba(0,0,0,0.5);
+
+  --nav-glass: rgba(255,255,255,0.06);
+  --nav-pill: #1a1a1a;
+  --nav-active-bg: #ffffff;
+  --nav-active-color: #111111;
+  --nav-inactive: #999999;
+  --nav-btn: #1a1a1a;
+  --nav-divider: #333333;
+
+  --pill-bg: rgba(255,255,255,0.059);
+  --pill-border: rgba(255,255,255,0.10);
+  --pill-text: #aaaaaa;
+
+  --badge-bg: rgba(255,255,255,0.06);
+  --badge-border: rgba(255,255,255,0.10);
+  --badge-text: #888888;
+
+  --btn-primary-bg: #ffffff;
+  --btn-primary-color: #0a0a0a;
+  --btn-secondary-bg: rgba(255,255,255,0.04);
+  --btn-secondary-border: #2a2a2a;
+  --btn-secondary-color: #ffffff;
+
+  --why-gap: #252525;
+  --why-cell: #0c0c0c;
+  --why-cell-border: rgba(255,255,255,0.12);
+
+  --faq-border: rgba(255,255,255,0.11);
+
+  --consult-card: #181818;
+  --consult-border: rgba(255,255,255,0.11);
+
+  --featured-card: #111111;
+  --featured-border: #1e1e1e;
+
+  --tag-bg: #1a1a1a;
+  --tag-border: #2a2a2a;
+  --tag-color: #666666;
+
+  --accordion-line: rgba(255,255,255,0.082);
+
+  --trust-border: #141414;
+  --tab-active: #303030;
+
+  /* Footer (dark) */
+  --footer-bg:
+    radial-gradient(ellipse 37% 54% at 46% 66%, rgba(3,6,36,0.97) 58%, rgba(6,8,26,0) 100%),
+    radial-gradient(ellipse 14% 12% at 95% 10%, rgba(255,255,255,0.78) 0%, transparent 100%),
+    radial-gradient(ellipse 37% 28% at 82% 7%, rgba(228,222,250,0.92) 0%, transparent 100%),
+    #000000;
+  --footer-shadow: 5px -11px 20px rgba(255,255,255,0.25);
+  --footer-heading: #ffffff;
+  --footer-text: rgba(255,255,255,0.7);
+  --footer-link: rgba(255,255,255,0.65);
+  --footer-muted: rgba(255,255,255,0.55);
+  --footer-divider: rgba(255,255,255,0.1);
+  --footer-social-bg: rgba(255,255,255,0.38);
+  --footer-social-icon: #ffffff;
+  --footer-btn-bg: #ffffff;
+  --footer-btn-color: #1a1532;
+  --footer-input-bg: rgba(255,255,255,0.11);
+  --footer-input-border: rgba(255,255,255,0.2);
+  --footer-input-text: #ffffff;
+}
+
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --surface: #F7F8FC;
+  --surface-2: #ffffff;
+  --surface-3: #EEF0F8;
+  --section-alt: #F7F8FC;
+  --cta-bg: #EEF0F8;
+
+  --text-primary: #0D1B4B;
+  --text-secondary: #536080;
+  --text-tertiary: #8A9BBE;
+  --text-muted: #8A9BBE;
+
+  --border: rgba(13,27,75,0.10);
+  --border-subtle: #E2E4EF;
+  --border-light: #E2E4EF;
+  --border-faint: #E2E4EF;
+
+  --kicker: #4A6FA5;
+
+  --card-bg: #ffffff;
+  --card-border: #E2E4EF;
+  --card-shadow: 0 2px 8px rgba(13,27,75,0.08), 0 16px 40px rgba(13,27,75,0.06);
+
+  --nav-glass: rgba(255,255,255,0.88);
+  --nav-pill: #EEF0F8;
+  --nav-active-bg: #0D1B4B;
+  --nav-active-color: #ffffff;
+  --nav-inactive: #536080;
+  --nav-btn: #EEF0F8;
+  --nav-divider: #E2E4EF;
+
+  --pill-bg: rgba(13,27,75,0.05);
+  --pill-border: #E2E4EF;
+  --pill-text: #536080;
+
+  --badge-bg: rgba(13,27,75,0.05);
+  --badge-border: #E2E4EF;
+  --badge-text: #536080;
+
+  --btn-primary-bg: #0D1B4B;
+  --btn-primary-color: #ffffff;
+  --btn-secondary-bg: rgba(13,27,75,0.05);
+  --btn-secondary-border: #E2E4EF;
+  --btn-secondary-color: #0D1B4B;
+
+  --why-gap: #E2E4EF;
+  --why-cell: #ffffff;
+  --why-cell-border: #E2E4EF;
+
+  --faq-border: #E2E4EF;
+
+  --consult-card: #ffffff;
+  --consult-border: #E2E4EF;
+
+  --featured-card: #ffffff;
+  --featured-border: #E2E4EF;
+
+  --tag-bg: #F7F8FC;
+  --tag-border: #E2E4EF;
+  --tag-color: #536080;
+
+  --accordion-line: #E2E4EF;
+
+  --trust-border: #E2E4EF;
+  --tab-active: #ffffff;
+
+  /* Footer (light) — Pencil node tOhv3 */
+  --footer-bg:
+    radial-gradient(ellipse 74% 56% at 82% 7%, rgba(228,222,250,0.92) 0%, rgba(228,222,250,0) 100%),
+    radial-gradient(ellipse 28% 24% at 95% 10%, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0) 100%),
+    radial-gradient(ellipse 115% 105% at 50% 65%, rgba(199,199,199,0.4) 53%, rgba(6,8,26,0) 100%),
+    #ffffff;
+  --footer-shadow: 5px -11px 20px rgba(13,27,75,0.12);
+  --footer-heading: #0D1B4B;
+  --footer-text: rgba(13,27,75,0.7);
+  --footer-link: rgba(13,27,75,0.62);
+  --footer-muted: rgba(13,27,75,0.5);
+  --footer-divider: rgba(13,27,75,0.1);
+  --footer-social-bg: rgba(13,27,75,0.08);
+  --footer-social-icon: #0D1B4B;
+  --footer-btn-bg: #0D1B4B;
+  --footer-btn-color: #ffffff;
+  --footer-input-bg: rgba(13,27,75,0.05);
+  --footer-input-border: #E2E4EF;
+  --footer-input-text: #0D1B4B;
+}
+
+/* ── Base ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: color 0.25s ease;
+}
+
+:root[data-theme="light"] .book-overlay {
+  opacity: 0 !important;
+}
+
+/* Logo lockups: dark theme is the default, so the white logo shows unless
+   [data-theme="light"] is set. */
+.logo-light {
+  display: none;
+}
+
+:root[data-theme="light"] .logo-dark {
+  display: none;
+}
+
+:root[data-theme="light"] .logo-light {
+  display: block;
+}
