@@ -40,7 +40,8 @@ export default function WorkShowcase() {
       <div style={{ display: 'flex', width: '100%', maxWidth: 1440, margin: '0 auto' }}>
 
         {/* ── Left: circles + waves in one SVG, cy=380 matching Pencil ── */}
-        <div style={{ flex: 1, height: 730, position: 'relative' }}>
+        {/* below lg the band height follows the viewport via aspect-ratio; fixed 730px from lg up */}
+        <div className="max-lg:aspect-[720/730] lg:h-[730px]" style={{ flex: 1, position: 'relative' }}>
           <svg
             viewBox="0 0 720 730"
             fill="none"
@@ -134,8 +135,8 @@ export default function WorkShowcase() {
           </svg>
         </div>
 
-        {/* ── Right: issue tracker ── */}
-        <div style={{ flex: 1, height: 730, position: 'relative', background: 'var(--bg)' }}>
+        {/* ── Right: issue tracker — its panels are positioned on a fixed 720px canvas, so it is desktop-only */}
+        <div className="max-lg:hidden" style={{ flex: 1, height: 730, position: 'relative', background: 'var(--bg)' }}>
 
           {/* Connector curves — from command panel right edge (x=280) to card left edges (x=360) */}
           <svg

@@ -7,17 +7,20 @@ import { motion } from 'framer-motion'
 import { Aperture, ArrowRight, Check, Eye, EyeOff } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 
+// Vertical padding + font size live in the input className (16px on mobile prevents iOS zoom).
 const fieldBox: React.CSSProperties = {
   width: '100%',
   borderRadius: 10,
   background: '#0A0A0C',
   border: '1px solid rgba(255,255,255,0.11)',
-  padding: '13px 16px',
-  fontSize: 14,
+  paddingLeft: 16,
+  paddingRight: 16,
   color: '#fff',
   outline: 'none',
   fontFamily: 'var(--font-inter)',
 }
+
+const fieldClass = 'af-field text-[16px] py-[14px] lg:text-[14px] lg:py-[13px]'
 
 const fieldLabel: React.CSSProperties = {
   fontSize: 11,
@@ -73,7 +76,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   }
 
   return (
-    <section style={{ background: '#0a0a0a', minHeight: 'calc(100vh - 90px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '64px 24px 96px' }}>
+    <section style={{ background: '#0a0a0a', minHeight: 'calc(100vh - 90px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(40px, 8vw, 64px) clamp(20px, 3vw, 24px) clamp(64px, 12vw, 96px)' }}>
       <style>{`.af-field::placeholder{color:#666666;opacity:1}`}</style>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -85,7 +88,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
           background: '#111111',
           border: '1px solid #2A2A2A',
           borderRadius: 20,
-          padding: '40px 36px 36px',
+          padding: 'clamp(26px, 7vw, 40px) clamp(20px, 5.5vw, 36px) clamp(24px, 5.5vw, 36px)',
         }}
       >
         {done ? (
@@ -122,7 +125,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   <label style={fieldLabel}>{t('FULL NAME')}</label>
                   <input
-                    className="af-field"
+                    className={fieldClass}
                     style={{ ...fieldBox, borderColor: errors.name ? 'rgba(255,120,120,0.6)' : 'rgba(255,255,255,0.11)' }}
                     placeholder="John Smith"
                     value={form.name}
@@ -135,7 +138,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label style={fieldLabel}>{t('EMAIL')}</label>
                 <input
-                  className="af-field"
+                  className={fieldClass}
                   type="email"
                   style={{ ...fieldBox, borderColor: errors.email ? 'rgba(255,120,120,0.6)' : 'rgba(255,255,255,0.11)' }}
                   placeholder="you@example.com"
@@ -149,18 +152,19 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                 <label style={fieldLabel}>{t('PASSWORD')}</label>
                 <div style={{ position: 'relative' }}>
                   <input
-                    className="af-field"
+                    className={fieldClass}
                     type={showPw ? 'text' : 'password'}
                     style={{ ...fieldBox, paddingRight: 44, borderColor: errors.password ? 'rgba(255,120,120,0.6)' : 'rgba(255,255,255,0.11)' }}
                     placeholder="••••••••"
                     value={form.password}
                     onChange={(e) => update('password', e.target.value)}
                   />
+                  {/* 14px padding grows the toggle hit area to 44x44 while the icon stays at right:12 */}
                   <button
                     type="button"
                     onClick={() => setShowPw((s) => !s)}
                     aria-label={showPw ? 'Hide password' : 'Show password'}
-                    style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#666', display: 'flex' }}
+                    style={{ position: 'absolute', right: -2, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#666', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 14 }}
                   >
                     {showPw ? <EyeOff style={{ width: 16, height: 16 }} /> : <Eye style={{ width: 16, height: 16 }} />}
                   </button>
@@ -172,7 +176,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   <label style={fieldLabel}>{t('CONFIRM PASSWORD')}</label>
                   <input
-                    className="af-field"
+                    className={fieldClass}
                     type={showPw ? 'text' : 'password'}
                     style={{ ...fieldBox, borderColor: errors.confirm ? 'rgba(255,120,120,0.6)' : 'rgba(255,255,255,0.11)' }}
                     placeholder="••••••••"
@@ -185,7 +189,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
 
               {!isRegister && (
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -4 }}>
-                  <span className="font-body" style={{ fontSize: 13, color: '#8E9FC0', cursor: 'pointer' }}>
+                  <span className="font-body max-lg:py-3.5 max-lg:-my-3.5 max-lg:px-2 max-lg:-mx-2" style={{ fontSize: 13, color: '#8E9FC0', cursor: 'pointer' }}>
                     {t('Forgot password?')}
                   </span>
                 </div>
@@ -210,7 +214,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
 
             <p className="font-body" style={{ fontSize: 14, color: '#8E9FC0', textAlign: 'center', marginTop: 24 }}>
               {isRegister ? t('Already have an account? ') : t("Don't have an account? ")}
-              <Link href={isRegister ? '/login' : '/register'} style={{ color: '#fff', fontWeight: 500 }}>
+              <Link href={isRegister ? '/login' : '/register'} className="max-lg:inline-block max-lg:p-3 max-lg:-m-3" style={{ color: '#fff', fontWeight: 500 }}>
                 {isRegister ? t('Sign in') : t('Sign up')}
               </Link>
             </p>

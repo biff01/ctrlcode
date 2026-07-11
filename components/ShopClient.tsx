@@ -35,23 +35,24 @@ export default function ShopClient() {
 
   return (
     <section style={{ background: 'var(--bg)', minHeight: '100vh' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 24px 96px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: 'clamp(48px, 8vw, 80px) clamp(20px, 5vw, 24px) clamp(64px, 10vw, 96px)' }}>
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 40 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 'clamp(28px, 6vw, 40px)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <span className="font-mono" style={{ fontSize: 12, letterSpacing: 1.5, color: '#4A6FA5' }}>{t('STORE')}</span>
-            <h1 className="font-display" style={{ fontSize: 56, fontWeight: 600, letterSpacing: -2, lineHeight: 1.05, color: 'var(--text-primary)', margin: 0 }}>
+            <h1 className="font-display" style={{ fontSize: 'clamp(34px, 8vw, 56px)', fontWeight: 600, letterSpacing: 'clamp(-2px, -0.2vw, -1px)', lineHeight: 1.05, color: 'var(--text-primary)', margin: 0 }}>
               {t('Templates & services.')}
             </h1>
-            <p className="font-body" style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: 520, margin: 0 }}>
+            <p className="font-body" style={{ fontSize: 'clamp(15px, 4.2vw, 17px)', lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: 520, margin: 0 }}>
               {t('Ready-made kits and fixed-scope services you can buy today.')}
             </p>
           </div>
 
-          {/* Cart summary */}
+          {/* Cart summary — full-width row below the title on mobile/tablet */}
           <div
+            className="max-lg:w-full max-lg:justify-between"
             style={{
-              display: 'flex', alignItems: 'center', gap: 16,
+              display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
               background: 'var(--surface-2)', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '14px 20px',
             }}
           >
@@ -65,11 +66,11 @@ export default function ShopClient() {
             <span className="font-display font-semibold" style={{ fontSize: 20, color: 'var(--text-primary)' }}>${total}</span>
             <Link
               href="/contact"
-              className="font-body font-semibold"
+              className="font-body font-semibold px-[18px] py-[14px] lg:py-[9px]"
               style={{
                 background: count ? 'var(--btn-primary-bg)' : 'var(--pill-bg)',
                 color: count ? 'var(--btn-primary-color)' : 'var(--text-tertiary)',
-                fontSize: 13, padding: '9px 18px', borderRadius: 99,
+                fontSize: 13, borderRadius: 99,
                 pointerEvents: count ? 'auto' : 'none', textDecoration: 'none',
               }}
             >
@@ -78,32 +79,33 @@ export default function ShopClient() {
           </div>
         </div>
 
-        {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
+        {/* Grid — 1 col mobile, 2 tablet, desktop keeps its auto-fill layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]" style={{ gap: 16 }}>
           {PRODUCTS.map((p) => {
             const qty = cart[p.id] || 0
             return (
-              <div key={p.id} style={{ background: 'var(--surface-2)', border: '1px solid var(--border-subtle)', borderRadius: 18, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, boxShadow: 'var(--card-shadow)' }}>
+              <div key={p.id} style={{ background: 'var(--surface-2)', border: '1px solid var(--border-subtle)', borderRadius: 18, padding: 'clamp(18px, 5vw, 24px)', display: 'flex', flexDirection: 'column', gap: 14, boxShadow: 'var(--card-shadow)' }}>
                 <span className="font-mono" style={{ fontSize: 11, letterSpacing: 1, color: '#4A6FA5' }}>{t(p.tag)}</span>
                 <h3 className="font-display font-semibold" style={{ fontSize: 22, color: 'var(--text-primary)', margin: 0 }}>{t(p.name)}</h3>
                 <p className="font-body" style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-secondary)', margin: 0, flex: 1 }}>{t(p.desc)}</p>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 }}>
-                  <span className="font-display font-light" style={{ fontSize: 34, color: 'var(--text-primary)' }}>${p.price}</span>
+                  <span className="font-display font-light" style={{ fontSize: 'clamp(28px, 7.5vw, 34px)', color: 'var(--text-primary)' }}>${p.price}</span>
                   {qty === 0 ? (
                     <button
                       onClick={() => add(p.id)}
-                      className="font-body font-semibold"
-                      style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--btn-primary-bg)', color: 'var(--btn-primary-color)', fontSize: 14, padding: '10px 18px', borderRadius: 99, border: 'none', cursor: 'pointer' }}
+                      className="font-body font-semibold py-[14px] lg:py-[10px]"
+                      style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--btn-primary-bg)', color: 'var(--btn-primary-color)', fontSize: 14, paddingLeft: 18, paddingRight: 18, borderRadius: 99, border: 'none', cursor: 'pointer' }}
                     >
                       <Plus style={{ width: 15, height: 15 }} /> {t('Add')}
                     </button>
                   ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--surface-3)', border: '1px solid var(--border-subtle)', borderRadius: 99, padding: '6px 10px' }}>
-                      <button onClick={() => remove(p.id)} aria-label="Remove one" style={{ display: 'flex', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}>
+                    <div className="py-[9px] lg:py-[6px]" style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--surface-3)', border: '1px solid var(--border-subtle)', borderRadius: 99, paddingLeft: 10, paddingRight: 10 }}>
+                      {/* padding + negative margin grow the +/- hit areas to ~44px on touch without moving the layout */}
+                      <button onClick={() => remove(p.id)} aria-label="Remove one" className="max-lg:p-3.5 max-lg:-m-2.5" style={{ display: 'flex', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}>
                         <Minus style={{ width: 16, height: 16 }} />
                       </button>
                       <span className="font-body" style={{ fontSize: 15, color: 'var(--text-primary)', minWidth: 16, textAlign: 'center' }}>{qty}</span>
-                      <button onClick={() => add(p.id)} aria-label="Add one" style={{ display: 'flex', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}>
+                      <button onClick={() => add(p.id)} aria-label="Add one" className="max-lg:p-3.5 max-lg:-m-2.5" style={{ display: 'flex', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}>
                         <Plus style={{ width: 16, height: 16 }} />
                       </button>
                     </div>

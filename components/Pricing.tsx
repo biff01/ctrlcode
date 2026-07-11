@@ -82,17 +82,18 @@ export default function Pricing() {
 
   return (
     <section style={{ background: 'var(--bg)', padding: '40px 0' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div className="px-5 md:px-6 lg:px-0" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-        {/* Header row */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+        {/* Header row — stacks on mobile, single row from tablet up */}
+        <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between md:gap-0" style={{ marginBottom: 8 }}>
           <h2
             className="font-display font-bold"
-            style={{ fontSize: 42, letterSpacing: -1.5, color: dark ? 'var(--text-primary)' : '#0D1B4B' }}
+            style={{ fontSize: 'clamp(30px, 6vw, 42px)', letterSpacing: '-0.0357em', color: dark ? 'var(--text-primary)' : '#0D1B4B' }}
           >
             {t('My Pricing')}
           </h2>
           <div
+            className="max-md:w-full"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -108,7 +109,7 @@ export default function Pricing() {
                 <button
                   key={tabKey}
                   onClick={() => setTab(tabKey)}
-                  className="font-body rounded-full"
+                  className="font-body rounded-full inline-flex items-center justify-center min-h-11 lg:min-h-0 max-md:flex-1"
                   style={{
                     padding: '7px 16px',
                     fontSize: 13,
@@ -131,8 +132,8 @@ export default function Pricing() {
           </div>
         </div>
 
-        {/* Plan cards */}
-        <div style={{ display: 'flex', gap: 12 }}>
+        {/* Plan cards — stacked on mobile, side by side from tablet up */}
+        <div className="flex flex-col md:flex-row" style={{ gap: 12 }}>
           {plans.map((plan, i) => {
             const isPremium = plan.id === 'premium'
             const showAmber = isPremium && dark
@@ -141,11 +142,11 @@ export default function Pricing() {
             return (
               <motion.div
                 key={btnKey}
+                className="w-full min-w-0 md:w-auto md:flex-1"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                  flex: 1,
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 0,
@@ -198,7 +199,7 @@ export default function Pricing() {
                   )}
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6, position: 'relative' }}>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between" style={{ rowGap: 6 }}>
                       <div className="flex items-center" style={{ gap: 8 }}>
                         <span style={{ color: showAmber ? '#e8a020' : '#fff', fontSize: 18 }}>•</span>
                         <span className="font-display font-semibold" style={{ fontSize: 17, color: '#fff' }}>
@@ -214,6 +215,7 @@ export default function Pricing() {
                             border: '1px solid rgba(245,200,66,0.5)',
                             borderRadius: 99, padding: '4px 12px', letterSpacing: 0.5,
                             boxShadow: '0 0 12px rgba(245,200,66,0.3)',
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           ✦ {t(plan.badge)}
@@ -227,7 +229,7 @@ export default function Pricing() {
 
                   <div style={{ position: 'relative' }}>
                     <div className="flex items-end" style={{ gap: 8 }}>
-                      <span className="font-display font-light" style={{ fontSize: 62, color: '#fff', lineHeight: 1 }}>
+                      <span className="font-display font-light" style={{ fontSize: 'clamp(44px, 12vw, 62px)', color: '#fff', lineHeight: 1 }}>
                         {plan.price}
                       </span>
                       <span className="font-body" style={{ fontSize: 18, color: '#888', paddingBottom: 4 }}>
@@ -259,7 +261,7 @@ export default function Pricing() {
                       ) : (
                         <span style={{ color: dark ? 'var(--text-primary)' : '#536080', fontSize: 14, flexShrink: 0, marginTop: 1 }}>•</span>
                       )}
-                      <span className="font-body" style={{ fontSize: 13.5, color: dark ? 'var(--text-secondary)' : '#536080', lineHeight: 1.45 }}>
+                      <span className="font-body text-sm md:text-[13.5px]" style={{ color: dark ? 'var(--text-secondary)' : '#536080', lineHeight: 1.45 }}>
                         {t(f)}
                       </span>
                     </div>
@@ -278,7 +280,7 @@ export default function Pricing() {
                   }}
                   whileTap={{ y: 0, filter: 'brightness(0.95)' }}
                   transition={{ duration: 0.18, ease: 'easeOut' }}
-                  className="flex items-center font-body font-semibold"
+                  className="flex items-center font-body font-semibold w-full justify-between md:w-auto md:justify-normal md:self-start"
                   style={{
                     background: showAmber
                       ? 'linear-gradient(135deg, #a06000 0%, #d48000 50%, #e09500 100%)'
@@ -289,7 +291,6 @@ export default function Pricing() {
                     padding: '8px 8px 8px 20px',
                     marginTop: 22,
                     gap: 12,
-                    alignSelf: 'flex-start',
                     border: 'none',
                     cursor: 'pointer',
                     boxShadow: showAmber ? '0 4px 24px rgba(180,100,0,0.45)' : 'none',
@@ -323,22 +324,24 @@ export default function Pricing() {
           style={{
             background: dark ? 'var(--surface-2)' : '#F7F8FC',
             borderRadius: 16,
-            padding: '20px 24px',
+            padding: 'clamp(16px, 4vw, 20px) clamp(16px, 4.5vw, 24px)',
             cursor: 'pointer',
             border: dark ? '1px solid transparent' : '1px solid #E2E4EF',
+            gap: 12,
           }}
         >
           <span
             className="font-display font-semibold"
-            style={{ fontSize: 28, color: dark ? 'var(--text-primary)' : '#0D1B4B', letterSpacing: -0.5 }}
+            style={{ fontSize: 'clamp(20px, 5vw, 28px)', color: dark ? 'var(--text-primary)' : '#0D1B4B', letterSpacing: -0.5 }}
           >
             {t('Custom Quote')}
           </span>
           <div
             style={{
-              width: 56, height: 56, borderRadius: 14,
+              width: 'clamp(44px, 12vw, 56px)', height: 'clamp(44px, 12vw, 56px)', borderRadius: 14,
               background: dark ? 'var(--border-subtle)' : '#EEF0F8',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
             }}
           >
             <ArrowUpRight style={{ width: 20, height: 20, color: dark ? 'var(--text-primary)' : '#536080' }} />

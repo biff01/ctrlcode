@@ -137,8 +137,8 @@ function Card({ project, imgHeight }: { project: Project; imgHeight: number }) {
       <div style={{ width: '100%', height: imgHeight, position: 'relative', overflow: 'hidden', borderRadius: 10 }}>
         <Image src={project.image} alt={project.name} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'cover' }} />
       </div>
-      <div className="flex items-end justify-between" style={{ padding: '20px 24px 24px', flex: 1 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div className="flex items-end justify-between gap-3 lg:gap-0" style={{ padding: '20px 24px 24px', flex: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 0 }}>
           <span className="font-body" style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 0.3, textTransform: 'uppercase' }}>
             {t(project.category)}
           </span>
@@ -184,15 +184,15 @@ function FeaturedCard({ project }: { project: Project }) {
         height: '100%',
       }}
     >
-      <div style={{ width: '100%', height: 460, position: 'relative', overflow: 'hidden', borderRadius: 10 }}>
-        <Image src={project.image} alt={project.name} fill sizes="60vw" style={{ objectFit: 'cover' }} />
+      <div className="aspect-[4/3] md:aspect-[16/9] lg:aspect-auto lg:h-[460px]" style={{ width: '100%', position: 'relative', overflow: 'hidden', borderRadius: 10 }}>
+        <Image src={project.image} alt={project.name} fill sizes="(max-width: 1023px) 100vw, 60vw" style={{ objectFit: 'cover' }} />
       </div>
-      <div className="flex items-end justify-between" style={{ padding: '20px 28px 28px', flex: 1 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div className="flex items-end justify-between gap-3 lg:gap-0" style={{ padding: '20px 28px 28px', flex: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minWidth: 0 }}>
           <span className="font-body" style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 0.3, textTransform: 'uppercase' }}>
             {t(project.category)}
           </span>
-          <span className="font-display font-bold" style={{ fontSize: 36, letterSpacing: -1.2, lineHeight: 1.1, color: 'var(--text-primary)' }}>
+          <span className="font-display font-bold" style={{ fontSize: 'clamp(26px, 5.5vw, 36px)', letterSpacing: 'clamp(-1.2px, -0.12vw, -0.6px)', lineHeight: 1.1, color: 'var(--text-primary)' }}>
             {t(project.name)}
           </span>
           <DatePill date={project.date} />
@@ -233,11 +233,12 @@ export default function PortfolioWork({ active }: { active: Filter }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 8 }}
+          className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-0"
+          style={{ marginBottom: 8 }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <span className="font-mono" style={{ fontSize: 11, letterSpacing: 3, color: 'var(--text-muted)' }}>{t('SELECTED WORK')}</span>
-            <h2 className="font-display font-bold" style={{ fontSize: 48, letterSpacing: -2, lineHeight: 1.08, color: 'var(--text-primary)' }}>
+            <h2 className="font-display font-bold" style={{ fontSize: 'clamp(30px, 6vw, 48px)', letterSpacing: 'clamp(-2px, -0.2vw, -1px)', lineHeight: 1.08, color: 'var(--text-primary)' }}>
               {t('Work that speaks for itself.')}
             </h2>
           </div>
@@ -271,17 +272,17 @@ export default function PortfolioWork({ active }: { active: Filter }) {
               style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
             >
               {/* Featured row */}
-              <div style={{ display: 'flex', gap: 20, alignItems: 'stretch' }}>
+              <div className="flex flex-col lg:flex-row lg:items-stretch" style={{ gap: 20 }}>
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ flex: 1 }}
+                  className="lg:flex-1"
                 >
                   <FeaturedCard project={PROJECTS[0]} />
                 </motion.div>
-                <div style={{ width: 380, display: 'flex', flexDirection: 'column', gap: 20 }}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-col w-full lg:w-[380px]" style={{ gap: 20 }}>
                   {[PROJECTS[1], PROJECTS[2]].map((p, i) => (
                     <motion.div
                       key={p.name}
@@ -296,8 +297,8 @@ export default function PortfolioWork({ active }: { active: Filter }) {
                   ))}
                 </div>
               </div>
-              {/* Grid row */}
-              <div style={{ display: 'flex', gap: 20 }}>
+              {/* Grid row — 2-up on tablet, the last card spanning the full row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:flex" style={{ gap: 20 }}>
                 {[PROJECTS[3], PROJECTS[4], PROJECTS[5]].map((p, i) => (
                   <motion.div
                     key={p.name}
@@ -305,6 +306,7 @@ export default function PortfolioWork({ active }: { active: Filter }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className={i === 2 ? 'md:col-span-2' : undefined}
                     style={{ flex: 1 }}
                   >
                     <Card project={p} imgHeight={240} />
@@ -327,7 +329,7 @@ export default function PortfolioWork({ active }: { active: Filter }) {
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ width: 'calc(33.333% - 14px)' }}
+                  className="w-full md:w-[calc(50%_-_10px)] lg:w-[calc(33.333%_-_14px)]"
                 >
                   <Card project={p} imgHeight={240} />
                 </motion.div>

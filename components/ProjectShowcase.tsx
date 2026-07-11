@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Monitor, Smartphone, ExternalLink } from 'lucide-react'
 import type { Showcase } from '@/lib/projects'
 import { useLang } from './LanguageProvider'
+import { useBreakpoint } from '@/lib/useBreakpoint'
 
 type Device = 'desktop' | 'mobile'
 
@@ -17,19 +18,17 @@ interface Props {
 }
 
 /* The captured strips are full-page, so the frame shows a window onto them and the
- * visitor scrolls. Heights below are the frame viewport, not the image. */
+ * visitor scrolls. Frame viewport heights live in the responsive classes below. */
 const DESKTOP_FRAME_W = 1100
-const MOBILE_FRAME_W = 320
-const MOBILE_FRAME_H = 660
 
-function ToggleButton({ active, onClick, icon: Icon, label }: {
-  active: boolean; onClick: () => void; icon: typeof Monitor; label: string
+function ToggleButton({ active, onClick, icon: Icon, label, grow }: {
+  active: boolean; onClick: () => void; icon: typeof Monitor; label: string; grow?: boolean
 }) {
   return (
     <button
       onClick={onClick}
       aria-pressed={active}
-      className="font-body flex items-center"
+      className="font-body flex items-center min-h-[44px] lg:min-h-0"
       style={{
         gap: 7,
         padding: '7px 14px',
@@ -39,6 +38,8 @@ function ToggleButton({ active, onClick, icon: Icon, label }: {
         border: `1px solid ${active ? 'var(--border)' : 'transparent'}`,
         background: active ? 'var(--btn-secondary-bg)' : 'transparent',
         color: active ? 'var(--text-primary)' : 'var(--text-tertiary)',
+        flex: grow ? 1 : undefined,
+        justifyContent: grow ? 'center' : undefined,
       }}
     >
       <Icon style={{ width: 14, height: 14 }} /> {label}
@@ -51,6 +52,8 @@ export default function ProjectShowcase({ name, showcase, liveUrl, onClose }: Pr
   const [device, setDevice] = useState<Device>('desktop')
   const [mounted, setMounted] = useState(false)
   const closeRef = useRef<HTMLButtonElement>(null)
+  // The modal only mounts after a click, so the breakpoint is already hydrated — no desktop flash.
+  const compact = useBreakpoint() === 'mobile'
 
   useEffect(() => setMounted(true), [])
 
@@ -71,6 +74,48 @@ export default function ProjectShowcase({ name, showcase, liveUrl, onClose }: Pr
 
   const isDesktop = device === 'desktop'
 
+  const deviceToggle = (
+    <div
+      className="flex items-center gap-2 lg:gap-1"
+      style={{ padding: 4, borderRadius: 10, background: 'var(--pill-bg)', border: '1px solid var(--card-border)', flex: compact ? 1 : undefined }}
+    >
+      <ToggleButton active={isDesktop} onClick={() => setDevice('desktop')} icon={Monitor} label={t('Desktop view')} grow={compact} />
+      <ToggleButton active={!isDesktop} onClick={() => setDevice('mobile')} icon={Smartphone} label={t('Mobile view')} grow={compact} />
+    </div>
+  )
+
+  const openOriginal = liveUrl ? (
+    <a
+      href={liveUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="font-body flex items-center min-h-[44px] lg:min-h-0"
+      style={{
+        gap: 6, padding: '8px 14px', borderRadius: 8, fontSize: 12,
+        background: 'var(--btn-secondary-bg)', border: '1px solid var(--border)',
+        color: 'var(--text-primary)', textDecoration: 'none',
+      }}
+    >
+      {t('Open original')} <ExternalLink style={{ width: 12, height: 12 }} />
+    </a>
+  ) : null
+
+  const closeButton = (
+    <button
+      ref={closeRef}
+      onClick={onClose}
+      aria-label={t('Close showcase')}
+      className="flex items-center justify-center flex-shrink-0 w-11 h-11 lg:w-9 lg:h-9"
+      style={{
+        borderRadius: 8, cursor: 'pointer',
+        background: 'var(--pill-bg)', border: '1px solid var(--card-border)',
+        color: 'var(--text-primary)',
+      }}
+    >
+      <X style={{ width: 16, height: 16 }} />
+    </button>
+  )
+
   return createPortal(
     <AnimatePresence>
       <motion.div
@@ -82,6 +127,7 @@ export default function ProjectShowcase({ name, showcase, liveUrl, onClose }: Pr
         role="dialog"
         aria-modal="true"
         aria-label={`${name} — ${t('Interactive showcase')}`}
+        className="p-3 md:px-4 md:py-6"
         style={{
           position: 'fixed',
           inset: 0,
@@ -91,68 +137,52 @@ export default function ProjectShowcase({ name, showcase, liveUrl, onClose }: Pr
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          padding: '24px 16px',
           overflowY: 'auto',
         }}
       >
-        {/* Toolbar */}
+        {/* Toolbar — on phones the title + close get their own row so close stays reachable */}
         <div
           onClick={(e) => e.stopPropagation()}
           className="flex items-center justify-between"
           style={{
             width: '100%',
             maxWidth: DESKTOP_FRAME_W,
-            marginBottom: 18,
-            gap: 16,
+            marginBottom: compact ? 12 : 18,
+            gap: compact ? 10 : 16,
             flexWrap: 'wrap',
           }}
         >
-          <span
-            className="font-display font-bold"
-            style={{ fontSize: 20, color: '#fff', letterSpacing: -0.4 }}
-          >
-            {t(name)}
-          </span>
-
-          <div className="flex items-center" style={{ gap: 8 }}>
-            <div
-              className="flex items-center"
-              style={{ gap: 4, padding: 4, borderRadius: 10, background: 'var(--pill-bg)', border: '1px solid var(--card-border)' }}
-            >
-              <ToggleButton active={isDesktop} onClick={() => setDevice('desktop')} icon={Monitor} label={t('Desktop view')} />
-              <ToggleButton active={!isDesktop} onClick={() => setDevice('mobile')} icon={Smartphone} label={t('Mobile view')} />
-            </div>
-
-            {liveUrl && (
-              <a
-                href={liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-body flex items-center"
-                style={{
-                  gap: 6, padding: '8px 14px', borderRadius: 8, fontSize: 12,
-                  background: 'var(--btn-secondary-bg)', border: '1px solid var(--border)',
-                  color: 'var(--text-primary)', textDecoration: 'none',
-                }}
+          {compact ? (
+            <>
+              <div className="flex items-center justify-between" style={{ width: '100%', gap: 12 }}>
+                <span
+                  className="font-display font-bold"
+                  style={{ fontSize: 18, color: '#fff', letterSpacing: -0.4, minWidth: 0 }}
+                >
+                  {t(name)}
+                </span>
+                {closeButton}
+              </div>
+              <div className="flex items-center" style={{ width: '100%', gap: 8, flexWrap: 'wrap' }}>
+                {deviceToggle}
+                {openOriginal}
+              </div>
+            </>
+          ) : (
+            <>
+              <span
+                className="font-display font-bold"
+                style={{ fontSize: 20, color: '#fff', letterSpacing: -0.4 }}
               >
-                {t('Open original')} <ExternalLink style={{ width: 12, height: 12 }} />
-              </a>
-            )}
-
-            <button
-              ref={closeRef}
-              onClick={onClose}
-              aria-label={t('Close showcase')}
-              className="flex items-center justify-center"
-              style={{
-                width: 36, height: 36, borderRadius: 8, cursor: 'pointer',
-                background: 'var(--pill-bg)', border: '1px solid var(--card-border)',
-                color: 'var(--text-primary)',
-              }}
-            >
-              <X style={{ width: 16, height: 16 }} />
-            </button>
-          </div>
+                {t(name)}
+              </span>
+              <div className="flex items-center" style={{ gap: 8 }}>
+                {deviceToggle}
+                {openOriginal}
+                {closeButton}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Device frame */}
@@ -162,6 +192,7 @@ export default function ProjectShowcase({ name, showcase, liveUrl, onClose }: Pr
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           onClick={(e) => e.stopPropagation()}
+          className="w-full lg:w-auto"
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}
         >
           {isDesktop ? (
@@ -199,7 +230,10 @@ export default function ProjectShowcase({ name, showcase, liveUrl, onClose }: Pr
                 <div style={{ width: 44 }} />
               </div>
 
-              <div style={{ height: '68vh', minHeight: 380, overflowY: 'auto', background: '#fff' }}>
+              <div
+                className="h-[calc(100dvh-230px)] min-h-[280px] lg:h-[68vh] lg:min-h-[380px]"
+                style={{ overflowY: 'auto', background: '#fff' }}
+              >
                 <img
                   src={showcase.desktop}
                   alt={`${name} — desktop design`}
@@ -209,8 +243,8 @@ export default function ProjectShowcase({ name, showcase, liveUrl, onClose }: Pr
             </div>
           ) : (
             <div
+              className="w-[min(320px,calc(100vw-24px))] lg:w-[320px]"
               style={{
-                width: MOBILE_FRAME_W,
                 borderRadius: 38,
                 padding: 10,
                 background: '#0d0d0d',
@@ -226,7 +260,10 @@ export default function ProjectShowcase({ name, showcase, liveUrl, onClose }: Pr
                   width: 96, height: 20, borderRadius: 12, background: '#0d0d0d', zIndex: 2,
                 }}
               />
-              <div style={{ height: MOBILE_FRAME_H, borderRadius: 30, overflowY: 'auto', overflowX: 'hidden', background: '#fff' }}>
+              <div
+                className="h-[min(660px,calc(100dvh-220px))] lg:h-[660px]"
+                style={{ borderRadius: 30, overflowY: 'auto', overflowX: 'hidden', background: '#fff' }}
+              >
                 <img
                   src={showcase.mobile}
                   alt={`${name} — mobile design`}

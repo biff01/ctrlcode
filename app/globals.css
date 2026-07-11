@@ -205,12 +205,60 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Safety net: nothing may push the page sideways. `clip` (not hidden) avoids
+   creating a scroll container, so position:sticky keeps working. */
+html,
+body {
+  overflow-x: clip;
+}
+
 body {
   background-color: var(--bg);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: color 0.25s ease;
+}
+
+/* ── Interaction polish ───────────────────────────── */
+/* Kill the grey iOS/Android tap flash; `manipulation` removes the 300ms
+   double-tap-to-zoom delay without disabling pinch zoom. */
+a,
+button,
+input,
+textarea,
+select,
+[role='button'],
+[role='tab'] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Keyboard-only focus ring that reads in both themes. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role='button']:focus-visible,
+[role='tab']:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--text-primary) 65%, transparent);
+  outline-offset: 3px;
+}
+
+/* Uniform press feedback for plain (non-framer-motion) CTAs and pills. */
+.press {
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+/* Headings never orphan a single word on their last line. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 :root[data-theme="light"] .book-overlay {
@@ -229,4 +277,36 @@ body {
 
 :root[data-theme="light"] .logo-light {
   display: block;
+}
+
+/* ── Responsive foundations ───────────────────────── */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Media never forces horizontal scroll. (svg excluded: icon sizing is explicit.) */
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Horizontal scroll-snap rows (filter pills, card rails) without visible scrollbars. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

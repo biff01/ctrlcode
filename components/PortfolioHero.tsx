@@ -37,7 +37,7 @@ export default function PortfolioHero({ filters, active, onFilterChange }: Props
           </span>
           <h1
             className="font-display font-bold"
-            style={{ fontSize: 64, letterSpacing: -2.6, lineHeight: 1.06, color: 'var(--text-primary)', maxWidth: 760 }}
+            style={{ fontSize: 'clamp(38px, 9.5vw, 64px)', letterSpacing: 'clamp(-2.6px, -0.26vw, -1.4px)', lineHeight: 1.06, color: 'var(--text-primary)', maxWidth: 760 }}
           >
             {t('Work that defines')}<br />{t('our craft.')}
           </h1>

@@ -97,7 +97,7 @@ export default function IconGrid({ height = 360, fadeColor = 'var(--bg)' }: Icon
   }
 
   return (
-    <div style={{ position: 'relative', width: '100%', height, overflow: 'hidden' }}>
+    <div style={{ position: 'relative', width: '100%', height: `min(${height}px, 70vw)`, overflow: 'hidden' }}>
       {/* Icon field — centred, overflowing tiles get clipped by the box */}
       <div
         style={{
@@ -105,44 +105,51 @@ export default function IconGrid({ height = 360, fadeColor = 'var(--bg)' }: Icon
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 16,
         }}
       >
-        <div style={{ ...rowStyle, paddingRight: 50 }}>
-          {ROW_TOP.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
-        </div>
-
-        <div style={rowStyle}>
-          {ROW_MID_LEFT.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
-          <div
-            style={{
-              width: CENTER,
-              height: CENTER,
-              borderRadius: 26,
-              background: centerBg,
-              border: `1px solid ${centerBorder}`,
-              boxShadow: centerGlow,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <span
-              className="font-display font-bold"
-              style={{ fontSize: 16, letterSpacing: -0.3, lineHeight: 1.05, color: centerText, textAlign: 'center' }}
-            >
-              Ctrl Code
-            </span>
+        {/* Scale wrapper — shrinks the fixed-px tile field below desktop */}
+        <div
+          className="max-md:scale-[0.62] md:max-lg:scale-[0.85]"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 16,
+          }}
+        >
+          <div style={{ ...rowStyle, paddingRight: 50 }}>
+            {ROW_TOP.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
           </div>
-          {ROW_MID_RIGHT.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
-        </div>
 
-        <div style={{ ...rowStyle, paddingLeft: 50 }}>
-          {ROW_BOTTOM.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
+          <div style={rowStyle}>
+            {ROW_MID_LEFT.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
+            <div
+              style={{
+                width: CENTER,
+                height: CENTER,
+                borderRadius: 26,
+                background: centerBg,
+                border: `1px solid ${centerBorder}`,
+                boxShadow: centerGlow,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <span
+                className="font-display font-bold"
+                style={{ fontSize: 16, letterSpacing: -0.3, lineHeight: 1.05, color: centerText, textAlign: 'center' }}
+              >
+                Ctrl Code
+              </span>
+            </div>
+            {ROW_MID_RIGHT.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
+          </div>
+
+          <div style={{ ...rowStyle, paddingLeft: 50 }}>
+            {ROW_BOTTOM.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
+          </div>
         </div>
       </div>
 

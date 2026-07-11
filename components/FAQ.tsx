@@ -30,14 +30,13 @@ export default function FAQ() {
   return (
     <section style={{ background: 'var(--bg)' }}>
       <div
-        className="faq-inner"
         style={{
           maxWidth: 1000,
           margin: '0 auto',
-          padding: '0 24px 104px',
+          padding: '0 24px clamp(64px, 12vw, 104px)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 40,
+          gap: 'clamp(28px, 6vw, 40px)',
         }}
       >
         {/* Header */}
@@ -47,7 +46,7 @@ export default function FAQ() {
           </span>
           <h2
             className="font-display"
-            style={{ fontSize: 38, fontWeight: 600, letterSpacing: -1.2, color: 'var(--text-primary)', margin: 0 }}
+            style={{ fontSize: 'clamp(28px, 6vw, 38px)', fontWeight: 600, letterSpacing: '-0.0316em', color: 'var(--text-primary)', margin: 0 }}
           >
             {t('Questions, answered.')}
           </h2>
@@ -58,19 +57,16 @@ export default function FAQ() {
           {FAQS.map((item) => (
             <div
               key={item.q}
-              className="faq-row"
+              className="flex flex-col gap-3 md:flex-row md:gap-12"
               style={{
-                display: 'flex',
-                gap: 48,
                 padding: '26px 0',
                 borderTop: '1px solid var(--faq-border)',
               }}
             >
               <h3
-                className="font-display faq-q"
+                className="font-display md:w-[340px]"
                 style={{
                   flex: 'none',
-                  width: 340,
                   fontSize: 17,
                   fontWeight: 600,
                   letterSpacing: -0.2,
@@ -91,13 +87,6 @@ export default function FAQ() {
           ))}
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 760px) {
-          .faq-row { flex-direction: column; gap: 12px !important; }
-          .faq-q { width: auto !important; }
-        }
-      `}</style>
     </section>
   )
 }

@@ -50,7 +50,7 @@ export default function SecurityPage() {
   return (
     <>
       {/* ── Hero ── */}
-      <section style={{ background: 'var(--bg)', padding: '80px 24px 72px' }}>
+      <section style={{ background: 'var(--bg)', padding: 'clamp(56px, 10vw, 80px) 24px clamp(48px, 9vw, 72px)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
           <motion.div
             initial={{ opacity: 0, y: 28 }}
@@ -63,7 +63,7 @@ export default function SecurityPage() {
             </span>
             <h1
               className="font-display font-semibold"
-              style={{ fontSize: 64, letterSpacing: -2.4, lineHeight: 1.05, color: 'var(--text-primary)', margin: 0 }}
+              style={{ fontSize: 'clamp(36px, 9vw, 64px)', letterSpacing: 'clamp(-2.4px, -0.32vw, -1.2px)', lineHeight: 1.05, color: 'var(--text-primary)', margin: 0 }}
             >
               {t('Built to protect')}<br />{t('what matters.')}
             </h1>
@@ -78,19 +78,19 @@ export default function SecurityPage() {
       </section>
 
       {/* ── Trust badges ── */}
-      <section style={{ background: 'var(--bg)', padding: '0 24px 72px' }}>
+      <section style={{ background: 'var(--bg)', padding: '0 24px clamp(56px, 9vw, 72px)' }}>
         <div
+          className="grid grid-cols-2 lg:grid-cols-4"
           style={{
             maxWidth: 1200,
             margin: '0 auto',
-            display: 'flex',
             gap: 12,
-            flexWrap: 'wrap',
           }}
         >
           {TRUST_BADGES.map((badge, i) => (
             <motion.div
               key={badge.label}
+              className="px-4 py-3.5 lg:px-6"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.08, ease: 'easeOut' }}
@@ -98,11 +98,9 @@ export default function SecurityPage() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 2,
-                padding: '14px 24px',
                 borderRadius: 12,
                 background: 'var(--card-bg)',
                 border: '1px solid var(--card-border)',
-                flex: '1 1 160px',
               }}
             >
               <span className="font-display font-semibold" style={{ fontSize: 15, color: 'var(--text-primary)', letterSpacing: -0.3 }}>
@@ -117,25 +115,24 @@ export default function SecurityPage() {
       </section>
 
       {/* ── Security pillars ── */}
-      <section style={{ background: 'var(--bg)', padding: '0 24px 96px' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 40 }}>
+      <section style={{ background: 'var(--bg)', padding: '0 24px clamp(64px, 10vw, 96px)' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'clamp(28px, 4vw, 40px)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <span className="font-mono" style={{ fontSize: 11, letterSpacing: 3, color: 'var(--text-tertiary)' }}>
               {t('HOW WE PROTECT YOU')}
             </span>
             <h2
               className="font-display font-bold"
-              style={{ fontSize: 42, letterSpacing: -1.5, lineHeight: 1.08, color: 'var(--text-primary)', margin: 0 }}
+              style={{ fontSize: 'clamp(28px, 6vw, 42px)', letterSpacing: 'clamp(-1.5px, -0.2vw, -0.75px)', lineHeight: 1.08, color: 'var(--text-primary)', margin: 0 }}
             >
               {t('Six layers of security.')}
             </h2>
           </div>
 
-          {/* 3 × 2 grid */}
+          {/* 3 × 2 grid → 2 cols tablet, 1 col mobile */}
           <div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
               gap: 14,
             }}
           >
@@ -152,7 +149,7 @@ export default function SecurityPage() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 16,
-                    padding: '28px 28px 32px',
+                    padding: 'clamp(22px, 3vw, 28px) clamp(20px, 3vw, 28px) clamp(26px, 3.2vw, 32px)',
                     borderRadius: 16,
                     background: 'var(--card-bg)',
                     border: '1px solid var(--card-border)',
@@ -195,18 +192,18 @@ export default function SecurityPage() {
       </section>
 
       {/* ── Commitment strip ── */}
-      <section style={{ background: 'var(--bg)', padding: '0 24px 96px' }}>
+      <section style={{ background: 'var(--bg)', padding: '0 24px clamp(64px, 10vw, 96px)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div
             style={{
               borderRadius: 20,
               background: 'linear-gradient(135deg, #080a18 0%, #0d1420 50%, #131825 100%)',
               border: '1px solid rgba(255,255,255,0.07)',
-              padding: '52px 56px',
+              padding: 'clamp(32px, 5.1vw, 52px) clamp(24px, 5.5vw, 56px)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: 40,
+              gap: 'clamp(28px, 4vw, 40px)',
               flexWrap: 'wrap',
               position: 'relative',
               overflow: 'hidden',
@@ -222,7 +219,7 @@ export default function SecurityPage() {
               pointerEvents: 'none',
             }} />
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1, minWidth: 280 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1, minWidth: 'min(280px, 100%)' }}>
               <div
                 style={{
                   display: 'inline-flex',
@@ -242,7 +239,7 @@ export default function SecurityPage() {
               </div>
               <h2
                 className="font-display font-semibold"
-                style={{ fontSize: 36, letterSpacing: -1.2, lineHeight: 1.15, color: '#fff', margin: 0 }}
+                style={{ fontSize: 'clamp(28px, 5.5vw, 36px)', letterSpacing: 'clamp(-1.2px, -0.16vw, -0.6px)', lineHeight: 1.15, color: '#fff', margin: 0 }}
               >
                 {t("We treat your project like it's ours.")}
               </h2>
@@ -254,7 +251,7 @@ export default function SecurityPage() {
               </p>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, flexShrink: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: '100%' }}>
               {[
                 t('Full source code ownership on delivery'),
                 t('NDA signed before any scoping call'),

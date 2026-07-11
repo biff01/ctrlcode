@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Globe } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 import { useTheme } from './ThemeProvider'
+import { useBreakpoint } from '@/lib/useBreakpoint'
 
 function XIcon() {
   return (
@@ -40,10 +41,30 @@ const OPEN_TOP = -44
 const CLOSE_RIGHT = -26
 const CLOSE_BOTTOM = -26
 
+// Phone variants — smaller circles, gentler offsets, so the crescents stay
+// inside a 375px viewport (the 24px page gutter absorbs the -14px overhang).
+const M_CIRCLE_SIZE = 64
+const M_OPEN_LEFT = -14
+const M_OPEN_TOP = -24
+const M_CLOSE_RIGHT = -14
+const M_CLOSE_BOTTOM = -14
+
 export default function BookACall() {
   const { t } = useLang()
   const { theme } = useTheme()
   const dark = theme === 'dark'
+
+  // The cut-out mask below is JS-computed pixel geometry, so the responsive
+  // constants have to come from JS too (SSR paints desktop-first, briefly).
+  const mobile = useBreakpoint() === 'mobile'
+  const circleSize = mobile ? M_CIRCLE_SIZE : CIRCLE_SIZE
+  const openLeft = mobile ? M_OPEN_LEFT : OPEN_LEFT
+  const openTop = mobile ? M_OPEN_TOP : OPEN_TOP
+  const closeRight = mobile ? M_CLOSE_RIGHT : CLOSE_RIGHT
+  const closeBottom = mobile ? M_CLOSE_BOTTOM : CLOSE_BOTTOM
+  // Quote glyph scales with its circle (178px / 67px at the desktop 92px box).
+  const quoteFont = Math.round(178 * (circleSize / CIRCLE_SIZE))
+  const quoteShift = Math.round(67 * (circleSize / CIRCLE_SIZE))
 
   // The pill is translucent, so any part of a quote circle behind it would smear
   // through the glass. Clip each circle to the crescent outside the pill instead.
@@ -64,16 +85,16 @@ export default function BookACall() {
   // Cut-out disc centered on the pill's corner arc, in each circle's own coordinates.
   const cutout = (cx: number, cy: number) =>
     `radial-gradient(circle at ${cx}px ${cy}px, transparent ${capR}px, #000 ${capR + 0.5}px)`
-  const openMask = cutout(capR - OPEN_LEFT, capR - OPEN_TOP)
+  const openMask = cutout(capR - openLeft, capR - openTop)
   const closeMask = cutout(
-    CIRCLE_SIZE + CLOSE_RIGHT - capR,
-    CIRCLE_SIZE + CLOSE_BOTTOM - capR,
+    circleSize + closeRight - capR,
+    circleSize + closeBottom - capR,
   )
 
   const GLASS_CIRCLE: React.CSSProperties = {
     position: 'absolute',
-    width: 92,
-    height: 92,
+    width: circleSize,
+    height: circleSize,
     borderRadius: '50%',
     background: dark
       ? 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.094) 100%), rgba(24,24,24,0.56)'
@@ -92,9 +113,10 @@ export default function BookACall() {
   const quoteColor = dark ? 'rgba(255,255,255,0.282)' : 'rgba(13,27,75,0.22)'
   return (
     <section
+      className="max-lg:overflow-x-clip"
       style={{
         position: 'relative',
-        padding: '130px 0',
+        padding: 'clamp(72px, 13vw, 130px) 0',
         background: 'var(--cta-bg)',
       }}
     >
@@ -114,7 +136,7 @@ export default function BookACall() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: 44,
+          gap: 'clamp(32px, 6vw, 44px)',
         }}
       >
         {/* Pill + quote circles wrapper */}
@@ -126,20 +148,20 @@ export default function BookACall() {
           style={{ position: 'relative', width: '100%' }}
         >
           {/* Opening quote glass — top-left corner of pill */}
-          <div style={{ ...GLASS_CIRCLE, left: OPEN_LEFT, top: OPEN_TOP, alignItems: 'center', paddingTop: 0, maskImage: openMask, WebkitMaskImage: openMask }}>
+          <div style={{ ...GLASS_CIRCLE, left: openLeft, top: openTop, alignItems: 'center', paddingTop: 0, maskImage: openMask, WebkitMaskImage: openMask }}>
             <span
               className="font-display font-bold select-none"
-              style={{ fontSize: 178, lineHeight: 1, color: quoteColor, flexShrink: 0, marginTop: 67 }}
+              style={{ fontSize: quoteFont, lineHeight: 1, color: quoteColor, flexShrink: 0, marginTop: quoteShift }}
             >
               &#x201C;
             </span>
           </div>
 
           {/* Closing quote glass — bottom-right corner of pill */}
-          <div style={{ ...GLASS_CIRCLE, right: CLOSE_RIGHT, bottom: CLOSE_BOTTOM, alignItems: 'center', paddingTop: 0, maskImage: closeMask, WebkitMaskImage: closeMask }}>
+          <div style={{ ...GLASS_CIRCLE, right: closeRight, bottom: closeBottom, alignItems: 'center', paddingTop: 0, maskImage: closeMask, WebkitMaskImage: closeMask }}>
             <span
               className="font-display font-bold select-none"
-              style={{ fontSize: 178, lineHeight: 1, color: quoteColor, flexShrink: 0, marginTop: 67 }}
+              style={{ fontSize: quoteFont, lineHeight: 1, color: quoteColor, flexShrink: 0, marginTop: quoteShift }}
             >
               &#x201D;
             </span>
@@ -161,12 +183,12 @@ export default function BookACall() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '40px 80px',
+              padding: 'clamp(24px, 6vw, 40px) clamp(28px, 8vw, 80px)',
             }}
           >
             <p
               className="font-display font-normal text-center"
-              style={{ fontSize: 26, letterSpacing: -1, lineHeight: 1.45, color: dark ? '#ffffff' : '#0D1B4B' }}
+              style={{ fontSize: 'clamp(17px, 4.5vw, 26px)', letterSpacing: 'clamp(-1px, -0.13vw, -0.5px)', lineHeight: 1.45, color: dark ? '#ffffff' : '#0D1B4B' }}
             >
               {t("Ctrl Code — we don't just build websites, we craft digital experiences that make brands feel sharper, faster, and more powerful.")}
             </p>

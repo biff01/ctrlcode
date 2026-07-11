@@ -7,14 +7,12 @@ import { useLang } from './LanguageProvider'
 export default function ConsultStrip() {
   const { t } = useLang()
   return (
-    <div style={{ background: 'var(--bg)', paddingBottom: 96 }}>
+    <div style={{ background: 'var(--bg)', paddingBottom: 'clamp(64px, 10vw, 96px)' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
       <div
+        className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between"
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '36px 44px',
+          padding: 'clamp(24px, 4vw, 36px) clamp(20px, 4.5vw, 44px)',
           borderRadius: 16,
           background: 'var(--consult-card)',
           border: '1px solid var(--consult-border)',
@@ -24,7 +22,7 @@ export default function ConsultStrip() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <span
             className="font-display"
-            style={{ fontSize: 24, fontWeight: 600, letterSpacing: -0.6, color: 'var(--text-primary)' }}
+            style={{ fontSize: 'clamp(21px, 5.5vw, 24px)', fontWeight: 600, letterSpacing: -0.6, color: 'var(--text-primary)' }}
           >
             {t('Not sure what you need?')}
           </span>
@@ -52,7 +50,7 @@ export default function ConsultStrip() {
             textDecoration: 'none',
             transition: 'background 0.25s ease, color 0.25s ease',
           }}
-          className="font-body"
+          className="font-body w-full min-h-12 justify-center md:w-auto md:min-h-0 md:justify-start"
         >
           {t('Book free consultation')}
           <ArrowRight style={{ width: 15, height: 15 }} />

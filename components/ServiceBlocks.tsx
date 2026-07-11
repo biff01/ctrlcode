@@ -121,8 +121,8 @@ function ServiceCard({ image, category, title, date, slug }: {
   return (
     <Link
       href={slug ? `/portfolio/${slug}` : '/portfolio'}
+      className="max-md:w-full md:flex-1"
       style={{
-        flex: 1,
         display: 'flex',
         flexDirection: 'column',
         borderRadius: 16,
@@ -151,7 +151,7 @@ function ServiceCard({ image, category, title, date, slug }: {
       {/* Card Body */}
       <div
         style={{
-          padding: 28,
+          padding: 'clamp(20px, 5vw, 28px)',
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'space-between',
@@ -276,7 +276,7 @@ function ServiceText({ num, price, title, desc, accordion }: {
   // Only one row per service block is open; clicking the open row closes it.
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 18 }}>
+    <div className="max-md:w-full md:flex-1" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       {/* Num + Price Row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <span className="font-mono" style={{ fontSize: 13, color: '#4E6A99', letterSpacing: 2 }}>
@@ -298,7 +298,7 @@ function ServiceText({ num, price, title, desc, accordion }: {
       {/* Title */}
       <h2
         className="font-display"
-        style={{ fontSize: 40, fontWeight: 700, letterSpacing: -1.5, color: 'var(--text-primary)', margin: 0, lineHeight: 1.1 }}
+        style={{ fontSize: 'clamp(30px, 7.5vw, 40px)', fontWeight: 700, letterSpacing: 'clamp(-1.5px, -0.15vw, -0.8px)', color: 'var(--text-primary)', margin: 0, lineHeight: 1.1 }}
       >
         {t(title)}
       </h2>
@@ -328,48 +328,35 @@ function ServiceText({ num, price, title, desc, accordion }: {
 export default function ServiceBlocks() {
   return (
     <section style={{ background: 'var(--bg)' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px 96px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px clamp(64px, 10vw, 96px)' }}>
       {/* Top border */}
       <div style={{ height: 1, background: 'var(--border-subtle)', marginBottom: 0 }} />
 
       {SERVICES.map((svc) => (
         <div key={svc.num}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 72, padding: '72px 0' }}>
-            {svc.cardLeft ? (
-              <>
-                <ServiceCard
-                  image={svc.image}
-                  category={svc.cardCategory}
-                  title={svc.cardTitle}
-                  date={svc.cardDate}
-                  slug={svc.cardSlug}
-                />
-                <ServiceText
-                  num={svc.num}
-                  price={svc.price}
-                  title={svc.title}
-                  desc={svc.desc}
-                  accordion={svc.accordion}
-                />
-              </>
-            ) : (
-              <>
-                <ServiceText
-                  num={svc.num}
-                  price={svc.price}
-                  title={svc.title}
-                  desc={svc.desc}
-                  accordion={svc.accordion}
-                />
-                <ServiceCard
-                  image={svc.image}
-                  category={svc.cardCategory}
-                  title={svc.cardTitle}
-                  date={svc.cardDate}
-                  slug={svc.cardSlug}
-                />
-              </>
-            )}
+          {/* Text always leads in the DOM so the stacked mobile layout reads
+              copy first; md:flex-row-reverse restores the alternating desktop
+              order for the cardLeft blocks. */}
+          <div
+            className={svc.cardLeft
+              ? 'flex flex-col gap-10 md:flex-row-reverse md:items-center lg:gap-[72px]'
+              : 'flex flex-col gap-10 md:flex-row md:items-center lg:gap-[72px]'}
+            style={{ padding: 'clamp(48px, 8vw, 72px) 0' }}
+          >
+            <ServiceText
+              num={svc.num}
+              price={svc.price}
+              title={svc.title}
+              desc={svc.desc}
+              accordion={svc.accordion}
+            />
+            <ServiceCard
+              image={svc.image}
+              category={svc.cardCategory}
+              title={svc.cardTitle}
+              date={svc.cardDate}
+              slug={svc.cardSlug}
+            />
           </div>
           {/* Divider between blocks */}
           <div style={{ height: 1, background: 'var(--border-subtle)' }} />

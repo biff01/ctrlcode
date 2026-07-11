@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { ArrowUpRight, ArrowRight } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 import { useTheme } from './ThemeProvider'
+import { BlurIn } from './ui/blur-in'
 
 /* ------------------------------------------------------------------ *
  * Rebuilt from the Pencil "Work Page" design (node EKef0).
@@ -72,17 +73,18 @@ const STEPS = [
 
 function ProjectCard({
   project,
-  height,
+  heightClass,
   pad,
   titleSize,
   titleLs,
   numSize,
 }: {
   project: Project
-  height: number
-  pad: number
-  titleSize: number
-  titleLs: number
+  /** Height via classes — aspect-ratio below md, fixed px heights from md/lg up. */
+  heightClass: string
+  pad: number | string
+  titleSize: number | string
+  titleLs: number | string
   numSize: number
 }) {
   const { t } = useLang()
@@ -90,9 +92,9 @@ function ProjectCard({
     <Link href={`/portfolio/${project.slug}`} style={{ display: 'block', textDecoration: 'none' }} aria-label={project.name}>
       <motion.div
         whileHover={{ y: -4, transition: { duration: 0.25 } }}
+        className={heightClass}
         style={{
           position: 'relative',
-          height,
           borderRadius: 16,
           overflow: 'hidden',
           backgroundImage: `url('${project.image}')`,
@@ -102,7 +104,7 @@ function ProjectCard({
           cursor: 'pointer',
         }}
       >
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: Math.round(height * 0.55), background: OVERLAY, zIndex: 0 }} />
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '55%', background: OVERLAY, zIndex: 0 }} />
 
         <div style={{ position: 'absolute', left: pad, top: pad, padding: '6px 14px', borderRadius: 100, background: '#FFFFFF16', zIndex: 1 }}>
           <span className="font-body" style={{ fontSize: 12, color: CARD_SUB }}>{t(project.category)}</span>
@@ -131,20 +133,20 @@ function ProjectCard({
 function Header({ active, onChange }: { active: string; onChange: (f: string) => void }) {
   const { t } = useLang()
   return (
-    <section style={{ background: BG, padding: '80px 0 64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <section style={{ background: BG, padding: 'clamp(56px, 9vw, 80px) 0 clamp(40px, 7vw, 64px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 40, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 'clamp(24px, 4vw, 40px)', flexWrap: 'wrap' }}>
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
+            style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, maxWidth: '100%' }}
           >
             <span className="font-mono" style={{ fontSize: 11, color: KICKER, letterSpacing: 3 }}>{t('SELECTED WORK')}</span>
-            <h1 className="font-display font-bold" style={{ fontSize: 56, lineHeight: '59px', letterSpacing: -2, color: TEXT }}>
+            <BlurIn className="font-display font-bold" style={{ fontSize: 'clamp(28px, 8vw, 56px)', lineHeight: 'clamp(30px, 8.4vw, 59px)', letterSpacing: 'clamp(-1.5px, -0.3vw, -1px)', color: TEXT, overflowWrap: 'break-word', wordBreak: 'break-word' }} duration={0.9}>
               {t('Work that speaks')}<br />{t('for itself.')}
-            </h1>
+            </BlurIn>
             <p className="font-body" style={{ fontSize: 15, lineHeight: '26px', color: SUB, width: 520, maxWidth: '100%' }}>
               {t('A collection of products, platforms, and digital systems built with clarity, speed, and purpose.')}
             </p>
@@ -152,7 +154,7 @@ function Header({ active, onChange }: { active: string; onChange: (f: string) =>
 
           <Link
             href="/portfolio"
-            className="flex items-center"
+            className="flex items-center max-lg:min-h-[44px]"
             style={{ gap: 10, padding: '11px 22px', borderRadius: 8, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}`, textDecoration: 'none' }}
           >
             <span className="font-body" style={{ fontSize: 13, color: SUB }}>{t('All projects')}</span>
@@ -160,18 +162,25 @@ function Header({ active, onChange }: { active: string; onChange: (f: string) =>
           </Link>
         </div>
 
-        {/* filter row — keyed on `active` so the pills reliably reconcile on selection */}
-        <div key={active} style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingTop: 32 }}>
+        {/* filter row — keyed on `active` so the pills reliably reconcile on selection.
+            Below md it becomes a full-bleed horizontal scroll rail. */}
+        <div
+          key={active}
+          className="no-scrollbar flex flex-nowrap overflow-x-auto max-md:-mx-6 max-md:px-6 md:flex-wrap md:overflow-x-visible"
+          style={{ gap: 8, paddingTop: 32 }}
+        >
           {FILTERS.map((f) => {
             const on = active === f
             return (
               <button
                 key={f}
                 onClick={() => onChange(f)}
-                className="font-body"
+                className="font-body max-lg:min-h-[44px]"
                 style={{
                   padding: '8px 18px',
                   borderRadius: 100,
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
                   fontSize: 13,
                   fontWeight: on ? 600 : 400,
                   background: on ? ACTIVE_BG : CHIP_BG,
@@ -198,26 +207,47 @@ function Grid({ active }: { active: string }) {
   const filtered = isAll ? PROJECTS : PROJECTS.filter((p) => p.tags.includes(active))
 
   return (
-    <section style={{ background: BG, padding: '0 0 80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 40 }}>
+    <section style={{ background: BG, padding: '0 0 clamp(56px, 8vw, 80px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 4vw, 40px)' }}>
         {isAll ? (
           <>
             <motion.div initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
-              <ProjectCard project={PROJECTS[0]} height={460} pad={24} titleSize={44} titleLs={-1.5} numSize={12} />
+              <ProjectCard
+                project={PROJECTS[0]}
+                heightClass="aspect-[4/3] md:aspect-auto md:h-[420px] lg:h-[460px]"
+                pad="clamp(16px, 3vw, 24px)"
+                titleSize="clamp(28px, 7vw, 44px)"
+                titleLs="clamp(-1.5px, -0.25vw, -0.75px)"
+                numSize={12}
+              />
             </motion.div>
 
-            <div style={{ display: 'flex', gap: 16 }}>
+            <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 16 }}>
               {[PROJECTS[1], PROJECTS[2]].map((p, i) => (
-                <motion.div key={p.name} initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }} style={{ flex: 1 }}>
-                  <ProjectCard project={p} height={340} pad={20} titleSize={34} titleLs={-1} numSize={12} />
+                <motion.div key={p.name} initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}>
+                  <ProjectCard
+                    project={p}
+                    heightClass="aspect-[4/3] md:aspect-auto md:h-[320px] lg:h-[340px]"
+                    pad="clamp(14px, 2.6vw, 20px)"
+                    titleSize="clamp(24px, 6vw, 34px)"
+                    titleLs="clamp(-1px, -0.18vw, -0.5px)"
+                    numSize={12}
+                  />
                 </motion.div>
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: 16 }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: 16 }}>
               {[PROJECTS[3], PROJECTS[4], PROJECTS[5]].map((p, i) => (
-                <motion.div key={p.name} initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }} style={{ flex: 1 }}>
-                  <ProjectCard project={p} height={300} pad={16} titleSize={22} titleLs={-0.5} numSize={11} />
+                <motion.div key={p.name} className={i === 2 ? 'md:max-lg:col-span-2' : undefined} initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}>
+                  <ProjectCard
+                    project={p}
+                    heightClass="aspect-[4/3] md:aspect-auto md:h-[300px]"
+                    pad={16}
+                    titleSize="clamp(20px, 5vw, 22px)"
+                    titleLs="clamp(-0.5px, -0.1vw, -0.25px)"
+                    numSize={11}
+                  />
                 </motion.div>
               ))}
             </div>
@@ -225,8 +255,15 @@ function Grid({ active }: { active: string }) {
         ) : filtered.length > 0 ? (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
             {filtered.map((p, i) => (
-              <motion.div key={p.name} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }} style={{ flexBasis: 'calc(33.333% - 11px)', flexGrow: 1, minWidth: 300 }}>
-                <ProjectCard project={p} height={340} pad={20} titleSize={30} titleLs={-1} numSize={12} />
+              <motion.div key={p.name} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }} style={{ flexBasis: 'calc(33.333% - 11px)', flexGrow: 1, minWidth: 'min(300px, 100%)' }}>
+                <ProjectCard
+                  project={p}
+                  heightClass="aspect-[4/3] md:aspect-auto md:h-[320px] lg:h-[340px]"
+                  pad="clamp(14px, 2.6vw, 20px)"
+                  titleSize="clamp(24px, 6vw, 30px)"
+                  titleLs="clamp(-1px, -0.18vw, -0.5px)"
+                  numSize={12}
+                />
               </motion.div>
             ))}
           </div>
@@ -248,8 +285,8 @@ const Divider = () => <div style={{ width: '100%', height: 1, background: LINE }
 function Process() {
   const { t } = useLang()
   return (
-    <section style={{ background: BG, padding: '96px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 64 }}>
-      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 56 }}>
+    <section style={{ background: BG, padding: 'clamp(64px, 10vw, 96px) 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 64 }}>
+      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 'clamp(40px, 6vw, 56px)' }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -258,7 +295,7 @@ function Process() {
           style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
         >
           <span className="font-mono" style={{ fontSize: 11, color: KICKER, letterSpacing: 3 }}>{t('OUR PROCESS')}</span>
-          <h2 className="font-display font-bold" style={{ fontSize: 52, letterSpacing: -2, color: TEXT, lineHeight: 1.05 }}>{t('How we build.')}</h2>
+          <h2 className="font-display font-bold" style={{ fontSize: 'clamp(30px, 6vw, 52px)', letterSpacing: 'clamp(-2px, -0.3vw, -1px)', color: TEXT, lineHeight: 1.05 }}>{t('How we build.')}</h2>
           <p className="font-body" style={{ fontSize: 15, lineHeight: '26px', color: SUB, width: 460, maxWidth: '100%' }}>
             {t("Six deliberate stages — each one sharpening the product until it's ready to scale.")}
           </p>
@@ -268,11 +305,12 @@ function Process() {
           <Divider />
           {STEPS.map((s) => (
             <div key={s.num}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 32, padding: '28px 0' }}>
+              {/* below lg: number + title on one line, description underneath; the arrow is desktop-only */}
+              <div className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-2 lg:flex lg:justify-between lg:gap-8" style={{ padding: '28px 0' }}>
                 <span className="font-mono" style={{ fontSize: 13, color: KICKER, letterSpacing: 2, width: 40, flexShrink: 0 }}>{s.num}</span>
-                <span className="font-display font-bold" style={{ fontSize: 22, letterSpacing: -0.5, color: TEXT, width: 260, flexShrink: 0 }}>{t(s.title)}</span>
-                <p className="font-body" style={{ fontSize: 14, lineHeight: '23px', color: SUB, width: 540, flexShrink: 0 }}>{t(s.desc)}</p>
-                <div className="flex items-center justify-center" style={{ width: 44, height: 44, flexShrink: 0, borderRadius: 10, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}` }}>
+                <span className="font-display font-bold lg:w-[260px]" style={{ fontSize: 'clamp(19px, 5vw, 22px)', letterSpacing: -0.5, color: TEXT, flexShrink: 0 }}>{t(s.title)}</span>
+                <p className="font-body col-span-2 lg:w-[540px]" style={{ fontSize: 14, lineHeight: '23px', color: SUB, flexShrink: 0 }}>{t(s.desc)}</p>
+                <div className="flex items-center justify-center max-lg:hidden" style={{ width: 44, height: 44, flexShrink: 0, borderRadius: 10, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}` }}>
                   <ArrowRight style={{ width: 16, height: 16, color: KICKER }} />
                 </div>
               </div>
@@ -301,22 +339,23 @@ function CTA() {
 
   return (
     <section
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '120px 0 140px', ...(theme === 'light' ? lightBg : darkBg) }}
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 'clamp(80px, 12vw, 120px) 0 clamp(96px, 14vw, 140px)', ...(theme === 'light' ? lightBg : darkBg) }}
     >
-      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 40 }}>
+      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(28px, 5vw, 40px)' }}>
         <span className="font-mono" style={{ fontSize: 11, color: KICKER, letterSpacing: 3, textAlign: 'center' }}>{t('READY TO BUILD')}</span>
-        <h2 className="font-display font-bold" style={{ fontSize: 64, lineHeight: '64px', letterSpacing: -2.5, color: TEXT, textAlign: 'center' }}>
+        <h2 className="font-display font-bold" style={{ fontSize: 'clamp(34px, 8vw, 64px)', lineHeight: 1, letterSpacing: 'clamp(-2.5px, -0.4vw, -1.2px)', color: TEXT, textAlign: 'center' }}>
           {t('Have a project in mind?')}
         </h2>
-        <p className="font-body" style={{ fontSize: 17, lineHeight: '28px', color: SUB, width: 540, maxWidth: '100%', textAlign: 'center' }}>
+        <p className="font-body" style={{ fontSize: 'clamp(15px, 4vw, 17px)', lineHeight: 'clamp(25px, 4.6vw, 28px)', color: SUB, width: 540, maxWidth: '100%', textAlign: 'center' }}>
           {t("Let's build a scalable digital product for your business.")}<br />
           {t('We move fast, we care deeply, and we ship.')}
         </p>
-        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <Link href="/contact" style={{ padding: '14px 32px', borderRadius: 10, background: 'var(--btn-primary-bg)', textDecoration: 'none' }}>
+        {/* buttons stack full-width on mobile, sit side by side from md up */}
+        <div className="flex w-full max-w-[360px] flex-col md:w-auto md:max-w-none md:flex-row md:flex-wrap md:justify-center" style={{ gap: 14 }}>
+          <Link href="/contact" style={{ padding: '14px 32px', borderRadius: 10, background: 'var(--btn-primary-bg)', textDecoration: 'none', textAlign: 'center' }}>
             <span className="font-body" style={{ fontSize: 14, fontWeight: 600, color: 'var(--btn-primary-color)' }}>{t('Start a Project')}</span>
           </Link>
-          <Link href="/contact" style={{ padding: '14px 32px', borderRadius: 10, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}`, textDecoration: 'none' }}>
+          <Link href="/contact" style={{ padding: '14px 32px', borderRadius: 10, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}`, textDecoration: 'none', textAlign: 'center' }}>
             <span className="font-body" style={{ fontSize: 14, fontWeight: 500, color: SUB }}>{t('Contact Us')}</span>
           </Link>
         </div>
@@ -356,7 +395,8 @@ const ISSUES = [
 function WorkHero({ dark }: { dark: boolean }) {
   const outerBg = dark ? '#0a0a0a' : '#F7F8FC'
   return (
-    <div style={{ position: 'relative', width: 720, height: 760, background: outerBg, overflow: 'hidden', flexShrink: 0 }}>
+    // scale(1) above 720px viewports, so desktop is untouched; below that the art shrinks with the screen
+    <div style={{ position: 'relative', width: 720, height: 760, background: outerBg, overflow: 'hidden', flexShrink: 0, transform: 'scale(min(1, calc(100vw / 720px)))', transformOrigin: 'top left' }}>
       <div style={{ position: 'absolute', left: 185, top: 230, width: 350, height: 300, filter: 'blur(50px)', borderRadius: '50%', background: 'radial-gradient(ellipse 50% 50% at 50% 50%, #2828BC14 0%, #00000000 100%)' }} />
       <div style={{ position: 'absolute', left: 50, top: 190, width: 620, height: 380 }}>
         <div style={{ position: 'absolute', left: -6, top: 124, width: 132, height: 132, borderRadius: '50%', border: '1px solid #FFFFFF0B' }} />
@@ -448,8 +488,13 @@ function HeroRow() {
   const dark = theme === 'dark'
   return (
     <div style={{ width: '100%', background: dark ? '#0a0a0a' : '#F7F8FC', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', overflow: 'hidden' }}>
-      <WorkHero dark={dark} />
-      <WorkShowcase dark={dark} />
+      {/* below lg only this panel shows, scaled to the viewport; the wrapper's aspect-ratio keeps the band height in step */}
+      <div style={{ width: '100%', maxWidth: 720, aspectRatio: '720 / 760', overflow: 'hidden', flexShrink: 0 }}>
+        <WorkHero dark={dark} />
+      </div>
+      <div className="max-lg:hidden" style={{ flexShrink: 0 }}>
+        <WorkShowcase dark={dark} />
+      </div>
     </div>
   )
 }

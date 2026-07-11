@@ -7,6 +7,7 @@ import { ArrowRight, Lock } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 import DashboardMockup from './DashboardMockup'
 import IconGrid from './IconGrid'
+import { BlurIn } from './ui/blur-in'
 
 const STATS = [
   { value: '50+', label: 'PROJECTS DELIVERED' },
@@ -22,43 +23,53 @@ export default function Hero() {
 
   // Russian runs ~40% wider than EN/UZ, so "цифровой реальности." overflows the
   // ~560px headline column at 76px and wraps to a 3rd line. Size it down to fit.
+  // Below desktop the clamp scales fluidly and saturates at these caps by 1024px.
   const headlineSize = lang === 'ru' ? 52 : 76
+  const headlineMin = lang === 'ru' ? 30 : 36
 
   return (
     <section
       className="relative w-full overflow-hidden"
-      style={{ background: 'var(--bg)', paddingBottom: 100 }}
+      style={{ background: 'var(--bg)', paddingBottom: 'clamp(64px, 9.8vw, 100px)' }}
     >
       {/* Container */}
-      <div className="w-full" style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <div className="w-full max-lg:px-6" style={{ maxWidth: 1200, margin: '0 auto' }}>
 
-        {/* ── Hero Top Row: text (left) + icon grid (right) ── */}
+        {/* ── Hero Top Row: text on top (mobile/tablet), text (left) + icon grid (right) on desktop ── */}
         <div
-          className="hero-top-row"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40, paddingTop: 72 }}
+          className="hero-top-row flex flex-col lg:flex-row lg:items-center lg:justify-between"
+          style={{ gap: 40, paddingTop: 'clamp(48px, 7.1vw, 72px)' }}
         >
         {/* ── Hero Text ── */}
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-          style={{ display: 'flex', flexDirection: 'column', gap: 24, flex: '1 1 0', minWidth: 0 }}
+          className="lg:flex-1 lg:min-w-0"
+          style={{ display: 'flex', flexDirection: 'column', gap: 24 }}
         >
           {/* Headline */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {['From idea to', 'digital reality.'].map((line) => (
-              <h1
+            {['From idea to', 'digital reality.'].map((line, i) => (
+              <BlurIn
                 key={line}
                 className="font-display font-semibold"
-                style={{ fontSize: headlineSize, letterSpacing: -2.8, lineHeight: 1.08, color: 'var(--text-primary)' }}
+                style={{
+                  fontSize: `clamp(${headlineMin}px, 9vw, ${headlineSize}px)`,
+                  letterSpacing: 'clamp(-2.8px, -0.28vw, -1.4px)',
+                  lineHeight: 1.08,
+                  color: 'var(--text-primary)',
+                }}
+                duration={0.9}
+                delay={i * 0.15}
               >
                 {t(line)}
-              </h1>
+              </BlurIn>
             ))}
           </div>
 
           {/* Subtitle */}
-          <p className="font-body" style={{ fontSize: 18, lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: 540 }}>
+          <p className="font-body" style={{ fontSize: 'clamp(16px, 1.76vw, 18px)', lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: 540 }}>
             {t('We design and build web platforms, mobile apps, CRM systems and AI products for ambitious companies — fast, reliable and beautifully engineered.')}
           </p>
 
@@ -67,22 +78,23 @@ export default function Hero() {
             className="flex items-center gap-[9px] rounded-full"
             style={{
               alignSelf: 'flex-start',
+              maxWidth: '100%',
               background: 'rgba(255,255,255,0.031)',
               border: '1px solid var(--border-subtle)',
               padding: '6px 16px',
             }}
           >
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--kicker)' }} />
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--kicker)', flexShrink: 0 }} />
             <span className="font-mono" style={{ fontSize: 12, letterSpacing: 1, color: 'var(--text-secondary)' }}>
               {t('OFFICIAL IT PARK UZBEKISTAN RESIDENT')}
             </span>
           </div>
 
-          {/* CTAs */}
-          <div style={{ display: 'flex', gap: 14 }}>
+          {/* CTAs — stacked full-width buttons on mobile */}
+          <div className="max-md:flex-col" style={{ display: 'flex', gap: 14 }}>
             <Link
               href="/contact"
-              className="flex items-center gap-2 font-body font-semibold"
+              className="flex items-center gap-2 font-body font-semibold max-md:w-full max-md:justify-center"
               style={{
                 background: 'var(--btn-primary-bg)',
                 color: 'var(--btn-primary-color)',
@@ -97,7 +109,7 @@ export default function Hero() {
             </Link>
             <Link
               href="/portfolio"
-              className="font-body font-medium inline-block"
+              className="font-body font-medium inline-block max-md:w-full max-md:text-center"
               style={{
                 background: 'var(--btn-secondary-bg)',
                 border: '1px solid var(--border-subtle)',
@@ -113,13 +125,12 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* ── Icon Grid — beside the headline ── */}
+        {/* ── Icon Grid — beside the headline on desktop, decorative band below it when stacked ── */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-          className="hero-icon-grid"
-          style={{ flexShrink: 0, width: 600 }}
+          className="hero-icon-grid w-full lg:w-[600px] lg:shrink-0"
         >
           <IconGrid height={360} fadeColor="var(--bg)" />
         </motion.div>
@@ -131,7 +142,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
           className="flex justify-center"
-          style={{ paddingTop: 68 }}
+          style={{ paddingTop: 'clamp(44px, 6.7vw, 68px)' }}
         >
           <div
             className="overflow-hidden"
@@ -168,18 +179,18 @@ export default function Hero() {
                 </span>
               </div>
             </div>
-            {/* Showcase — inline SVG dashboard */}
-            <div style={{ width: '100%', height: 580, background: '#0a0a0f' }}>
+            {/* Showcase — inline SVG dashboard; keeps the SVG's aspect below lg */}
+            <div className="w-full max-lg:aspect-[1120/580] lg:h-[580px]" style={{ background: '#0a0a0f' }}>
               <DashboardMockup />
             </div>
           </div>
         </motion.div>
 
-        {/* ── Stats ── */}
+        {/* ── Stats — 2x2 grid on mobile, single row from md up ── */}
         <div
           ref={statsRef}
-          className="flex justify-between"
-          style={{ maxWidth: 1120, width: '100%', margin: '0 auto', paddingTop: 56, paddingLeft: 40, paddingRight: 40 }}
+          className="grid grid-cols-2 gap-x-4 gap-y-9 md:flex md:justify-between md:gap-x-0 md:gap-y-0 md:px-10"
+          style={{ maxWidth: 1120, width: '100%', margin: '0 auto', paddingTop: 'clamp(44px, 5.5vw, 56px)' }}
         >
           {STATS.map((s, i) => (
             <motion.div
@@ -192,7 +203,7 @@ export default function Hero() {
             >
               <span
                 className="font-display font-semibold"
-                style={{ fontSize: 38, letterSpacing: -1, color: 'var(--text-primary)', lineHeight: 1 }}
+                style={{ fontSize: 'clamp(30px, 9vw, 38px)', letterSpacing: -1, color: 'var(--text-primary)', lineHeight: 1 }}
               >
                 {s.value}
               </span>

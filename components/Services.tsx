@@ -101,7 +101,7 @@ const FIG_DEFS = [
 
 export default function Services() {
   const colsRef = useRef<HTMLDivElement>(null)
-  const colsVisible = useInView(colsRef, { once: true, margin: '-80px' })
+  const colsVisible = useInView(colsRef, { once: true, margin: '-40px' })
   const { t } = useLang()
   const { theme } = useTheme()
   const dark = theme === 'dark'
@@ -110,39 +110,44 @@ export default function Services() {
     <section
       style={{
         background: 'var(--section-alt)',
-        padding: '110px 0 120px',
+        padding: 'clamp(64px, 10.75vw, 110px) 0 clamp(72px, 11.72vw, 120px)',
       }}
     >
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <div className="max-lg:px-6" style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* Statement headline */}
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
+          viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          style={{ marginBottom: 88 }}
+          style={{ marginBottom: 'clamp(56px, 8.6vw, 88px)' }}
         >
           <div>
             <span
               className="font-display font-semibold"
-              style={{ fontSize: 46, letterSpacing: -1.8, lineHeight: 1.18, color: 'var(--text-primary)' }}
+              style={{ fontSize: 'clamp(28px, 6vw, 46px)', letterSpacing: 'clamp(-1.8px, -0.25vw, -0.9px)', lineHeight: 1.18, color: 'var(--text-primary)' }}
             >
               {t('A new species of product tool.')}{' '}
             </span>
             <span
               className="font-display font-semibold"
-              style={{ fontSize: 46, letterSpacing: -1.8, lineHeight: 1.18, color: 'var(--text-secondary)' }}
+              style={{ fontSize: 'clamp(28px, 6vw, 46px)', letterSpacing: 'clamp(-1.8px, -0.25vw, -0.9px)', lineHeight: 1.18, color: 'var(--text-secondary)' }}
             >
               {t('Purpose-built for modern teams with AI workflows at its core, Ctrl Code sets a new standard for planning and building products.')}
             </span>
           </div>
         </motion.div>
 
-        {/* Fig columns */}
-        <div ref={colsRef} className="flex w-full" style={{ gap: 0 }}>
+        {/* Fig columns — stacked on mobile, 2-up on tablet (last spans), row on desktop */}
+        <div ref={colsRef} className="grid grid-cols-1 md:grid-cols-2 lg:flex w-full gap-14 md:gap-x-10 md:gap-y-14 lg:gap-0">
           {FIG_DEFS.map((fig, i) => (
             <motion.div
               key={fig.label}
+              className={[
+                i > 0 ? 'lg:border-l lg:border-l-[color:var(--border-subtle)] lg:pl-11' : '',
+                i < 2 ? 'lg:pr-11' : '',
+                i === 2 ? 'md:max-lg:col-span-2' : '',
+              ].join(' ')}
               initial={{ opacity: 0, y: 40 }}
               animate={colsVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: i * 0.14, ease: [0.22, 1, 0.36, 1] }}
@@ -150,10 +155,6 @@ export default function Services() {
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0',
-                paddingLeft: i === 0 ? 0 : 44,
-                paddingRight: i === 2 ? 0 : 44,
-                borderLeft: i > 0 ? '1px solid var(--border-subtle)' : 'none',
               }}
             >
               <span
@@ -162,7 +163,7 @@ export default function Services() {
               >
                 {fig.label}
               </span>
-              <div style={{ height: 360, width: '100%' }}><fig.Illo dark={dark} /></div>
+              <div style={{ height: 'clamp(260px, 35.2vw, 360px)', width: '100%' }}><fig.Illo dark={dark} /></div>
               <div style={{ paddingTop: 24, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <h3
                   className="font-display font-semibold"

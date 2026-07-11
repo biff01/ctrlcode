@@ -21,13 +21,13 @@ export default function StatsStrip() {
         padding: '0 0',
       }}
     >
+      {/* 2x2 grid on mobile, single row from md up */}
       <div
+        className="grid grid-cols-2 gap-x-8 md:flex md:items-stretch md:gap-x-0"
         style={{
           maxWidth: 1200,
           margin: '0 auto',
           padding: '0 24px',
-          display: 'flex',
-          alignItems: 'stretch',
         }}
       >
         {STATS.map((stat, i) => (
@@ -37,18 +37,19 @@ export default function StatsStrip() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className={i === 0 ? '' : 'md:pl-12'}
             style={{
               flex: 1,
               display: 'flex',
               flexDirection: 'column',
               gap: 6,
-              padding: '36px 0',
-              paddingLeft: i === 0 ? 0 : 48,
+              paddingTop: 'clamp(24px, 3.6vw, 36px)',
+              paddingBottom: 'clamp(24px, 3.6vw, 36px)',
             }}
           >
             <span
               className="font-display font-semibold"
-              style={{ fontSize: 44, letterSpacing: -1.6, lineHeight: 1, color: 'var(--text-primary)' }}
+              style={{ fontSize: 'clamp(32px, 9vw, 44px)', letterSpacing: 'clamp(-1.6px, -0.3vw, -1px)', lineHeight: 1, color: 'var(--text-primary)' }}
             >
               {stat.number}
             </span>

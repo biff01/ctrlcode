@@ -33,21 +33,20 @@ export default function NewsletterForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 4 }}>
-      <div style={{ display: 'flex', gap: 8 }}>
+      {/* Stacks on phones; taller input below lg keeps iOS from zooming on focus */}
+      <div className="max-md:flex-col" style={{ display: 'flex', gap: 8 }}>
         <input
           type="email"
           value={email}
           onChange={(e) => { setEmail(e.target.value); if (error) setError('') }}
           placeholder={t('Email address')}
+          className="flex-none md:flex-1 max-lg:h-12 max-lg:text-base lg:h-10 lg:text-[12.5px]"
           style={{
-            flex: 1,
             minWidth: 0,
-            height: 40,
             borderRadius: 8,
             background: 'var(--footer-input-bg)',
             border: `1px solid ${error ? 'rgba(255,120,120,0.6)' : 'var(--footer-input-border)'}`,
             padding: '0 14px',
-            fontSize: 12.5,
             color: 'var(--footer-input-text)',
             outline: 'none',
             fontFamily: 'var(--font-inter)',
@@ -55,9 +54,8 @@ export default function NewsletterForm() {
         />
         <button
           type="submit"
-          className="font-body font-medium"
+          className="font-body font-medium max-lg:h-12 lg:h-10"
           style={{
-            height: 40,
             padding: '0 18px',
             borderRadius: 8,
             background: 'var(--footer-btn-bg)',

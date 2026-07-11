@@ -46,22 +46,22 @@ export default function Footer() {
           margin: '0 auto',
           position: 'relative',
           zIndex: 10,
-          padding: '0 40px',
+          padding: '0 clamp(20px, 4vw, 40px)',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
         {/* Top CTA */}
-        <div style={{ padding: '56px 0 48px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ padding: 'clamp(40px, 8vw, 56px) 0 clamp(36px, 6vw, 48px)', display: 'flex', flexDirection: 'column', gap: 24 }}>
           <h2
             className="font-display font-light"
-            style={{ fontSize: 58, letterSpacing: -1.8, lineHeight: 1.1, color: 'var(--footer-heading)' }}
+            style={{ fontSize: 'clamp(32px, 7.5vw, 58px)', letterSpacing: 'clamp(-1.8px, -0.24vw, -0.9px)', lineHeight: 1.1, color: 'var(--footer-heading)' }}
           >
             {t('Ready to start building')}<br />{t('your next product?')}
           </h2>
           <Link
             href="/contact"
-            className="self-start font-body font-medium"
+            className="self-start max-md:w-full max-md:text-center font-body font-medium"
             style={{
               background: 'var(--footer-btn-bg)',
               color: 'var(--footer-btn-color)',
@@ -75,17 +75,17 @@ export default function Footer() {
           </Link>
         </div>
 
-        {/* Footer columns */}
+        {/* Footer columns — 2-col grid on phones, single row from md up */}
         <div
+          className="grid grid-cols-2 md:flex"
           style={{
-            display: 'flex',
             justifyContent: 'space-between',
             paddingBottom: 48,
             gap: 32,
           }}
         >
           {/* Newsletter */}
-          <div style={{ width: 260, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="max-md:col-span-2 md:w-[260px]" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <span className="font-body font-bold" style={{ fontSize: 14, color: 'var(--footer-heading)' }}>
               {t('Newsletter')}
             </span>
@@ -107,7 +107,7 @@ export default function Footer() {
               <Link
                 key={l}
                 href={FOOTER_HREF[l] || '/'}
-                className="font-body"
+                className="font-body max-md:py-1"
                 style={{ fontSize: 13.5, color: 'var(--footer-link)', cursor: 'pointer', textDecoration: 'none' }}
               >
                 {t(l)}
@@ -124,7 +124,7 @@ export default function Footer() {
               <Link
                 key={l}
                 href={FOOTER_HREF[l] || '/'}
-                className="font-body"
+                className="font-body max-md:py-1"
                 style={{ fontSize: 13.5, color: 'var(--footer-link)', cursor: 'pointer', textDecoration: 'none' }}
               >
                 {t(l)}
@@ -141,7 +141,7 @@ export default function Footer() {
               <Link
                 key={l}
                 href={FOOTER_HREF[l] || '/'}
-                className="font-body"
+                className="font-body max-md:py-1"
                 style={{ fontSize: 13.5, color: 'var(--footer-link)', cursor: 'pointer', textDecoration: 'none' }}
               >
                 {t(l)}
@@ -158,9 +158,8 @@ export default function Footer() {
                   aria-label={label}
                   target={href.startsWith('http') ? '_blank' : undefined}
                   rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="max-md:w-11 max-md:h-11 md:w-9 md:h-9"
                   style={{
-                    width: 36,
-                    height: 36,
                     borderRadius: 9,
                     background: 'var(--footer-social-bg)',
                     display: 'flex',
@@ -185,7 +184,7 @@ export default function Footer() {
             justifyContent: 'center',
           }}
         >
-          <span className="font-body" style={{ fontSize: 12.5, color: 'var(--footer-muted)' }}>
+          <span className="font-body" style={{ fontSize: 12.5, color: 'var(--footer-muted)', textAlign: 'center' }}>
             {t('© 2025 Ctrl Code. All rights reserved.')}
           </span>
         </div>

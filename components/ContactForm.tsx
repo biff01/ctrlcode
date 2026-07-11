@@ -17,17 +17,18 @@ const SERVICES = ['Web development', 'Mobile app', 'CRM system', 'AI product', '
 const BUDGETS = ['$1,500 – $3,500', '$3,500 – $7,000', '$7,000 – $15,000', '$15,000+']
 
 // Field box shared style (design: #0A0A0C bg, #FFFFFF1C border, r10, 13/16 padding)
+// padding/fontSize live in fieldClass so mobile can go 16px text / 48px+ tall while desktop stays 14px / 13px pad
 const fieldBox: React.CSSProperties = {
   width: '100%',
   borderRadius: 10,
   background: 'var(--bg)',
   border: '1px solid var(--border)',
-  padding: '13px 16px',
-  fontSize: 14,
   color: 'var(--text-primary)',
   outline: 'none',
   fontFamily: 'var(--font-inter)',
 }
+
+const fieldClass = 'cf-field px-4 py-[15px] lg:py-[13px] text-[16px] lg:text-[14px]'
 
 const fieldLabel: React.CSSProperties = {
   fontSize: 11,
@@ -68,25 +69,21 @@ export default function ContactForm() {
   }
 
   return (
-    <section style={{ background: 'var(--bg)', paddingBottom: 104 }}>
+    <section style={{ background: 'var(--bg)', paddingBottom: 'clamp(64px, 12vw, 104px)' }}>
       {/* placeholder color to match design */}
       <style>{`.cf-field::placeholder{color:var(--text-tertiary);opacity:1}`}</style>
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '8px 24px 0' }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 72,
-          }}
-        >
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '8px clamp(20px, 5vw, 24px) 0' }}>
+        {/* stacks below lg: form first, info + 3D shape after */}
+        <div className="flex flex-col lg:flex-row lg:items-start gap-10 lg:gap-[72px]">
           {/* Left — Contact Info (node fVH7O) */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            style={{ width: 420, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 28 }}
+            className="w-full lg:w-[420px] order-2 lg:order-1"
+            style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 28 }}
           >
             {INFO.map(({ icon: Icon, label, value, href }) => {
               const inner = (
@@ -124,9 +121,9 @@ export default function ContactForm() {
 
             {/* 3D Contact Shape */}
             <div
+              className="h-[240px] lg:h-[300px]"
               style={{
                 width: '100%',
-                height: 300,
                 borderRadius: 18,
                 border: '1px solid var(--border-subtle)',
                 overflow: 'hidden',
@@ -143,10 +140,11 @@ export default function ContactForm() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            className="w-full order-1 lg:order-2"
             style={{
               flex: 1,
               minWidth: 0,
-              padding: '36px 36px 40px',
+              padding: 'clamp(20px, 5vw, 36px) clamp(20px, 5vw, 36px) clamp(24px, 6vw, 40px)',
               borderRadius: 18,
               background: 'var(--featured-card)',
               border: '1px solid var(--border-subtle)',
@@ -190,10 +188,9 @@ export default function ContactForm() {
                     setForm({ name: '', phone: '', service: '', budget: '', message: '' })
                     setSent(false)
                   }}
-                  className="font-body font-medium"
+                  className="font-body font-medium px-[22px] py-3.5 lg:py-[11px]"
                   style={{
                     marginTop: 8,
-                    padding: '11px 22px',
                     borderRadius: 10,
                     background: 'var(--pill-bg)',
                     border: '1px solid var(--border)',
@@ -214,12 +211,12 @@ export default function ContactForm() {
                   {t('Start your project')}
                 </h2>
 
-                {/* Name Row */}
-                <div style={{ display: 'flex', gap: 16 }}>
+                {/* Name Row — single column on mobile */}
+                <div className="flex flex-col md:flex-row" style={{ gap: 16 }}>
                   <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
                     <label style={fieldLabel}>{t('YOUR NAME')}</label>
                     <input
-                      className="cf-field"
+                      className={fieldClass}
                       style={{ ...fieldBox, borderColor: errors.name ? 'rgba(255,120,120,0.6)' : 'var(--border)' }}
                       placeholder="John Smith"
                       value={form.name}
@@ -230,7 +227,7 @@ export default function ContactForm() {
                   <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
                     <label style={fieldLabel}>{t('PHONE OR TELEGRAM')}</label>
                     <input
-                      className="cf-field"
+                      className={fieldClass}
                       style={{ ...fieldBox, borderColor: errors.phone ? 'rgba(255,120,120,0.6)' : 'var(--border)' }}
                       placeholder="+998 __ ___ __ __"
                       value={form.phone}
@@ -262,7 +259,7 @@ export default function ContactForm() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   <label style={fieldLabel}>{t('ABOUT YOUR PROJECT')}</label>
                   <textarea
-                    className="cf-field"
+                    className={fieldClass}
                     style={{
                       ...fieldBox,
                       height: 110,
@@ -366,13 +363,13 @@ function SelectField({
           onClick={() => setOpen((o) => !o)}
           aria-haspopup="listbox"
           aria-expanded={open}
+          className={fieldClass}
           style={{
             ...fieldBox,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: 12,
-            paddingRight: 16,
             cursor: 'pointer',
             textAlign: 'left',
             color: value ? 'var(--text-primary)' : 'var(--text-tertiary)',
@@ -437,17 +434,16 @@ function SelectField({
                   onMouseLeave={(e) => {
                     if (!selected) e.currentTarget.style.background = 'transparent'
                   }}
+                  className="px-3.5 py-[13px] lg:py-[11px] text-[15px] lg:text-[14px]"
                   style={{
                     width: '100%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     gap: 10,
-                    padding: '11px 14px',
                     borderRadius: 8,
                     border: 'none',
                     cursor: 'pointer',
-                    fontSize: 14,
                     fontFamily: 'var(--font-inter)',
                     textAlign: 'left',
                     color: selected ? '#ffffff' : optText,

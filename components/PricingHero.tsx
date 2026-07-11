@@ -1,6 +1,7 @@
 'use client'
 
 import { useLang } from './LanguageProvider'
+import { BlurIn } from './ui/blur-in'
 
 export default function PricingHero() {
   const { t } = useLang()
@@ -26,7 +27,7 @@ export default function PricingHero() {
           position: 'relative',
           maxWidth: 1200,
           margin: '0 auto',
-          padding: '80px 24px 56px',
+          padding: 'clamp(56px, 10vw, 80px) 24px clamp(40px, 7vw, 56px)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -37,12 +38,13 @@ export default function PricingHero() {
         <span className="font-mono" style={{ fontSize: 12, letterSpacing: 1.5, color: '#4A6FA5' }}>
           {t('PRICING')}
         </span>
-        <h1
+        <BlurIn
           className="font-display"
-          style={{ fontSize: 64, fontWeight: 600, letterSpacing: -2.4, lineHeight: 1.05, color: 'var(--text-primary)', margin: 0 }}
+          style={{ fontSize: 'clamp(36px, 9vw, 64px)', fontWeight: 600, letterSpacing: '-0.0375em', lineHeight: 1.05, color: 'var(--text-primary)', margin: 0 }}
+          duration={0.9}
         >
           {t('Invest in what ships.')}
-        </h1>
+        </BlurIn>
         <p
           className="font-body"
           style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: 560, margin: 0 }}

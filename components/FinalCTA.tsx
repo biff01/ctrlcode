@@ -11,7 +11,7 @@ export default function FinalCTA() {
     <section
       style={{
         background: 'var(--cta-bg)',
-        padding: '120px 0 140px',
+        padding: 'clamp(72px, 12vw, 120px) 0 clamp(84px, 14vw, 140px)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -22,6 +22,7 @@ export default function FinalCTA() {
       <div className="book-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, #040404 0%, #111217 100%)', opacity: 0.92, pointerEvents: 'none' }} />
 
       <motion.div
+        className="flex-col items-start lg:flex-row lg:items-center"
         initial={{ opacity: 0, y: 36 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -32,18 +33,17 @@ export default function FinalCTA() {
           position: 'relative',
           zIndex: 10,
           display: 'flex',
-          alignItems: 'center',
           justifyContent: 'center',
           flexWrap: 'wrap',
-          gap: 60,
-          padding: '0 48px',
+          gap: 'clamp(40px, 6vw, 60px)',
+          padding: '0 clamp(20px, 5vw, 48px)',
         }}
       >
         {/* Left — headline + subtitle */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1, minWidth: 0 }}>
+        <div className="max-lg:w-full" style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1, minWidth: 0 }}>
           <h2
             className="font-display font-semibold"
-            style={{ fontSize: 60, letterSpacing: -2.2, lineHeight: 1.1, color: 'var(--text-primary)' }}
+            style={{ fontSize: 'clamp(34px, 8vw, 60px)', letterSpacing: 'clamp(-2.2px, -0.29vw, -1.1px)', lineHeight: 1.1, color: 'var(--text-primary)' }}
           >
             {t('Have an idea?')}<br />{t("Let's ship it together.")}
           </h2>
@@ -56,11 +56,11 @@ export default function FinalCTA() {
         </div>
 
         {/* Right — buttons + contact */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 20, flexShrink: 0 }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+        <div className="max-lg:w-full" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 20, flexShrink: 0 }}>
+          <div className="max-md:w-full max-md:flex-col" style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
             <Link
               href="/contact"
-              className="flex items-center gap-2 font-body font-semibold"
+              className="flex items-center max-md:justify-center gap-2 font-body font-semibold"
               style={{
                 background: 'var(--btn-primary-bg)',
                 color: 'var(--btn-primary-color)',
@@ -79,7 +79,7 @@ export default function FinalCTA() {
               href="https://t.me/ctrlcode"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 font-body font-medium"
+              className="flex items-center max-md:justify-center gap-2 font-body font-medium"
               style={{
                 background: 'var(--btn-secondary-bg)',
                 border: '1px solid var(--border-subtle)',
@@ -97,7 +97,7 @@ export default function FinalCTA() {
           </div>
           <span
             className="font-mono font-normal"
-            style={{ fontSize: 20, letterSpacing: 0.5, color: 'var(--text-primary)' }}
+            style={{ fontSize: 'clamp(15px, 4vw, 20px)', letterSpacing: 0.5, color: 'var(--text-primary)' }}
           >
             +998 77 000 78 78 · info@ctrlcode.uz
           </span>

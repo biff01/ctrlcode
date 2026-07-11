@@ -120,7 +120,7 @@ function LivePill({ href, onShowcase }: { href?: string; onShowcase?: () => void
 
   if (onShowcase) {
     return (
-      <button onClick={onShowcase} className="font-body" style={pillStyle}>
+      <button onClick={onShowcase} className="font-body min-h-[44px] lg:min-h-0" style={pillStyle}>
         {t('View Live Product')}
         <Maximize2 style={{ width: 12, height: 12 }} />
       </button>
@@ -130,7 +130,7 @@ function LivePill({ href, onShowcase }: { href?: string; onShowcase?: () => void
   if (!href) return null
 
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="font-body" style={pillStyle}>
+    <a href={href} target="_blank" rel="noopener noreferrer" className="font-body min-h-[44px] lg:min-h-0" style={pillStyle}>
       {t('View Live Product')}
       <ExternalLink style={{ width: 12, height: 12 }} />
     </a>
@@ -138,16 +138,14 @@ function LivePill({ href, onShowcase }: { href?: string; onShowcase?: () => void
 }
 
 /** Opens the internal case-study page. */
-function DetailsButton({ slug, name, size }: { slug: string; name: string; size: number }) {
+function DetailsButton({ slug, name }: { slug: string; name: string }) {
   const { t } = useLang()
   return (
     <Link
       href={`/portfolio/${slug}`}
       aria-label={`${t('View case study')}: ${t(name)}`}
-      className="flex items-center justify-center flex-shrink-0"
+      className="flex items-center justify-center flex-shrink-0 w-[52px] h-[52px] lg:w-[68px] lg:h-[68px]"
       style={{
-        width: size,
-        height: size,
         borderRadius: 14,
         background: 'var(--pill-bg)',
         border: '1px solid var(--card-border)',
@@ -160,7 +158,7 @@ function DetailsButton({ slug, name, size }: { slug: string; name: string; size:
   )
 }
 
-function Card({ card, imgHeight, onShowcase }: { card: ProjectCard; imgHeight: number; onShowcase?: () => void }) {
+function Card({ card, imgClassName, onShowcase }: { card: ProjectCard; imgClassName: string; onShowcase?: () => void }) {
   const { t } = useLang()
   return (
     <motion.div
@@ -174,20 +172,20 @@ function Card({ card, imgHeight, onShowcase }: { card: ProjectCard; imgHeight: n
         height: '100%',
       }}
     >
-      <div style={{ width: '100%', height: imgHeight, position: 'relative', overflow: 'hidden', borderRadius: 10 }}>
+      <div className={imgClassName} style={{ width: '100%', position: 'relative', overflow: 'hidden', borderRadius: 10 }}>
         <Image
           src={card.image}
           alt={card.name}
           fill
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 400px"
           style={{ objectFit: 'cover' }}
         />
       </div>
       <div
-        className="flex items-end justify-between"
-        style={{ padding: 28, flex: 1 }}
+        className="flex items-end justify-between gap-3 p-5 md:p-6 lg:gap-0 lg:p-7"
+        style={{ flex: 1 }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minWidth: 0 }}>
           <span
             className="font-body"
             style={{ fontSize: 12, color: 'var(--text-tertiary)' }}
@@ -203,7 +201,7 @@ function Card({ card, imgHeight, onShowcase }: { card: ProjectCard; imgHeight: n
           <DatePill date={card.date} />
           <LivePill href={card.liveUrl} onShowcase={onShowcase} />
         </div>
-        <DetailsButton slug={card.slug} name={card.name} size={68} />
+        <DetailsButton slug={card.slug} name={card.name} />
       </div>
     </motion.div>
   )
@@ -223,20 +221,20 @@ function FeaturedCard({ card, onShowcase }: { card: ProjectCard; onShowcase?: ()
         height: '100%',
       }}
     >
-      <div style={{ width: '100%', height: 460, position: 'relative', overflow: 'hidden', borderRadius: 10 }}>
+      <div className="aspect-[4/3] md:aspect-[16/9] lg:aspect-auto lg:h-[460px]" style={{ width: '100%', position: 'relative', overflow: 'hidden', borderRadius: 10 }}>
         <Image
           src={card.image}
           alt={card.name}
           fill
-          sizes="(max-width: 768px) 100vw, 60vw"
+          sizes="(max-width: 1023px) 100vw, 780px"
           style={{ objectFit: 'cover' }}
         />
       </div>
       <div
-        className="flex items-end justify-between"
-        style={{ padding: 28, flex: 1 }}
+        className="flex items-end justify-between gap-3 p-5 md:p-6 lg:gap-0 lg:p-7"
+        style={{ flex: 1 }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minWidth: 0 }}>
           <span
             className="font-body"
             style={{ fontSize: 12, color: 'var(--text-tertiary)' }}
@@ -245,14 +243,14 @@ function FeaturedCard({ card, onShowcase }: { card: ProjectCard; onShowcase?: ()
           </span>
           <span
             className="font-display font-bold"
-            style={{ fontSize: 38, letterSpacing: -1.2, lineHeight: 1.1, color: 'var(--text-primary)' }}
+            style={{ fontSize: 'clamp(26px, 5.5vw, 38px)', letterSpacing: 'clamp(-1.2px, -0.12vw, -0.6px)', lineHeight: 1.1, color: 'var(--text-primary)' }}
           >
             {t(card.name)}
           </span>
           <DatePill date={card.date} />
           <LivePill href={card.liveUrl} onShowcase={onShowcase} />
         </div>
-        <DetailsButton slug={card.slug} name={card.name} size={68} />
+        <DetailsButton slug={card.slug} name={card.name} />
       </div>
     </motion.div>
   )
@@ -260,7 +258,7 @@ function FeaturedCard({ card, onShowcase }: { card: ProjectCard; onShowcase?: ()
 
 export default function Work() {
   const featuredRef = useRef<HTMLDivElement>(null)
-  const featuredVisible = useInView(featuredRef, { once: true, margin: '-80px' })
+  const featuredVisible = useInView(featuredRef, { once: true, margin: '-40px' })
   const { t } = useLang()
   const [openSlug, setOpenSlug] = useState<string | null>(null)
 
@@ -272,7 +270,7 @@ export default function Work() {
 
   return (
     <section
-      style={{ background: 'var(--bg)', padding: '96px 0 110px', position: 'relative', overflow: 'hidden' }}
+      style={{ background: 'var(--bg)', padding: 'clamp(56px, 10vw, 96px) 0 clamp(64px, 11vw, 110px)', position: 'relative', overflow: 'hidden' }}
     >
       {/* Section glow */}
       <div
@@ -288,14 +286,15 @@ export default function Work() {
         }}
       />
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="px-5 md:px-8 lg:px-0" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28 }}
+          className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-0"
+          style={{ marginBottom: 28 }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <span
@@ -306,7 +305,7 @@ export default function Work() {
             </span>
             <h2
               className="font-display font-bold"
-              style={{ fontSize: 52, letterSpacing: -2.2, lineHeight: 1.08, color: 'var(--text-primary)' }}
+              style={{ fontSize: 'clamp(28px, 6vw, 52px)', letterSpacing: 'clamp(-2.2px, -0.22vw, -1.1px)', lineHeight: 1.08, color: 'var(--text-primary)' }}
             >
               {t('Work that speaks for itself.')}
             </h2>
@@ -319,10 +318,10 @@ export default function Work() {
           </div>
           <Link
             href="/portfolio"
-            className="flex items-center font-body"
+            className="flex items-center justify-center w-full min-h-[44px] py-3 lg:w-auto lg:justify-start lg:min-h-0 lg:py-[11px] font-body"
             style={{
               gap: 10,
-              padding: '11px 22px',
+              paddingInline: 22,
               borderRadius: 8,
               background: 'var(--btn-secondary-bg)',
               border: '1px solid var(--border)',
@@ -338,17 +337,18 @@ export default function Work() {
         {/* Featured row */}
         <div
           ref={featuredRef}
-          style={{ display: 'flex', gap: 20, alignItems: 'stretch' }}
+          className="flex flex-col lg:flex-row lg:items-stretch"
+          style={{ gap: 20 }}
         >
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={featuredVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={{ flex: 1 }}
+            className="lg:flex-1"
           >
             <FeaturedCard card={FEATURED} onShowcase={showcaseHandler(FEATURED.slug)} />
           </motion.div>
-          <div style={{ width: 400, display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-col w-full lg:w-[400px]" style={{ gap: 20 }}>
             {SIDE_CARDS.map((card, i) => (
               <motion.div
                 key={card.name}
@@ -357,14 +357,14 @@ export default function Work() {
                 transition={{ duration: 0.7, delay: (i + 1) * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 style={{ flex: 1 }}
               >
-                <Card card={card} imgHeight={200} onShowcase={showcaseHandler(card.slug)} />
+                <Card card={card} imgClassName="aspect-[16/10] lg:aspect-auto lg:h-[200px]" onShowcase={showcaseHandler(card.slug)} />
               </motion.div>
             ))}
           </div>
         </div>
 
-        {/* Grid row */}
-        <div style={{ display: 'flex', gap: 20 }}>
+        {/* Grid row — 2-up on tablet, the last card spanning the full row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex" style={{ gap: 20 }}>
           {GRID_CARDS.map((card, i) => (
             <motion.div
               key={card.name}
@@ -372,9 +372,16 @@ export default function Work() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className={i === 2 ? 'md:col-span-2' : undefined}
               style={{ flex: 1 }}
             >
-              <Card card={card} imgHeight={240} onShowcase={showcaseHandler(card.slug)} />
+              <Card
+                card={card}
+                imgClassName={i === 2
+                  ? 'aspect-[16/10] md:aspect-[2/1] lg:aspect-auto lg:h-[240px]'
+                  : 'aspect-[16/10] lg:aspect-auto lg:h-[240px]'}
+                onShowcase={showcaseHandler(card.slug)}
+              />
             </motion.div>
           ))}
         </div>

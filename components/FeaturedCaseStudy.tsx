@@ -40,13 +40,10 @@ export default function FeaturedCaseStudy() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-16 p-6 md:p-10 lg:p-14"
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 64,
             background: 'var(--featured-card)',
             borderRadius: 20,
-            padding: '56px 56px',
             border: '1px solid var(--featured-border)',
             overflow: 'hidden',
           }}
@@ -77,7 +74,7 @@ export default function FeaturedCaseStudy() {
             {/* Headline */}
             <h2
               className="font-display font-bold"
-              style={{ fontSize: 38, letterSpacing: -1.4, lineHeight: 1.15, color: 'var(--text-primary)' }}
+              style={{ fontSize: 'clamp(28px, 5.5vw, 38px)', letterSpacing: 'clamp(-1.4px, -0.14vw, -0.7px)', lineHeight: 1.15, color: 'var(--text-primary)' }}
             >
               {t('From idea to $1M ARR')}<br />{t('in 8 months.')}
             </h2>
@@ -132,10 +129,8 @@ export default function FeaturedCaseStudy() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full aspect-[4/3] md:aspect-[16/9] lg:w-[480px] lg:aspect-auto lg:h-[380px] shrink-0"
             style={{
-              flexShrink: 0,
-              width: 480,
-              height: 380,
               position: 'relative',
               borderRadius: 14,
               overflow: 'hidden',
@@ -146,7 +141,7 @@ export default function FeaturedCaseStudy() {
               src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=960&q=80"
               alt="NuroMedical analytics dashboard"
               fill
-              sizes="480px"
+              sizes="(max-width: 1023px) 100vw, 480px"
               style={{ objectFit: 'cover' }}
             />
           </motion.div>

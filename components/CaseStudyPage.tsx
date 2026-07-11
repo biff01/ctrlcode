@@ -96,8 +96,8 @@ function HeroSection({ project, dark, t }: SectionProps) {
     textDecoration: 'none', letterSpacing: -0.2, border: 'none', cursor: 'pointer',
   }
   return (
-    <section style={{ background: c.bg1, padding: '72px 0 96px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 120px', display: 'flex', alignItems: 'center', gap: 80 }}>
+    <section style={{ background: c.bg1, padding: 'clamp(48px, 8vw, 72px) 0 clamp(56px, 10vw, 96px)' }}>
+      <div className="flex flex-col lg:flex-row lg:items-center" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 5vw, 120px)', gap: 'clamp(40px, 8vw, 80px)' }}>
         {/* Left */}
         <motion.div
           initial="hidden"
@@ -129,7 +129,7 @@ function HeroSection({ project, dark, t }: SectionProps) {
           {/* Title */}
           <motion.h1
             variants={fadeUp}
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 72, letterSpacing: -3, lineHeight: 1.0, color: c.text, margin: 0 }}
+            style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(40px, 10vw, 72px)', letterSpacing: 'clamp(-3px, -0.3vw, -1.5px)', lineHeight: 1.0, color: c.text, margin: 0 }}
           >
             {project.name}.
           </motion.h1>
@@ -143,12 +143,13 @@ function HeroSection({ project, dark, t }: SectionProps) {
           </motion.p>
 
           {/* Buttons */}
-          <motion.div variants={fadeUp} style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <motion.div variants={fadeUp} className="flex flex-col md:flex-row" style={{ gap: 12, flexWrap: 'wrap' }}>
             {project.liveUrl && (
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="max-md:w-full max-md:justify-center max-md:min-h-[48px]"
                 style={liveBtnStyle}
               >
                 {t('View Live Product')} <ExternalLink size={14} />
@@ -156,6 +157,7 @@ function HeroSection({ project, dark, t }: SectionProps) {
             )}
             <a
               href="#overview"
+              className="max-md:w-full max-md:justify-center max-md:min-h-[48px]"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '12px 22px', borderRadius: 10,
@@ -171,7 +173,8 @@ function HeroSection({ project, dark, t }: SectionProps) {
           {/* Stats */}
           <motion.div
             variants={fadeUp}
-            style={{ display: 'flex', gap: 40, paddingTop: 8, borderTop: `1px solid ${c.divider}` }}
+            className="grid grid-cols-2 gap-x-8 gap-y-5 md:flex md:gap-x-10"
+            style={{ paddingTop: 8, borderTop: `1px solid ${c.divider}` }}
           >
             {project.stats.map((s) => (
               <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -191,8 +194,9 @@ function HeroSection({ project, dark, t }: SectionProps) {
           initial={{ opacity: 0, scale: 0.97, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full lg:w-[560px]"
           style={{
-            width: 560, flexShrink: 0, borderRadius: 16, overflow: 'hidden',
+            flexShrink: 0, borderRadius: 16, overflow: 'hidden',
             border: `1px solid ${c.heroBorder}`, boxShadow: c.heroShadow,
             position: 'relative', aspectRatio: '16/11',
           }}
@@ -202,7 +206,7 @@ function HeroSection({ project, dark, t }: SectionProps) {
               <div key={col} style={{ width: 10, height: 10, borderRadius: 999, background: col }} />
             ))}
           </div>
-          <Image src={project.heroImage} alt={project.name} fill sizes="560px" style={{ objectFit: 'cover', paddingTop: 32 }} />
+          <Image src={project.heroImage} alt={project.name} fill sizes="(max-width: 767px) 100vw, (max-width: 1023px) 90vw, 560px" style={{ objectFit: 'cover', paddingTop: 32 }} />
         </motion.div>
       </div>
     </section>
@@ -218,9 +222,16 @@ function OverviewSection({ project, dark, t }: SectionProps) {
     { label: 'Type', value: project.type },
     { label: 'Timeline', value: project.timeline },
   ]
+  /* mobile: 2x2 grid — dividers only where a cell has a left neighbour */
+  const metaCellClasses = [
+    'pr-4 md:pr-8',
+    'border-l pl-4 md:pl-8 md:pr-8',
+    'pr-4 md:border-l md:pl-8 md:pr-8',
+    'border-l pl-4 md:pl-8 md:pr-8',
+  ]
   return (
-    <section id="overview" style={{ background: c.bg2, padding: '96px 0' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 120px', display: 'flex', flexDirection: 'column', gap: 56 }}>
+    <section id="overview" style={{ background: c.bg2, padding: 'clamp(56px, 10vw, 96px) 0' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 5vw, 120px)', display: 'flex', flexDirection: 'column', gap: 'clamp(40px, 5.5vw, 56px)' }}>
         {/* Header */}
         <motion.div
           initial="hidden" whileInView="show" viewport={{ once: true }}
@@ -230,7 +241,7 @@ function OverviewSection({ project, dark, t }: SectionProps) {
           <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
             {t('Project Overview')}
           </motion.span>
-          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, letterSpacing: -2.2, lineHeight: 1.05, color: c.text, margin: 0 }}>
+          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(28px, 6vw, 52px)', letterSpacing: 'clamp(-2.2px, -0.22vw, -1.1px)', lineHeight: 1.05, color: c.text, margin: 0 }}>
             {t('What we built.')}
           </motion.h2>
         </motion.div>
@@ -239,15 +250,16 @@ function OverviewSection({ project, dark, t }: SectionProps) {
         <motion.div
           initial="hidden" whileInView="show" viewport={{ once: true }}
           variants={{ show: { transition: { staggerChildren: 0.06 } } }}
-          style={{ display: 'flex', width: '100%' }}
+          className="grid grid-cols-2 gap-y-8 md:flex"
+          style={{ width: '100%' }}
         >
           {meta.map((m, i) => (
             <motion.div
               key={m.label} variants={fadeUp}
+              className={metaCellClasses[i] ?? ''}
               style={{
                 flex: 1, display: 'flex', flexDirection: 'column', gap: 10,
-                padding: i === 0 ? '0 32px 0 0' : '0 32px',
-                borderLeft: i === 0 ? 'none' : `1px solid ${c.borderStrong}`,
+                borderLeftColor: c.borderStrong,
               }}
             >
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: 1.5, color: c.textLabel, textTransform: 'uppercase' }}>
@@ -261,7 +273,7 @@ function OverviewSection({ project, dark, t }: SectionProps) {
         </motion.div>
 
         {/* Body: paragraph + services */}
-        <div style={{ display: 'flex', gap: 56, alignItems: 'flex-start' }}>
+        <div className="flex flex-col md:flex-row md:items-start" style={{ gap: 'clamp(32px, 5.5vw, 56px)' }}>
           <motion.p
             initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}
             style={{
@@ -275,7 +287,8 @@ function OverviewSection({ project, dark, t }: SectionProps) {
           <motion.div
             initial="hidden" whileInView="show" viewport={{ once: true }}
             variants={{ show: { transition: { staggerChildren: 0.06 } } }}
-            style={{ width: 240, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 14 }}
+            className="w-full md:w-[240px]"
+            style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 14 }}
           >
             <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: 1.5, color: c.textLabel, textTransform: 'uppercase' }}>
               {t('Services Provided')}
@@ -300,8 +313,8 @@ function OverviewSection({ project, dark, t }: SectionProps) {
 function ChallengeSection({ project, dark, t }: SectionProps) {
   const c = themeColors(dark)
   return (
-    <section style={{ background: c.bg1, padding: '96px 0' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 120px', display: 'flex', flexDirection: 'column', gap: 56 }}>
+    <section style={{ background: c.bg1, padding: 'clamp(56px, 10vw, 96px) 0' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 5vw, 120px)', display: 'flex', flexDirection: 'column', gap: 'clamp(40px, 5.5vw, 56px)' }}>
         <motion.div
           initial="hidden" whileInView="show" viewport={{ once: true }}
           variants={{ show: { transition: { staggerChildren: 0.08 } } }}
@@ -310,7 +323,7 @@ function ChallengeSection({ project, dark, t }: SectionProps) {
           <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
             {t('The Problem')}
           </motion.span>
-          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, letterSpacing: -2.5, lineHeight: 1.05, color: c.text, margin: 0, maxWidth: 540 }}>
+          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(28px, 6vw, 52px)', letterSpacing: 'clamp(-2.5px, -0.25vw, -1.25px)', lineHeight: 1.05, color: c.text, margin: 0, maxWidth: 540 }}>
             {t('What needed to change.')}
           </motion.h2>
           <motion.p variants={fadeUp} style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: c.textMuted, margin: 0, maxWidth: 520 }}>
@@ -318,7 +331,7 @@ function ChallengeSection({ project, dark, t }: SectionProps) {
           </motion.p>
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ gap: 16 }}>
           {project.challenges.map((ch, i) => {
             const ChallengeIcon = CHALLENGE_ICONS[ch.icon] ?? Gauge
             return (
@@ -354,9 +367,9 @@ function ChallengeSection({ project, dark, t }: SectionProps) {
 function ProcessSection({ project, dark, t }: SectionProps) {
   const c = themeColors(dark)
   return (
-    <section style={{ background: c.bg1, padding: '96px 0' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 120px' }}>
-        <div style={{ display: 'flex', gap: 80, marginBottom: 56 }}>
+    <section style={{ background: c.bg1, padding: 'clamp(56px, 10vw, 96px) 0' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 5vw, 120px)' }}>
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-20" style={{ marginBottom: 'clamp(40px, 5.5vw, 56px)' }}>
           <motion.div
             initial="hidden" whileInView="show" viewport={{ once: true }}
             variants={{ show: { transition: { staggerChildren: 0.08 } } }}
@@ -365,13 +378,14 @@ function ProcessSection({ project, dark, t }: SectionProps) {
             <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
               {t('Our Process')}
             </motion.span>
-            <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, letterSpacing: -2.5, lineHeight: 1.05, color: c.text, margin: 0 }}>
+            <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(28px, 6vw, 52px)', letterSpacing: 'clamp(-2.5px, -0.25vw, -1.25px)', lineHeight: 1.05, color: c.text, margin: 0 }}>
               {project.processTitle}
             </motion.h2>
           </motion.div>
           <motion.p
             initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}
-            style={{ flex: 1, fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: c.textMuted, margin: 0, alignSelf: 'flex-end' }}
+            className="lg:self-end"
+            style={{ flex: 1, fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: c.textMuted, margin: 0 }}
           >
             {project.processSubtitle}
           </motion.p>
@@ -382,18 +396,19 @@ function ProcessSection({ project, dark, t }: SectionProps) {
             <motion.div
               key={step.number}
               initial="hidden" whileInView="show" viewport={{ once: true }} custom={i} variants={fadeUp}
-              style={{ display: 'flex', alignItems: 'center', gap: 48, padding: '24px 0', borderBottom: `1px solid ${c.borderSubtle}` }}
+              className="flex flex-wrap gap-x-4 gap-y-2 md:flex-nowrap md:gap-x-12"
+              style={{ alignItems: 'center', padding: '24px 0', borderBottom: `1px solid ${c.borderSubtle}` }}
             >
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: 1, color: c.textFaint, width: 28, flexShrink: 0 }}>
                 {step.number}
               </span>
-              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 18, color: c.text, width: 200, flexShrink: 0 }}>
+              <span className="flex-1 md:flex-none md:w-[200px]" style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 18, color: c.text }}>
                 {step.title}
               </span>
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.6, color: c.textMuted, flex: 1 }}>
+              <span className="w-full pl-11 md:w-auto md:flex-1 md:pl-0" style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.6, color: c.textMuted }}>
                 {step.description}
               </span>
-              <ArrowUpRight size={14} color={c.arrowVeryFaint} style={{ flexShrink: 0 }} />
+              <ArrowUpRight size={14} color={c.arrowVeryFaint} className="max-md:hidden" style={{ flexShrink: 0 }} />
             </motion.div>
           ))}
         </div>
@@ -409,8 +424,8 @@ function MockupsSection({ project, dark, t }: SectionProps) {
   const rest = project.mockups.filter((m) => !m.large)
 
   return (
-    <section style={{ background: c.bg2, padding: '96px 0' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 120px', display: 'flex', flexDirection: 'column', gap: 40 }}>
+    <section style={{ background: c.bg2, padding: 'clamp(56px, 10vw, 96px) 0' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 5vw, 120px)', display: 'flex', flexDirection: 'column', gap: 'clamp(28px, 4vw, 40px)' }}>
         <motion.div
           initial="hidden" whileInView="show" viewport={{ once: true }}
           variants={{ show: { transition: { staggerChildren: 0.08 } } }}
@@ -419,7 +434,7 @@ function MockupsSection({ project, dark, t }: SectionProps) {
           <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
             {t('Design Preview')}
           </motion.span>
-          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, letterSpacing: -2.5, lineHeight: 1.05, color: c.text, margin: 0 }}>
+          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(28px, 6vw, 52px)', letterSpacing: 'clamp(-2.5px, -0.25vw, -1.25px)', lineHeight: 1.05, color: c.text, margin: 0 }}>
             {project.mockupsTitle}
           </motion.h2>
         </motion.div>
@@ -427,26 +442,28 @@ function MockupsSection({ project, dark, t }: SectionProps) {
         <motion.div
           initial="hidden" whileInView="show" viewport={{ once: true }}
           variants={{ show: { transition: { staggerChildren: 0.1 } } }}
-          style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}
+          className="flex flex-col lg:flex-row"
+          style={{ gap: 16, alignItems: 'stretch' }}
         >
           {large && (
-            <motion.div variants={fadeUp} style={{ flex: 1, position: 'relative', borderRadius: 16, overflow: 'hidden', border: `1px solid ${c.border}`, minHeight: 400 }}>
+            <motion.div variants={fadeUp} className="aspect-[4/3] lg:aspect-auto lg:flex-1 lg:min-h-[400px]" style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', border: `1px solid ${c.border}` }}>
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 32, background: c.chrome, display: 'flex', alignItems: 'center', gap: 6, padding: '0 14px', zIndex: 2 }}>
                 {['#FF5F57', '#FEBC2E', '#28C840'].map((col) => (
                   <div key={col} style={{ width: 8, height: 8, borderRadius: 999, background: col }} />
                 ))}
               </div>
-              <Image src={large.src} alt="Main mockup" fill sizes="65vw" style={{ objectFit: 'cover', paddingTop: 32 }} />
+              <Image src={large.src} alt="Main mockup" fill sizes="(max-width: 1023px) 100vw, 65vw" style={{ objectFit: 'cover', paddingTop: 32 }} />
             </motion.div>
           )}
           {rest.length > 0 && (
-            <div style={{ width: 280, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="grid grid-cols-2 lg:flex lg:flex-col lg:w-[280px]" style={{ gap: 16 }}>
               {rest.map((m) => (
                 <motion.div
                   key={m.src} variants={fadeUp}
+                  className="aspect-square lg:aspect-auto"
                   style={{ flex: 1, position: 'relative', borderRadius: 12, overflow: 'hidden', border: `1px solid ${c.border}` }}
                 >
-                  <Image src={m.src} alt={m.label || 'Mockup'} fill sizes="280px" style={{ objectFit: 'cover' }} />
+                  <Image src={m.src} alt={m.label || 'Mockup'} fill sizes="(max-width: 1023px) 50vw, 280px" style={{ objectFit: 'cover' }} />
                   {m.label && (
                     <div style={{ position: 'absolute', bottom: 12, left: 12, background: dark ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.85)', backdropFilter: 'blur(8px)', padding: '4px 10px', borderRadius: 6, border: `1px solid ${c.border}` }}>
                       <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: dark ? 'rgba(255,255,255,0.7)' : 'rgba(13,27,75,0.7)' }}>{m.label}</span>
@@ -467,20 +484,20 @@ function ProjectNav({ project, dark, t }: SectionProps) {
   const c = themeColors(dark)
   return (
     <section style={{ background: c.bg1, borderTop: `1px solid ${c.borderStrong}`, borderBottom: `1px solid ${c.borderStrong}`, padding: '32px 0' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 120px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="max-lg:gap-2" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 5vw, 120px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {project.prevProject ? (
-          <Link href={`/portfolio/${project.prevProject.slug}`} style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: c.navLink, fontFamily: 'var(--font-body)', fontSize: 13 }}>
-            <ArrowLeft size={14} />
-            {project.prevProject.name}
+          <Link href={`/portfolio/${project.prevProject.slug}`} className="max-lg:flex-1 max-lg:min-w-0 max-lg:min-h-[44px]" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: c.navLink, fontFamily: 'var(--font-body)', fontSize: 13 }}>
+            <ArrowLeft size={14} style={{ flexShrink: 0 }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{project.prevProject.name}</span>
           </Link>
         ) : <div />}
-        <Link href="/portfolio" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: c.navCenter, fontFamily: 'var(--font-body)', fontSize: 12 }}>
+        <Link href="/portfolio" className="max-lg:shrink-0 max-lg:min-h-[44px]" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: c.navCenter, fontFamily: 'var(--font-body)', fontSize: 12 }}>
           {t('All Projects')}
         </Link>
         {project.nextProject ? (
-          <Link href={`/portfolio/${project.nextProject.slug}`} style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: c.navLink, fontFamily: 'var(--font-body)', fontSize: 13 }}>
-            {project.nextProject.name}
-            <ArrowRight size={14} />
+          <Link href={`/portfolio/${project.nextProject.slug}`} className="max-lg:flex-1 max-lg:min-w-0 max-lg:justify-end max-lg:min-h-[44px]" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: c.navLink, fontFamily: 'var(--font-body)', fontSize: 13 }}>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{project.nextProject.name}</span>
+            <ArrowRight size={14} style={{ flexShrink: 0 }} />
           </Link>
         ) : <div />}
       </div>
@@ -492,8 +509,8 @@ function ProjectNav({ project, dark, t }: SectionProps) {
 function CTASection({ dark, t }: { dark: boolean; t: (s: string) => string }) {
   const c = themeColors(dark)
   return (
-    <section style={{ background: c.bg1, padding: '96px 0' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 120px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 32 }}>
+    <section style={{ background: c.bg1, padding: 'clamp(56px, 10vw, 96px) 0' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 5vw, 120px)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 32 }}>
         <motion.div
           initial="hidden" whileInView="show" viewport={{ once: true }}
           variants={{ show: { transition: { staggerChildren: 0.1 } } }}
@@ -502,7 +519,7 @@ function CTASection({ dark, t }: { dark: boolean; t: (s: string) => string }) {
           <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
             {t('Start Your Project')}
           </motion.span>
-          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 56, letterSpacing: -2.5, lineHeight: 1.0, color: c.text, margin: 0, maxWidth: 520 }}>
+          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(30px, 7vw, 56px)', letterSpacing: 'clamp(-2.5px, -0.25vw, -1.25px)', lineHeight: 1.0, color: c.text, margin: 0, maxWidth: 520 }}>
             {t('Ready to build something great?')}
           </motion.h2>
           <motion.p variants={fadeUp} style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: c.textMuted, margin: 0, maxWidth: 380 }}>
@@ -512,16 +529,19 @@ function CTASection({ dark, t }: { dark: boolean; t: (s: string) => string }) {
 
         <motion.div
           initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}
-          style={{ display: 'flex', gap: 12 }}
+          className="flex flex-col md:flex-row w-full md:w-auto"
+          style={{ gap: 12 }}
         >
           <Link
             href="/contact"
+            className="max-md:w-full max-md:justify-center max-md:min-h-[48px]"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 10, background: c.btnPrimBg, color: c.btnPrimText, fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14, textDecoration: 'none' }}
           >
             {t('Get in touch')} <ArrowUpRight size={14} />
           </Link>
           <Link
             href="/portfolio"
+            className="max-md:w-full max-md:justify-center max-md:min-h-[48px]"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 10, background: c.btnSecBg, border: `1px solid ${c.btnSecBorder}`, color: c.btnSecText, fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}
           >
             {t('View all work')}

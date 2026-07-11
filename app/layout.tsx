@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
+import MotionProvider from "@/components/MotionProvider";
 import LanguageProvider from "@/components/LanguageProvider";
 import NavBar from "@/components/NavBar";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -37,11 +38,13 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <LanguageProvider>
-            <ScrollToTop />
-            <NavBar />
-            {children}
-          </LanguageProvider>
+          <MotionProvider>
+            <LanguageProvider>
+              <ScrollToTop />
+              <NavBar />
+              {children}
+            </LanguageProvider>
+          </MotionProvider>
         </ThemeProvider>
       </body>
     </html>
