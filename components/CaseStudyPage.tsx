@@ -33,6 +33,7 @@ import { motion } from 'framer-motion'
 import type { Project } from '@/lib/projects'
 import Footer from './Footer'
 import { useTheme } from './ThemeProvider'
+import { useLang } from './LanguageProvider'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -43,7 +44,7 @@ const fadeUp = {
   }),
 }
 
-interface SectionProps { project: Project; dark: boolean }
+interface SectionProps { project: Project; dark: boolean; t: (s: string) => string }
 
 function themeColors(dark: boolean) {
   return {
@@ -85,8 +86,15 @@ function themeColors(dark: boolean) {
 }
 
 /* ── Hero ───────────────────────────────────────────────────────── */
-function HeroSection({ project, dark }: SectionProps) {
+function HeroSection({ project, dark, t }: SectionProps) {
   const c = themeColors(dark)
+  const liveBtnStyle: React.CSSProperties = {
+    display: 'inline-flex', alignItems: 'center', gap: 8,
+    padding: '12px 22px', borderRadius: 10,
+    background: c.btnPrimBg, color: c.btnPrimText,
+    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14,
+    textDecoration: 'none', letterSpacing: -0.2, border: 'none', cursor: 'pointer',
+  }
   return (
     <section style={{ background: c.bg1, padding: '72px 0 96px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 120px', display: 'flex', alignItems: 'center', gap: 80 }}>
@@ -141,15 +149,9 @@ function HeroSection({ project, dark }: SectionProps) {
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '12px 22px', borderRadius: 10,
-                  background: c.btnPrimBg, color: c.btnPrimText,
-                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14,
-                  textDecoration: 'none', letterSpacing: -0.2,
-                }}
+                style={liveBtnStyle}
               >
-                View Live Product <ExternalLink size={14} />
+                {t('View Live Product')} <ExternalLink size={14} />
               </a>
             )}
             <a
@@ -162,7 +164,7 @@ function HeroSection({ project, dark }: SectionProps) {
                 textDecoration: 'none',
               }}
             >
-              Read the Overview
+              {t('Read the Overview')}
             </a>
           </motion.div>
 
@@ -208,61 +210,83 @@ function HeroSection({ project, dark }: SectionProps) {
 }
 
 /* ── Overview ────────────────────────────────────────────────────── */
-function OverviewSection({ project, dark }: SectionProps) {
+function OverviewSection({ project, dark, t }: SectionProps) {
   const c = themeColors(dark)
+  const meta = [
+    { label: 'Client', value: project.name },
+    { label: 'Industry', value: project.category },
+    { label: 'Type', value: project.type },
+    { label: 'Timeline', value: project.timeline },
+  ]
   return (
     <section id="overview" style={{ background: c.bg2, padding: '96px 0' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 120px', display: 'flex', flexDirection: 'column', gap: 56 }}>
+        {/* Header */}
         <motion.div
           initial="hidden" whileInView="show" viewport={{ once: true }}
           variants={{ show: { transition: { staggerChildren: 0.08 } } }}
-          style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
+          style={{ display: 'flex', flexDirection: 'column', gap: 14 }}
         >
           <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
-            What We Built
+            {t('Project Overview')}
           </motion.span>
-          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, letterSpacing: -2.5, lineHeight: 1.05, color: c.text, margin: 0 }}>
-            What we built.
+          <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, letterSpacing: -2.2, lineHeight: 1.05, color: c.text, margin: 0 }}>
+            {t('What we built.')}
           </motion.h2>
         </motion.div>
 
-        <div style={{ display: 'flex', gap: 80, alignItems: 'flex-start' }}>
-          <motion.div
-            initial="hidden" whileInView="show" viewport={{ once: true }}
-            variants={{ show: { transition: { staggerChildren: 0.08 } } }}
-            style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 36 }}
-          >
-            <motion.p variants={fadeUp} style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: c.textSub, margin: 0 }}>
-              {project.overviewDescription}
-            </motion.p>
-            <motion.div variants={fadeUp} style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              {[project.name, project.category, project.type, project.timeline].map((val, i) => (
-                <span
-                  key={i}
-                  style={{
-                    padding: '8px 16px', borderRadius: 8,
-                    background: c.pillBg, border: `1px solid ${c.pillBorder}`,
-                    fontFamily: 'var(--font-body)', fontSize: 13, color: c.pillText,
-                  }}
-                >
-                  {val}
-                </span>
-              ))}
+        {/* Meta row */}
+        <motion.div
+          initial="hidden" whileInView="show" viewport={{ once: true }}
+          variants={{ show: { transition: { staggerChildren: 0.06 } } }}
+          style={{ display: 'flex', width: '100%' }}
+        >
+          {meta.map((m, i) => (
+            <motion.div
+              key={m.label} variants={fadeUp}
+              style={{
+                flex: 1, display: 'flex', flexDirection: 'column', gap: 10,
+                padding: i === 0 ? '0 32px 0 0' : '0 32px',
+                borderLeft: i === 0 ? 'none' : `1px solid ${c.borderStrong}`,
+              }}
+            >
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: 1.5, color: c.textLabel, textTransform: 'uppercase' }}>
+                {t(m.label)}
+              </span>
+              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 20, letterSpacing: -0.5, color: c.text, lineHeight: 1.2 }}>
+                {m.value}
+              </span>
             </motion.div>
-          </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Body: paragraph + services */}
+        <div style={{ display: 'flex', gap: 56, alignItems: 'flex-start' }}>
+          <motion.p
+            initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}
+            style={{
+              flex: 1, fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.8, color: c.textSub, margin: 0,
+              display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden',
+            }}
+          >
+            {project.overviewDescription}
+          </motion.p>
 
           <motion.div
             initial="hidden" whileInView="show" viewport={{ once: true }}
             variants={{ show: { transition: { staggerChildren: 0.06 } } }}
-            style={{ width: 260, display: 'flex', flexDirection: 'column', gap: 0 }}
+            style={{ width: 240, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 14 }}
           >
+            <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: 1.5, color: c.textLabel, textTransform: 'uppercase' }}>
+              {t('Services Provided')}
+            </motion.span>
             {project.skills.map((skill, i) => (
               <motion.div
                 key={skill} custom={i} variants={fadeUp}
-                style={{ padding: '14px 0', borderBottom: `1px solid ${c.borderSubtle}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                style={{ display: 'flex', alignItems: 'center', gap: 12 }}
               >
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: c.textSub }}>{skill}</span>
-                <ArrowUpRight size={12} color={c.arrowFaint} />
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: c.textFaint, flexShrink: 0 }} />
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: c.textSub }}>{skill}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -273,7 +297,7 @@ function OverviewSection({ project, dark }: SectionProps) {
 }
 
 /* ── Challenge ───────────────────────────────────────────────────── */
-function ChallengeSection({ project, dark }: SectionProps) {
+function ChallengeSection({ project, dark, t }: SectionProps) {
   const c = themeColors(dark)
   return (
     <section style={{ background: c.bg1, padding: '96px 0' }}>
@@ -284,10 +308,10 @@ function ChallengeSection({ project, dark }: SectionProps) {
           style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
         >
           <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
-            The Problem
+            {t('The Problem')}
           </motion.span>
           <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, letterSpacing: -2.5, lineHeight: 1.05, color: c.text, margin: 0, maxWidth: 540 }}>
-            What needed to change.
+            {t('What needed to change.')}
           </motion.h2>
           <motion.p variants={fadeUp} style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: c.textMuted, margin: 0, maxWidth: 520 }}>
             {project.challengeIntro}
@@ -308,7 +332,7 @@ function ChallengeSection({ project, dark }: SectionProps) {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: 2, color: c.labelColor, textTransform: 'uppercase' }}>
-                  {String(i + 1).padStart(2, '0')} Problem
+                  {String(i + 1).padStart(2, '0')} {t('Problem')}
                 </span>
                 <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16, color: c.text, margin: 0, lineHeight: 1.35 }}>
                   {ch.title}
@@ -327,7 +351,7 @@ function ChallengeSection({ project, dark }: SectionProps) {
 }
 
 /* ── Process ─────────────────────────────────────────────────────── */
-function ProcessSection({ project, dark }: SectionProps) {
+function ProcessSection({ project, dark, t }: SectionProps) {
   const c = themeColors(dark)
   return (
     <section style={{ background: c.bg1, padding: '96px 0' }}>
@@ -339,7 +363,7 @@ function ProcessSection({ project, dark }: SectionProps) {
             style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}
           >
             <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
-              Our Process
+              {t('Our Process')}
             </motion.span>
             <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, letterSpacing: -2.5, lineHeight: 1.05, color: c.text, margin: 0 }}>
               {project.processTitle}
@@ -379,7 +403,7 @@ function ProcessSection({ project, dark }: SectionProps) {
 }
 
 /* ── Mockups ─────────────────────────────────────────────────────── */
-function MockupsSection({ project, dark }: SectionProps) {
+function MockupsSection({ project, dark, t }: SectionProps) {
   const c = themeColors(dark)
   const large = project.mockups.find((m) => m.large)
   const rest = project.mockups.filter((m) => !m.large)
@@ -393,7 +417,7 @@ function MockupsSection({ project, dark }: SectionProps) {
           style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
         >
           <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
-            Design Preview
+            {t('Design Preview')}
           </motion.span>
           <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, letterSpacing: -2.5, lineHeight: 1.05, color: c.text, margin: 0 }}>
             {project.mockupsTitle}
@@ -439,7 +463,7 @@ function MockupsSection({ project, dark }: SectionProps) {
 }
 
 /* ── Project Nav ─────────────────────────────────────────────────── */
-function ProjectNav({ project, dark }: SectionProps) {
+function ProjectNav({ project, dark, t }: SectionProps) {
   const c = themeColors(dark)
   return (
     <section style={{ background: c.bg1, borderTop: `1px solid ${c.borderStrong}`, borderBottom: `1px solid ${c.borderStrong}`, padding: '32px 0' }}>
@@ -451,7 +475,7 @@ function ProjectNav({ project, dark }: SectionProps) {
           </Link>
         ) : <div />}
         <Link href="/portfolio" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: c.navCenter, fontFamily: 'var(--font-body)', fontSize: 12 }}>
-          All Projects
+          {t('All Projects')}
         </Link>
         {project.nextProject ? (
           <Link href={`/portfolio/${project.nextProject.slug}`} style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: c.navLink, fontFamily: 'var(--font-body)', fontSize: 13 }}>
@@ -465,7 +489,7 @@ function ProjectNav({ project, dark }: SectionProps) {
 }
 
 /* ── CTA ─────────────────────────────────────────────────────────── */
-function CTASection({ dark }: { dark: boolean }) {
+function CTASection({ dark, t }: { dark: boolean; t: (s: string) => string }) {
   const c = themeColors(dark)
   return (
     <section style={{ background: c.bg1, padding: '96px 0' }}>
@@ -476,13 +500,13 @@ function CTASection({ dark }: { dark: boolean }) {
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}
         >
           <motion.span variants={fadeUp} style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: 3, color: c.textLabel, textTransform: 'uppercase' }}>
-            Start Your Project
+            {t('Start Your Project')}
           </motion.span>
           <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 56, letterSpacing: -2.5, lineHeight: 1.0, color: c.text, margin: 0, maxWidth: 520 }}>
-            Ready to build something great?
+            {t('Ready to build something great?')}
           </motion.h2>
           <motion.p variants={fadeUp} style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: c.textMuted, margin: 0, maxWidth: 380 }}>
-            {"Let's discuss your idea and turn it into a product your users will love."}
+            {t("Let's discuss your idea and turn it into a product your users will love.")}
           </motion.p>
         </motion.div>
 
@@ -494,13 +518,13 @@ function CTASection({ dark }: { dark: boolean }) {
             href="/contact"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 10, background: c.btnPrimBg, color: c.btnPrimText, fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14, textDecoration: 'none' }}
           >
-            Get in touch <ArrowUpRight size={14} />
+            {t('Get in touch')} <ArrowUpRight size={14} />
           </Link>
           <Link
             href="/portfolio"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 10, background: c.btnSecBg, border: `1px solid ${c.btnSecBorder}`, color: c.btnSecText, fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}
           >
-            View all work
+            {t('View all work')}
           </Link>
         </motion.div>
       </div>
@@ -511,17 +535,18 @@ function CTASection({ dark }: { dark: boolean }) {
 /* ── Root ────────────────────────────────────────────────────────── */
 export default function CaseStudyPage({ project }: { project: Project }) {
   const { theme } = useTheme()
+  const { t } = useLang()
   const dark = theme === 'dark'
 
   return (
     <main style={{ background: themeColors(dark).bg1, minHeight: '100vh' }}>
-      <HeroSection project={project} dark={dark} />
-      <OverviewSection project={project} dark={dark} />
-      <ChallengeSection project={project} dark={dark} />
-      <ProcessSection project={project} dark={dark} />
-      <MockupsSection project={project} dark={dark} />
-      <ProjectNav project={project} dark={dark} />
-      <CTASection dark={dark} />
+      <HeroSection project={project} dark={dark} t={t} />
+      <OverviewSection project={project} dark={dark} t={t} />
+      <ChallengeSection project={project} dark={dark} t={t} />
+      <ProcessSection project={project} dark={dark} t={t} />
+      <MockupsSection project={project} dark={dark} t={t} />
+      <ProjectNav project={project} dark={dark} t={t} />
+      <CTASection dark={dark} t={t} />
       <Footer />
     </main>
   )

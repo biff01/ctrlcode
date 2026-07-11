@@ -22,7 +22,7 @@ const FOOTER_HREF: Record<string, string> = {
   Overview: '/services',
   Portfolio: '/portfolio',
   Connectors: '/services',
-  Security: '/services',
+  Security: '/security',
   'Contact Us': '/contact',
 }
 

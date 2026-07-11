@@ -8,7 +8,7 @@ export default function ContactHero() {
     <section style={{ background: 'var(--bg)' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 24px 56px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <span className="font-mono" style={{ fontSize: 12, letterSpacing: 1.5, color: 'var(--text-muted)' }}>
+          <span className="font-mono" style={{ fontSize: 12, letterSpacing: 1.5, color: 'var(--text-secondary)' }}>
             {t('CONTACT')}
           </span>
           <h1

@@ -46,9 +46,8 @@ const NAV_LINKS = [
 const DARK_PILL_SHADOW = 'inset 0 3px 8px rgba(0,0,0,0.75), inset 0 1px 3px rgba(0,0,0,0.6)'
 const WHITE_INDICATOR_BG = 'linear-gradient(180deg, #ffffff 0%, #e8e8e8 100%)'
 const WHITE_INDICATOR_SHADOW = [
-  '0 6px 20px rgba(0,0,0,0.5)',
-  '0 3px 8px rgba(0,0,0,0.3)',
-  '0 1px 3px rgba(0,0,0,0.2)',
+  // Inset (inside-the-shape) shadows only. The outer drop shadows were removed
+  // because, with the thin dark frames, they bled past the pill/circle onto the page.
   'inset 0 0 18px rgba(0,0,0,0.18)',
   'inset 0 4px 10px rgba(0,0,0,0.12)',
 ].join(', ')
@@ -88,7 +87,10 @@ export default function NavBar() {
     const activeIndex = NAV_LINKS.findIndex(({ label, href }) => isActive(href, label))
     const container = navContainerRef.current
     const activeEl = activeIndex !== -1 ? navLinkRefs.current[activeIndex] : null
-    if (!container || !activeEl) return
+    if (!container || !activeEl) {
+      setNavInd(prev => ({ ...prev, visible: false }))
+      return
+    }
     const cRect = container.getBoundingClientRect()
     const eRect = activeEl.getBoundingClientRect()
     setNavInd({

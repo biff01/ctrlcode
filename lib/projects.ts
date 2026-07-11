@@ -79,7 +79,7 @@ const PROJECTS: Project[] = [
     ],
     heroImage: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80',
     overviewDescription:
-      'Darsly is a next-generation digital platform built to help students, teachers, and administrators manage the learning process in one place. The platform allows learners to access courses, track progress, manage lessons, submit assignments, and connect with their educators and classmates.',
+      'Darsly is a next-generation digital platform built to help students, teachers, and administrators manage the learning process in one place. It lets learners access courses, track progress, manage lessons, submit assignments, and connect with their educators.',
     skills: [
       'UI/UX Design',
       'Frontend Development',
@@ -165,6 +165,11 @@ const PROJECTS: Project[] = [
     prevProject: { slug: 'sonicmeditate', name: 'SonicMeditate' },
     nextProject: { slug: 'nextway', name: 'NextWay App' },
     liveUrl: 'https://darsly.uz/ru',
+    showcase: {
+      desktop: '/showcase/darsly-desktop.webp',
+      mobile: '/showcase/darsly-mobile.jpg',
+      siteLabel: 'darsly.uz',
+    },
     portfolioImage: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80',
     portfolioCategory: 'Education / EdTech',
     portfolioDate: 'Nov 2024',
@@ -774,6 +779,11 @@ const PROJECTS: Project[] = [
     prevProject: { slug: 'ai-workflow-platform', name: 'AI Workflow Platform' },
     nextProject: { slug: 'real-estate-platform', name: 'Real Estate Platform' },
     liveUrl: 'https://softms.io/',
+    showcase: {
+      desktop: '/showcase/logistics-management-desktop.webp',
+      mobile: '/showcase/logistics-management-mobile.jpg',
+      siteLabel: 'softms.io',
+    },
     portfolioImage: 'https://images.unsplash.com/photo-1692384359344-42fd4a15603c?w=1200&q=80',
     portfolioCategory: 'Web App',
     portfolioDate: 'Mar 2024',
@@ -849,6 +859,11 @@ const PROJECTS: Project[] = [
     prevProject: { slug: 'logistics-management', name: 'Logistics Management' },
     nextProject: undefined,
     liveUrl: 'https://uzautomotors.com/',
+    showcase: {
+      desktop: '/showcase/real-estate-platform-desktop.webp',
+      mobile: '/showcase/real-estate-platform-mobile.jpg',
+      siteLabel: 'uzautomotors.com',
+    },
     portfolioImage: 'https://images.unsplash.com/photo-1585164216355-cfe3ca9c961d?w=1200&q=80',
     portfolioCategory: 'Website Design',
     portfolioDate: 'Jun 2024',

@@ -1,0 +1,470 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { ArrowUpRight, ArrowRight } from 'lucide-react'
+import { useLang } from './LanguageProvider'
+import { useTheme } from './ThemeProvider'
+
+/* ------------------------------------------------------------------ *
+ * Rebuilt from the Pencil "Work Page" design (node EKef0).
+ * Theme-aware (light/dark via CSS vars) and fully translated (uz/ru/en).
+ * ------------------------------------------------------------------ */
+
+// Page chrome — theme-aware
+const BG = 'var(--bg)'
+const TEXT = 'var(--text-primary)'
+const SUB = 'var(--text-secondary)'
+const KICKER = 'var(--text-tertiary)'
+const LINE = 'var(--border)'
+const CHIP_BG = 'var(--btn-secondary-bg)'
+const CHIP_BORDER = 'var(--border)'
+const ACTIVE_BG = 'var(--nav-active-bg)'
+const ACTIVE_TEXT = 'var(--nav-active-color)'
+
+// Card overlays sit on photos, so they stay fixed regardless of theme
+const OVERLAY = 'linear-gradient(0deg, #00000000 0%, #000000F2 100%)'
+const CARD_TITLE = '#FFFFFF'
+const CARD_SUB = '#FFFFFFAA'
+const CARD_NUM = '#7C93C4'
+
+const FILTERS = ['All', 'Websites', 'CRM Systems', 'Dashboards', 'Mobile Apps', 'Automation', 'E-commerce']
+
+const IMG = (id: string) =>
+  `https://images.unsplash.com/${id}?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400`
+
+// Real captured screenshot of a project's live site (see public/showcase/).
+const SHOT = (slug: string) => `/showcase/${slug}-desktop.webp`
+
+interface Project {
+  name: string
+  category: string
+  num: string
+  image: string
+  /** background-position for the card art; screenshots look best anchored to the top. */
+  bgPosition?: string
+  /** Case-study slug in lib/projects.ts — the card links to /portfolio/<slug>. */
+  slug: string
+  tags: string[]
+}
+
+// Each card links to a real case study; screenshot cards reuse the live-site captures.
+const PROJECTS: Project[] = [
+  { name: 'Nano Medical', category: 'Healthcare', num: '01', image: IMG('photo-1738778578755-87e3caccd36d'), slug: 'healthcare-website', tags: ['Websites', 'Dashboards'] },
+  { name: 'UZAUTO Motors', category: 'Automotive', num: '02', image: SHOT('real-estate-platform'), bgPosition: 'top center', slug: 'real-estate-platform', tags: ['Websites', 'E-commerce'] },
+  { name: 'Darsly', category: 'E-Learning', num: '03', image: SHOT('darsly'), bgPosition: 'top center', slug: 'darsly', tags: ['Websites', 'Mobile Apps'] },
+  { name: 'Education Platform', category: 'E-Commerce', num: '04', image: SHOT('education-platform'), bgPosition: 'top center', slug: 'education-platform', tags: ['Websites', 'E-commerce'] },
+  { name: 'SOFTMS', category: 'CRM', num: '05', image: SHOT('logistics-management'), bgPosition: 'top center', slug: 'logistics-management', tags: ['CRM Systems', 'Dashboards'] },
+  { name: 'Sello Brand', category: 'Branding', num: '06', image: IMG('photo-1718670013988-c6e3edb92345'), slug: 'brand-identity', tags: ['Websites'] },
+]
+
+const STEPS = [
+  { num: '01', title: 'Research & Discovery', desc: 'Stakeholder interviews, competitive analysis, technical scoping, and goal alignment.' },
+  { num: '02', title: 'UI/UX Design', desc: 'Wireframes, interactive prototypes, and pixel-perfect designs anchored in user behavior.' },
+  { num: '03', title: 'Engineering', desc: 'Clean, scalable architecture. Agile sprints with regular demos and fast iteration cycles.' },
+  { num: '04', title: 'QA & Testing', desc: 'End-to-end coverage: unit tests, integration, accessibility audits, performance benchmarks.' },
+  { num: '05', title: 'Launch', desc: 'Zero-downtime deployment, monitoring setup, SEO configuration, and stakeholder handoff.' },
+  { num: '06', title: 'Growth & Support', desc: 'Ongoing maintenance, feature evolution, and performance optimization post-launch.' },
+]
+
+/* ---------------------------- Project card --------------------------- */
+
+function ProjectCard({
+  project,
+  height,
+  pad,
+  titleSize,
+  titleLs,
+  numSize,
+}: {
+  project: Project
+  height: number
+  pad: number
+  titleSize: number
+  titleLs: number
+  numSize: number
+}) {
+  const { t } = useLang()
+  return (
+    <Link href={`/portfolio/${project.slug}`} style={{ display: 'block', textDecoration: 'none' }} aria-label={project.name}>
+      <motion.div
+        whileHover={{ y: -4, transition: { duration: 0.25 } }}
+        style={{
+          position: 'relative',
+          height,
+          borderRadius: 16,
+          overflow: 'hidden',
+          backgroundImage: `url('${project.image}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: project.bgPosition ?? 'center',
+          backgroundRepeat: 'no-repeat',
+          cursor: 'pointer',
+        }}
+      >
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: Math.round(height * 0.55), background: OVERLAY, zIndex: 0 }} />
+
+        <div style={{ position: 'absolute', left: pad, top: pad, padding: '6px 14px', borderRadius: 100, background: '#FFFFFF16', zIndex: 1 }}>
+          <span className="font-body" style={{ fontSize: 12, color: CARD_SUB }}>{t(project.category)}</span>
+        </div>
+
+        <div
+          className="flex items-center justify-center"
+          style={{ position: 'absolute', right: pad, top: pad, width: 48, height: 48, borderRadius: 10, background: '#FFFFFF0A', border: '1px solid #FFFFFF22', zIndex: 2 }}
+        >
+          <ArrowUpRight style={{ width: 16, height: 16, color: '#FFFFFF' }} />
+        </div>
+
+        <div style={{ position: 'absolute', left: pad, bottom: pad, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 3 }}>
+          <span className="font-mono" style={{ fontSize: numSize, color: CARD_NUM, letterSpacing: 2 }}>{project.num}</span>
+          <span className="font-display font-bold" style={{ fontSize: titleSize, letterSpacing: titleLs, color: CARD_TITLE, lineHeight: 1.05 }}>
+            {project.name}
+          </span>
+        </div>
+      </motion.div>
+    </Link>
+  )
+}
+
+/* ------------------------------ Header ------------------------------ */
+
+function Header({ active, onChange }: { active: string; onChange: (f: string) => void }) {
+  const { t } = useLang()
+  return (
+    <section style={{ background: BG, padding: '80px 0 64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 40, flexWrap: 'wrap' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
+          >
+            <span className="font-mono" style={{ fontSize: 11, color: KICKER, letterSpacing: 3 }}>{t('SELECTED WORK')}</span>
+            <h1 className="font-display font-bold" style={{ fontSize: 56, lineHeight: '59px', letterSpacing: -2, color: TEXT }}>
+              {t('Work that speaks')}<br />{t('for itself.')}
+            </h1>
+            <p className="font-body" style={{ fontSize: 15, lineHeight: '26px', color: SUB, width: 520, maxWidth: '100%' }}>
+              {t('A collection of products, platforms, and digital systems built with clarity, speed, and purpose.')}
+            </p>
+          </motion.div>
+
+          <Link
+            href="/portfolio"
+            className="flex items-center"
+            style={{ gap: 10, padding: '11px 22px', borderRadius: 8, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}`, textDecoration: 'none' }}
+          >
+            <span className="font-body" style={{ fontSize: 13, color: SUB }}>{t('All projects')}</span>
+            <ArrowUpRight style={{ width: 15, height: 15, color: SUB }} />
+          </Link>
+        </div>
+
+        {/* filter row — keyed on `active` so the pills reliably reconcile on selection */}
+        <div key={active} style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingTop: 32 }}>
+          {FILTERS.map((f) => {
+            const on = active === f
+            return (
+              <button
+                key={f}
+                onClick={() => onChange(f)}
+                className="font-body"
+                style={{
+                  padding: '8px 18px',
+                  borderRadius: 100,
+                  fontSize: 13,
+                  fontWeight: on ? 600 : 400,
+                  background: on ? ACTIVE_BG : CHIP_BG,
+                  border: on ? `1px solid ${ACTIVE_BG}` : `1px solid ${CHIP_BORDER}`,
+                  color: on ? ACTIVE_TEXT : SUB,
+                  cursor: 'pointer',
+                }}
+              >
+                {t(f)}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ------------------------------- Grid ------------------------------- */
+
+function Grid({ active }: { active: string }) {
+  const { t } = useLang()
+  const isAll = active === 'All'
+  const filtered = isAll ? PROJECTS : PROJECTS.filter((p) => p.tags.includes(active))
+
+  return (
+    <section style={{ background: BG, padding: '0 0 80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 40 }}>
+        {isAll ? (
+          <>
+            <motion.div initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+              <ProjectCard project={PROJECTS[0]} height={460} pad={24} titleSize={44} titleLs={-1.5} numSize={12} />
+            </motion.div>
+
+            <div style={{ display: 'flex', gap: 16 }}>
+              {[PROJECTS[1], PROJECTS[2]].map((p, i) => (
+                <motion.div key={p.name} initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }} style={{ flex: 1 }}>
+                  <ProjectCard project={p} height={340} pad={20} titleSize={34} titleLs={-1} numSize={12} />
+                </motion.div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: 16 }}>
+              {[PROJECTS[3], PROJECTS[4], PROJECTS[5]].map((p, i) => (
+                <motion.div key={p.name} initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }} style={{ flex: 1 }}>
+                  <ProjectCard project={p} height={300} pad={16} titleSize={22} titleLs={-0.5} numSize={11} />
+                </motion.div>
+              ))}
+            </div>
+          </>
+        ) : filtered.length > 0 ? (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+            {filtered.map((p, i) => (
+              <motion.div key={p.name} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }} style={{ flexBasis: 'calc(33.333% - 11px)', flexGrow: 1, minWidth: 300 }}>
+                <ProjectCard project={p} height={340} pad={20} titleSize={30} titleLs={-1} numSize={12} />
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div style={{ padding: '80px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+            <span className="font-display" style={{ fontSize: 40, color: KICKER }}>✦</span>
+            <p className="font-body" style={{ fontSize: 15, color: SUB }}>{t('No projects in this category yet.')}</p>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+/* ----------------------------- Process ------------------------------ */
+
+const Divider = () => <div style={{ width: '100%', height: 1, background: LINE }} />
+
+function Process() {
+  const { t } = useLang()
+  return (
+    <section style={{ background: BG, padding: '96px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 64 }}>
+      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 56 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
+        >
+          <span className="font-mono" style={{ fontSize: 11, color: KICKER, letterSpacing: 3 }}>{t('OUR PROCESS')}</span>
+          <h2 className="font-display font-bold" style={{ fontSize: 52, letterSpacing: -2, color: TEXT, lineHeight: 1.05 }}>{t('How we build.')}</h2>
+          <p className="font-body" style={{ fontSize: 15, lineHeight: '26px', color: SUB, width: 460, maxWidth: '100%' }}>
+            {t("Six deliberate stages — each one sharpening the product until it's ready to scale.")}
+          </p>
+        </motion.div>
+
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Divider />
+          {STEPS.map((s) => (
+            <div key={s.num}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 32, padding: '28px 0' }}>
+                <span className="font-mono" style={{ fontSize: 13, color: KICKER, letterSpacing: 2, width: 40, flexShrink: 0 }}>{s.num}</span>
+                <span className="font-display font-bold" style={{ fontSize: 22, letterSpacing: -0.5, color: TEXT, width: 260, flexShrink: 0 }}>{t(s.title)}</span>
+                <p className="font-body" style={{ fontSize: 14, lineHeight: '23px', color: SUB, width: 540, flexShrink: 0 }}>{t(s.desc)}</p>
+                <div className="flex items-center justify-center" style={{ width: 44, height: 44, flexShrink: 0, borderRadius: 10, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}` }}>
+                  <ArrowRight style={{ width: 16, height: 16, color: KICKER }} />
+                </div>
+              </div>
+              <Divider />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ------------------------------- CTA -------------------------------- */
+
+function CTA() {
+  const { t } = useLang()
+  const { theme } = useTheme()
+  const darkBg: React.CSSProperties = {
+    background: '#000000',
+    backgroundImage:
+      'linear-gradient(-90deg, #040404eb 0%, #111217eb 100%), radial-gradient(ellipse 75% 85% at 70% 55%, #454545db 0%, #040404db 5%)',
+    backgroundRepeat: 'no-repeat, no-repeat',
+    backgroundSize: '100% 100%, 100% 100%',
+  }
+  const lightBg: React.CSSProperties = { background: 'var(--cta-bg)' }
+
+  return (
+    <section
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '120px 0 140px', ...(theme === 'light' ? lightBg : darkBg) }}
+    >
+      <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 40 }}>
+        <span className="font-mono" style={{ fontSize: 11, color: KICKER, letterSpacing: 3, textAlign: 'center' }}>{t('READY TO BUILD')}</span>
+        <h2 className="font-display font-bold" style={{ fontSize: 64, lineHeight: '64px', letterSpacing: -2.5, color: TEXT, textAlign: 'center' }}>
+          {t('Have a project in mind?')}
+        </h2>
+        <p className="font-body" style={{ fontSize: 17, lineHeight: '28px', color: SUB, width: 540, maxWidth: '100%', textAlign: 'center' }}>
+          {t("Let's build a scalable digital product for your business.")}<br />
+          {t('We move fast, we care deeply, and we ship.')}
+        </p>
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <Link href="/contact" style={{ padding: '14px 32px', borderRadius: 10, background: 'var(--btn-primary-bg)', textDecoration: 'none' }}>
+            <span className="font-body" style={{ fontSize: 14, fontWeight: 600, color: 'var(--btn-primary-color)' }}>{t('Start a Project')}</span>
+          </Link>
+          <Link href="/contact" style={{ padding: '14px 32px', borderRadius: 10, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}`, textDecoration: 'none' }}>
+            <span className="font-body" style={{ fontSize: 14, fontWeight: 500, color: SUB }}>{t('Contact Us')}</span>
+          </Link>
+        </div>
+        <span className="font-body" style={{ fontSize: 13, color: KICKER, textAlign: 'center' }}>
+          {t('No commitment required · Free 30-min strategy call · Response within 24 hours')}
+        </span>
+      </div>
+    </section>
+  )
+}
+
+/* --------------------------- Hero Row art --------------------------- */
+/* A self-contained dark showcase band (the artwork is a dark UI illustration,
+   so it stays dark in both themes by design). */
+
+const WAVES = [
+  { d: 'M0 190c31-72 63-72 94 0 31 72 63 72 94 0 31-72 62-72 94 0 31 72 62 72 93 0', stroke: '#3838CC', w: 1.5, o: 0.88 },
+  { d: 'M0 182c31-54 63-54 94 0 31 54 63 54 94 0 31-54 62-54 94 0 31 54 62 54 93 0', stroke: '#4848D8', w: 1.5, o: 0.72 },
+  { d: 'M0 200c31-88 63-88 94 0 31 88 63 88 94 0 31-88 62-88 94 0 31 88 62 88 93 0', stroke: '#2C2CBB', w: 1.5, o: 0.55 },
+  { d: 'M0 194c31-42 63-42 94 0 31 42 63 42 94 0 31-42 62-42 94 0 31 42 62 42 93 0', stroke: '#5555D5', w: 1, o: 0.45 },
+  { d: 'M0 186c31-105 63-105 94 0 31 105 63 105 94 0 31-105 62-105 94 0 31 105 62 105 93 0', stroke: '#1E1EAA', w: 2, o: 0.3 },
+]
+
+const CONNECTORS = [
+  'M280 310c40 0 40-70 80-70m-7-4l7 4-7 4',
+  'M280 310c40 0 40 68 80 68m-7-4l7 4-7 4',
+  'M280 384c40 0 40-2 80-2m-7-4l7 4-7 4',
+  'M280 384c40 0 40 136 80 136m-7-4l7 4-7 4',
+]
+
+const ISSUES = [
+  { code: 'ENG-2991', title: 'Ride status fails to update', top: 180, status: 'half' },
+  { code: 'ENG-2843', title: 'App shows incorrect pickup location', top: 320, status: 'orange' },
+  { code: 'FEA-2018', title: 'Improve explanations for tax feature', top: 460, status: 'empty' },
+]
+
+function WorkHero({ dark }: { dark: boolean }) {
+  const outerBg = dark ? '#0a0a0a' : '#F7F8FC'
+  return (
+    <div style={{ position: 'relative', width: 720, height: 760, background: outerBg, overflow: 'hidden', flexShrink: 0 }}>
+      <div style={{ position: 'absolute', left: 185, top: 230, width: 350, height: 300, filter: 'blur(50px)', borderRadius: '50%', background: 'radial-gradient(ellipse 50% 50% at 50% 50%, #2828BC14 0%, #00000000 100%)' }} />
+      <div style={{ position: 'absolute', left: 50, top: 190, width: 620, height: 380 }}>
+        <div style={{ position: 'absolute', left: -6, top: 124, width: 132, height: 132, borderRadius: '50%', border: '1px solid #FFFFFF0B' }} />
+        <div style={{ position: 'absolute', left: 0, top: 130, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', boxShadow: '0 10px 50px #00000055', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', left: 10, top: 10, width: 100, height: 100, borderRadius: '50%', background: '#0A0A15' }} />
+          <svg viewBox="0 0 110 110" style={{ position: 'absolute', left: 27, top: 27, width: 66, height: 66, overflow: 'visible' }}>
+            <path d="M55 0l8.4 34.7 30.5-18.6-18.6 30.5 34.7 8.4-34.7 8.4 18.6 30.5-30.5-18.6-8.4 34.7-8.4-34.7-30.5 18.6 18.6-30.5-34.7-8.4 34.7-8.4-18.6-30.5 30.5 18.6z" fill="#FFFFFF" />
+          </svg>
+        </div>
+
+        <div style={{ position: 'absolute', left: 125, top: 0, width: 375, height: 380 }}>
+          {WAVES.map((w, i) => (
+            <svg key={i} viewBox="0 0 375 380" preserveAspectRatio="none" style={{ position: 'absolute', left: 0, top: 0, width: 375, height: 380, opacity: w.o, overflow: 'visible' }}>
+              <path d={w.d} fill="none" stroke={w.stroke} strokeWidth={w.w} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+            </svg>
+          ))}
+        </div>
+
+        <div style={{ position: 'absolute', left: 494, top: 124, width: 132, height: 132, borderRadius: '50%', border: '1px solid #FFFFFF0B' }} />
+        <div style={{ position: 'absolute', left: 500, top: 130, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', boxShadow: '0 10px 50px #00000055', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', left: 20, top: 20, width: 80, height: 80, borderRadius: 40, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(ellipse 50% 50% at 36% 30%, #E0E0E0 0%, #ABABAB 55%, #676767 100%)' }} />
+            {[-12, 10, 32, 54, 76].map((l, i) => (
+              <div key={i} style={{ position: 'absolute', left: l, top: -15, width: 12, height: 120, background: '#0F0F1B', transform: 'rotate(42deg)', transformOrigin: 'top left' }} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function StatusDot({ kind }: { kind: string }) {
+  if (kind === 'half') {
+    return (
+      <div style={{ position: 'relative', width: 22, height: 22, borderRadius: 11, background: '#2E2E2E', overflow: 'hidden', flexShrink: 0 }}>
+        <svg viewBox="0 0 22 22" style={{ position: 'absolute', left: 0, top: 0, width: 22, height: 22 }}>
+          <path d="M11 0a11 11 0 0 1 0 22z" fill="#F59E0B" />
+        </svg>
+      </div>
+    )
+  }
+  if (kind === 'orange') {
+    return <div style={{ width: 22, height: 22, borderRadius: 11, background: '#F97316', flexShrink: 0 }} />
+  }
+  return <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'transparent', border: '2px solid #555555', flexShrink: 0 }} />
+}
+
+function WorkShowcase({ dark }: { dark: boolean }) {
+  const outerBg = dark ? '#0a0a0a' : '#F7F8FC'
+  const connectorStroke = dark ? '#3C3C3C' : '#C8D0E8'
+  return (
+    <div style={{ position: 'relative', width: 720, height: 760, background: outerBg, overflow: 'hidden', flexShrink: 0 }}>
+      {CONNECTORS.map((d, i) => (
+        <svg key={i} viewBox="0 0 720 760" preserveAspectRatio="none" style={{ position: 'absolute', left: 0, top: 0, width: 720, height: 760, overflow: 'visible', zIndex: 0 }}>
+          <path d={d} fill="none" stroke={connectorStroke} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        </svg>
+      ))}
+
+      <div style={{ position: 'absolute', left: 40, top: 260, width: 240, display: 'flex', flexDirection: 'column', gap: 14, padding: 20, background: '#181818', border: '1px solid #2A2A2A', borderRadius: 18, zIndex: 1 }}>
+        {[
+          { label: 'New Issue', glyph: <path d="M2 2l16 0 0 3-11 10 11 0 0 3-16 0 0-3 11-10-11 0z" fill="#FFFFFF" /> },
+          { label: 'Create Issue', glyph: <path d="M3 3h6v6H3zM11 3h6v6h-6zM3 11h6v6H3zM11 11h6v6h-6z" fill="#FFFFFF" /> },
+        ].map((r) => (
+          <div key={r.label} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', background: '#222222', borderRadius: 10 }}>
+            <div style={{ position: 'relative', width: 36, height: 36, background: '#111111', borderRadius: 8, flexShrink: 0 }}>
+              <svg viewBox="0 0 20 20" style={{ position: 'absolute', left: 8, top: 8, width: 20, height: 20 }}>{r.glyph}</svg>
+            </div>
+            <span className="font-body" style={{ fontSize: 15, color: '#FFFFFF', fontWeight: 500 }}>{r.label}</span>
+          </div>
+        ))}
+      </div>
+
+      {ISSUES.map((it) => (
+        <div key={it.code} style={{ position: 'absolute', left: 360, top: it.top, width: 300, display: 'flex', flexDirection: 'column', gap: 10, padding: '16px 20px', background: '#181818', border: '1px solid #282828', borderRadius: 14, overflow: 'hidden', zIndex: 2 }}>
+          <span className="font-mono" style={{ fontSize: 12, color: '#555555', letterSpacing: 0.5 }}>{it.code}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <StatusDot kind={it.status} />
+            <span className="font-body" style={{ fontSize: 18, color: '#CCCCCC' }}>{it.title}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function HeroRow() {
+  const { theme } = useTheme()
+  const dark = theme === 'dark'
+  return (
+    <div style={{ width: '100%', background: dark ? '#0a0a0a' : '#F7F8FC', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', overflow: 'hidden' }}>
+      <WorkHero dark={dark} />
+      <WorkShowcase dark={dark} />
+    </div>
+  )
+}
+
+/* ------------------------------ Page -------------------------------- */
+
+export default function PortfolioDesign() {
+  const [active, setActive] = useState('All')
+  return (
+    <div style={{ background: BG }}>
+      <Header active={active} onChange={setActive} />
+      <Grid active={active} />
+      <Process />
+      <CTA />
+      <HeroRow />
+    </div>
+  )
+}

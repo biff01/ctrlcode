@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Workflow, BadgeCheck, Zap, MessageSquare, LifeBuoy, Receipt } from 'lucide-react'
 import { useLang } from './LanguageProvider'
+import { useTheme } from './ThemeProvider'
 
 const FEATURES = [
   {
@@ -42,6 +43,8 @@ export default function Why() {
   const gridRef = useRef<HTMLDivElement>(null)
   const gridVisible = useInView(gridRef, { once: true, margin: '-60px' })
   const { t } = useLang()
+  const { theme } = useTheme()
+  const dark = theme === 'dark'
 
   const rows = [FEATURES.slice(0, 3), FEATURES.slice(3, 6)]
 
@@ -92,13 +95,12 @@ export default function Why() {
           style={{
             borderRadius: 20,
             overflow: 'hidden',
-            border: '1px solid var(--why-cell-border)',
-            boxShadow:
-              '0 32px 64px -12px rgba(0,0,0,0.55), 0 0 32px 1px rgba(255,255,255,0.03)',
+            border: dark ? '1px solid rgba(255,255,255,0.10)' : '1px solid var(--why-cell-border)',
+            boxShadow: '0 32px 64px -12px rgba(0,0,0,0.55), 0 0 32px 1px rgba(255,255,255,0.03)',
             display: 'flex',
             flexDirection: 'column',
             gap: 1,
-            background: 'var(--why-gap)',
+            background: dark ? '#262626' : 'var(--why-gap)',
           }}
         >
           {rows.map((row, rowIdx) => (
@@ -114,25 +116,29 @@ export default function Why() {
                     transition={{ duration: 0.5, delay: idx * 0.07, ease: 'easeOut' }}
                     style={{
                       flex: 1,
-                      padding: '32px 32px 38px',
-                      background: 'var(--why-cell)',
-                      borderTop: '1px solid var(--why-cell-border)',
-                      boxShadow: '0 1px 0 var(--why-cell-border)',
+                      padding: '32px 32px 36px',
+                      background: dark
+                        ? 'linear-gradient(180deg, #1C1C1C 0%, #0C0C0C 100%)'
+                        : 'var(--why-cell)',
+                      borderTop: dark ? '1px solid rgba(255,255,255,0.125)' : '1px solid var(--why-cell-border)',
+                      boxShadow: dark
+                        ? '0 1px 0 rgba(255,255,255,0.06), 0 8px 24px -2px rgba(0,0,0,0.33)'
+                        : '0 1px 0 var(--why-cell-border)',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: 12,
+                      gap: 14,
                     }}
                   >
-                    <Icon style={{ width: 20, height: 20, color: 'var(--text-primary)' }} />
+                    <Icon style={{ width: 22, height: 22, color: 'var(--text-primary)' }} strokeWidth={1.6} />
                     <h3
                       className="font-display font-semibold"
-                      style={{ fontSize: 16, color: 'var(--text-primary)', letterSpacing: -0.2 }}
+                      style={{ fontSize: 17, color: 'var(--text-primary)', letterSpacing: -0.2 }}
                     >
                       {t(feat.title)}
                     </h3>
                     <p
                       className="font-body"
-                      style={{ fontSize: 13.5, lineHeight: 1.65, color: 'var(--text-secondary)' }}
+                      style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-secondary)' }}
                     >
                       {t(feat.desc)}
                     </p>

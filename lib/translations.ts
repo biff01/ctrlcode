@@ -49,6 +49,26 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
       'Коллекция продуктов, платформ и цифровых систем, созданных ясно, быстро и точно.',
     'All projects': 'Все проекты',
     'View Live Product': 'Открыть продукт',
+    'Read the Overview': 'Читать обзор',
+    'Project Overview': 'Обзор проекта',
+    'Services Provided': 'Оказанные услуги',
+    'Client': 'Клиент',
+    'Industry': 'Отрасль',
+    'Type': 'Тип',
+    'Timeline': 'Сроки',
+    'What We Built': 'Что мы создали',
+    'What we built.': 'Что мы создали.',
+    'The Problem': 'Проблема',
+    'What needed to change.': 'Что нужно было изменить.',
+    'Problem': 'Задача',
+    'Our Process': 'Наш процесс',
+    'Design Preview': 'Предпросмотр дизайна',
+    'All Projects': 'Все проекты',
+    'Start Your Project': 'Начать проект',
+    'Ready to build something great?': 'Готовы создать что-то великое?',
+    "Let's discuss your idea and turn it into a product your users will love.": 'Давайте обсудим вашу идею и превратим её в продукт, который полюбят пользователи.',
+    'Get in touch': 'Связаться',
+    'View all work': 'Все работы',
     'View case study': 'Открыть кейс',
     'Interactive showcase': 'Интерактивный показ',
     'Desktop view': 'Десктоп',
@@ -130,7 +150,7 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
 
     // ── FinalCTA ──
     'Have an idea?': 'Есть идея?',
-    "Let's ship it together.": 'Реализуем её вместе.',
+    "Let's ship it together.": 'Сделаем вместе!',
     "Book a free 30-minute consultation — we'll estimate your project within 48 hours.":
       'Запишитесь на бесплатную 30-минутную консультацию — мы оценим ваш проект в течение 48 часов.',
     'Book free consultation': 'Бесплатная консультация',
@@ -176,6 +196,49 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Connectors': 'Коннекторы',
     'Security': 'Безопасность',
     '© 2025 Ctrl Code. All rights reserved.': '© 2025 Ctrl Code. Все права защищены.',
+
+    // ── Security page ──
+    'SECURITY': 'БЕЗОПАСНОСТЬ',
+    'Built to protect': 'Создано для защиты',
+    'what matters.': 'того, что важно.',
+    'Every product we build follows strict security principles — your data, your users, and your reputation are always protected.':
+      'Каждый продукт, который мы создаём, следует строгим принципам безопасности — ваши данные, ваши пользователи и ваша репутация всегда под защитой.',
+    'IT Park Uzbekistan': 'IT Park Узбекистан',
+    'Official Resident': 'Официальный резидент',
+    'GDPR': 'GDPR',
+    'Aligned Practices': 'Соответствующие практики',
+    'NDA': 'NDA',
+    'Signed on Every Project': 'Подписывается на каждом проекте',
+    'ISO 27001': 'ISO 27001',
+    'Principles Followed': 'Принципы соблюдаются',
+    'HOW WE PROTECT YOU': 'КАК МЫ ВАС ЗАЩИЩАЕМ',
+    'Six layers of security.': 'Шесть уровней безопасности.',
+    'End-to-End Encryption': 'Сквозное шифрование',
+    'All data in transit and at rest is encrypted using TLS 1.3 and AES-256. No plain-text storage, ever.':
+      'Все данные в транзите и в состоянии покоя зашифрованы с использованием TLS 1.3 и AES-256. Никакого хранения в открытом виде.',
+    'Access Control': 'Контроль доступа',
+    'Role-based permissions and multi-factor authentication across all internal systems and client environments.':
+      'Ролевые разрешения и многофакторная аутентификация во всех внутренних системах и клиентских средах.',
+    'Secure Infrastructure': 'Безопасная инфраструктура',
+    'Hosted on enterprise-grade cloud providers with automatic backups, failover, and DDoS mitigation built in.':
+      'Размещено у провайдеров корпоративного уровня с автоматическим резервным копированием, отказоустойчивостью и защитой от DDoS.',
+    'Privacy by Design': 'Конфиденциальность по умолчанию',
+    'GDPR-aligned data practices are embedded from day one — not added as an afterthought. Your users\' data stays yours.':
+      'Практики обработки данных, соответствующие GDPR, встроены с первого дня — а не добавлены постфактум. Данные ваших пользователей остаются вашими.',
+    'Code Security': 'Безопасность кода',
+    'Dependency audits, automated vulnerability scanning, and zero-trust code reviews before every production release.':
+      'Аудит зависимостей, автоматическое сканирование уязвимостей и проверки кода с нулевым доверием перед каждым релизом.',
+    'Transparent Agreements': 'Прозрачные соглашения',
+    'Full NDAs, formal contracts, and complete IP transfer upon project completion. No grey areas.':
+      'Полные NDA, официальные договоры и полная передача прав ИС по завершении проекта. Никаких серых зон.',
+    'OUR COMMITMENT': 'НАШИ ОБЯЗАТЕЛЬСТВА',
+    'We treat your project like it\'s ours.': 'Мы относимся к вашему проекту как к своему.',
+    'Security isn\'t a checkbox — it\'s embedded in how we design, code, and deploy every single day. You get full visibility, formal agreements, and a team that takes responsibility.':
+      'Безопасность — это не галочка в списке. Она встроена в то, как мы проектируем, пишем код и деплоим каждый день. Вы получаете полную прозрачность, официальные соглашения и команду, которая несёт ответственность.',
+    'Full source code ownership on delivery': 'Полное право собственности на исходный код при передаче',
+    'NDA signed before any scoping call': 'NDA подписывается до любого звонка по проекту',
+    'No third-party data sharing, ever': 'Никогда не передаём данные третьим сторонам',
+    'Incident response within 4 hours': 'Реагирование на инциденты в течение 4 часов',
 
     // ── NewsletterForm ──
     "Thanks — you're subscribed.": 'Спасибо — вы подписаны.',
@@ -361,6 +424,51 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Password is required.': 'Пароль обязателен.',
     'At least 6 characters.': 'Минимум 6 символов.',
     'Passwords do not match.': 'Пароли не совпадают.',
+
+    // ── Work Page ──
+    'Work that speaks': 'Работа, которая говорит',
+    'for itself.': 'сама за себя.',
+    'A collection of products, platforms, and digital systems built with clarity, speed, and purpose.':
+      'Коллекция продуктов, платформ и цифровых систем, созданных ясно, быстро и осмысленно.',
+    'Websites': 'Веб-сайты',
+    'CRM Systems': 'CRM-системы',
+    'Dashboards': 'Дашборды',
+    'Automation': 'Автоматизация',
+    'E-commerce': 'Электронная коммерция',
+    'E-Learning': 'Онлайн-обучение',
+    'Fintech': 'Финтех',
+    'CRM': 'CRM',
+    'OUR PROCESS': 'НАШ ПРОЦЕСС',
+    'How we build.': 'Как мы создаём.',
+    "Six deliberate stages — each one sharpening the product until it's ready to scale.":
+      'Шесть продуманных этапов — каждый оттачивает продукт, пока он не будет готов к масштабированию.',
+    'Research & Discovery': 'Исследование и анализ',
+    'UI/UX Design': 'UI/UX-дизайн',
+    'Engineering': 'Разработка',
+    'QA & Testing': 'QA и тестирование',
+    'Launch': 'Запуск',
+    'Growth & Support': 'Рост и поддержка',
+    'Stakeholder interviews, competitive analysis, technical scoping, and goal alignment.':
+      'Интервью со стейкхолдерами, анализ конкурентов, техническая оценка и согласование целей.',
+    'Wireframes, interactive prototypes, and pixel-perfect designs anchored in user behavior.':
+      'Вайрфреймы, интерактивные прототипы и безупречный дизайн, основанный на поведении пользователей.',
+    'Clean, scalable architecture. Agile sprints with regular demos and fast iteration cycles.':
+      'Чистая масштабируемая архитектура. Agile-спринты с регулярными демо и быстрыми итерациями.',
+    'End-to-end coverage: unit tests, integration, accessibility audits, performance benchmarks.':
+      'Полное покрытие: юнит-тесты, интеграция, аудит доступности, тесты производительности.',
+    'Zero-downtime deployment, monitoring setup, SEO configuration, and stakeholder handoff.':
+      'Развёртывание без простоев, настройка мониторинга, SEO-конфигурация и передача проекта.',
+    'Ongoing maintenance, feature evolution, and performance optimization post-launch.':
+      'Постоянная поддержка, развитие функций и оптимизация производительности после запуска.',
+    'READY TO BUILD': 'ГОТОВЫ СОЗДАВАТЬ',
+    'Have a project in mind?': 'Есть идея проекта?',
+    "Let's build a scalable digital product for your business.":
+      'Давайте создадим масштабируемый цифровой продукт для вашего бизнеса.',
+    'We move fast, we care deeply, and we ship.':
+      'Мы работаем быстро, заботимся о деталях и доводим до результата.',
+    'Start a Project': 'Начать проект',
+    'No commitment required · Free 30-min strategy call · Response within 24 hours':
+      'Без обязательств · Бесплатный 30-минутный созвон · Ответ в течение 24 часов',
   },
 
   uz: {
@@ -407,6 +515,26 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
       'Aniqlik, tezlik va nafislik bilan yaratilgan mahsulotlar, platformalar va raqamli tizimlar to‘plami.',
     'All projects': 'Barcha loyihalar',
     'View Live Product': 'Mahsulotni ochish',
+    'Read the Overview': 'Umumiy ma\'lumotni o\'qish',
+    'Project Overview': 'Loyiha haqida',
+    'Services Provided': 'Ko\'rsatilgan xizmatlar',
+    'Client': 'Mijoz',
+    'Industry': 'Soha',
+    'Type': 'Turi',
+    'Timeline': 'Muddat',
+    'What We Built': 'Nima qurdik',
+    'What we built.': 'Nima qurdik.',
+    'The Problem': 'Muammo',
+    'What needed to change.': 'Nima o\'zgarishi kerak edi.',
+    'Problem': 'Muammo',
+    'Our Process': 'Bizning jarayon',
+    'Design Preview': 'Dizayn ko\'rgazmasi',
+    'All Projects': 'Barcha loyihalar',
+    'Start Your Project': 'Loyihangizni boshlang',
+    'Ready to build something great?': 'Ajoyib narsa yaratishga tayyormisiz?',
+    "Let's discuss your idea and turn it into a product your users will love.": 'Keling g\'oyangizni muhokama qilaylik va uni foydalanuvchilaringiz sevadigan mahsulotga aylantiraylik.',
+    'Get in touch': 'Bog\'lanish',
+    'View all work': 'Barcha ishlar',
     'View case study': 'Loyihani ochish',
     'Interactive showcase': 'Interaktiv namoyish',
     'Desktop view': 'Kompyuter',
@@ -535,6 +663,49 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Security': 'Xavfsizlik',
     '© 2025 Ctrl Code. All rights reserved.': '© 2025 Ctrl Code. Barcha huquqlar himoyalangan.',
 
+    // ── Security page ──
+    'SECURITY': 'XAVFSIZLIK',
+    'Built to protect': 'Himoya qilish uchun',
+    'what matters.': "muhim narsani.",
+    'Every product we build follows strict security principles — your data, your users, and your reputation are always protected.':
+      "Biz yaratadigan har bir mahsulot qat'iy xavfsizlik tamoyillariga amal qiladi — ma'lumotlaringiz, foydalanuvchilaringiz va obro'ingiz doimo himoyalangan.",
+    'IT Park Uzbekistan': 'IT Park Oʻzbekiston',
+    'Official Resident': 'Rasmiy rezident',
+    'GDPR': 'GDPR',
+    'Aligned Practices': 'Mos amaliyotlar',
+    'NDA': 'NDA',
+    'Signed on Every Project': 'Har bir loyihada imzolanadi',
+    'ISO 27001': 'ISO 27001',
+    'Principles Followed': 'Tamoyillarga amal qilinadi',
+    'HOW WE PROTECT YOU': 'SIZ NI QANDAY HIMOYA QILAMIZ',
+    'Six layers of security.': 'Xavfsizlikning olti qatlami.',
+    'End-to-End Encryption': 'Uchdan-uchgacha shifrlash',
+    'All data in transit and at rest is encrypted using TLS 1.3 and AES-256. No plain-text storage, ever.':
+      "Tranzitdagi va saqlangan barcha ma'lumotlar TLS 1.3 va AES-256 yordamida shifrlanadi. Hech qachon ochiq matnda saqlanmaydi.",
+    'Access Control': 'Kirish nazorati',
+    'Role-based permissions and multi-factor authentication across all internal systems and client environments.':
+      "Barcha ichki tizimlar va mijoz muhitlarida roliga asoslangan ruxsatlar va ko'p faktorli autentifikatsiya.",
+    'Secure Infrastructure': 'Xavfsiz infratuzilma',
+    'Hosted on enterprise-grade cloud providers with automatic backups, failover, and DDoS mitigation built in.':
+      "Avtomatik zaxira nusxa ko'chirish, ishdan chiqishga bardoshlilik va DDoS himoyasi bilan korporativ darajadagi bulut provayderlarda joylashtirilgan.",
+    'Privacy by Design': 'Dizayn boʻyicha maxfiylik',
+    'GDPR-aligned data practices are embedded from day one — not added as an afterthought. Your users\' data stays yours.':
+      "GDPR ga mos ma'lumotlar amaliyotlari birinchi kundan boshlab tatbiq etiladi — keyinchalik qo'shilmaydi. Foydalanuvchilaringiz ma'lumotlari sizniki bo'lib qoladi.",
+    'Code Security': 'Kod xavfsizligi',
+    'Dependency audits, automated vulnerability scanning, and zero-trust code reviews before every production release.':
+      "Har bir ishlab chiqarish versiyasi chiqarilishidan oldin bog'liqlik auditi, avtomatlashtirilgan zaifliklarni skanerlash va nol-ishonch asosidagi kod tekshiruvlari.",
+    'Transparent Agreements': 'Shaffof kelishuvlar',
+    'Full NDAs, formal contracts, and complete IP transfer upon project completion. No grey areas.':
+      "To'liq NDA lar, rasmiy shartnomalar va loyiha yakunlanganda to'liq intellektual mulk topshirilishi. Hech qanday noaniqlik yo'q.",
+    'OUR COMMITMENT': 'BIZNING MAJBURIYATIMIZ',
+    'We treat your project like it\'s ours.': "Loyihangizga o'zimiznikidek munosabatda bo'lamiz.",
+    'Security isn\'t a checkbox — it\'s embedded in how we design, code, and deploy every single day. You get full visibility, formal agreements, and a team that takes responsibility.':
+      "Xavfsizlik — bu belgichani belgilash emas. U har kuni loyihalash, kod yozish va joylashtirish tarzimizga singdirilgan. Siz to'liq shaffoflikni, rasmiy kelishuvlarni va javobgarlikni o'z zimmasiga olgan jamoani olasiz.",
+    'Full source code ownership on delivery': "Topshirilganda to'liq manba kodi mulki",
+    'NDA signed before any scoping call': "Har qanday qoʻngʻiroqdan oldin NDA imzolanadi",
+    'No third-party data sharing, ever': "Ma'lumotlar hech qachon uchinchi tomonlarga berilmaydi",
+    'Incident response within 4 hours': '4 soat ichida hodisaga javob',
+
     // ── NewsletterForm ──
     "Thanks — you're subscribed.": 'Rahmat — siz obuna boʻldingiz.',
     'Email address': 'Email manzili',
@@ -600,7 +771,7 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
       "Belgilangan hajm, bosqichli to'lovlar va har qanday majburiyatdan oldin bepul konsultatsiya.",
 
     // ── PortfolioHero / PortfolioWork ──
-    'Work that defines': 'Mahoratimizni belgilaydigan',
+    'Work that defines': 'Bizni belgilaydigan',
     'our craft.': 'ishlar.',
     'Every project is a collaboration, every result is a story. Browse 48+ projects across web, mobile, SaaS, and brand design.':
       "Har bir loyiha — hamkorlik, har bir natija — hikoya. Veb, mobil, SaaS va brend dizaynidagi 48+ loyihani ko'rib chiqing.",
@@ -719,5 +890,50 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Password is required.': 'Parol talab qilinadi.',
     'At least 6 characters.': 'Kamida 6 ta belgi.',
     'Passwords do not match.': 'Parollar mos kelmadi.',
+
+    // ── Work Page ──
+    'Work that speaks': "O'zi haqida gapiradigan",
+    'for itself.': 'ishlar.',
+    'A collection of products, platforms, and digital systems built with clarity, speed, and purpose.':
+      "Aniqlik, tezlik va maqsad bilan yaratilgan mahsulotlar, platformalar va raqamli tizimlar to'plami.",
+    'Websites': 'Veb-saytlar',
+    'CRM Systems': 'CRM tizimlar',
+    'Dashboards': 'Boshqaruv panellari',
+    'Automation': 'Avtomatlashtirish',
+    'E-commerce': 'Elektron tijorat',
+    'E-Learning': "Onlayn ta'lim",
+    'Fintech': 'Fintex',
+    'CRM': 'CRM',
+    'OUR PROCESS': 'BIZNING JARAYON',
+    'How we build.': 'Qanday quramiz.',
+    "Six deliberate stages — each one sharpening the product until it's ready to scale.":
+      "Olti puxta bosqich — har biri mahsulotni masshtablashga tayyor bo'lguncha sayqallaydi.",
+    'Research & Discovery': 'Tadqiqot va tahlil',
+    'UI/UX Design': 'UI/UX dizayn',
+    'Engineering': 'Muhandislik',
+    'QA & Testing': 'QA va sinov',
+    'Launch': 'Ishga tushirish',
+    'Growth & Support': "O'sish va qo'llab-quvvatlash",
+    'Stakeholder interviews, competitive analysis, technical scoping, and goal alignment.':
+      'Manfaatdor tomonlar bilan suhbatlar, raqobat tahlili, texnik baholash va maqsadlarni moslashtirish.',
+    'Wireframes, interactive prototypes, and pixel-perfect designs anchored in user behavior.':
+      'Vayrfreymlar, interaktiv prototiplar va foydalanuvchi xatti-harakatiga asoslangan mukammal dizayn.',
+    'Clean, scalable architecture. Agile sprints with regular demos and fast iteration cycles.':
+      'Toza, masshtablanuvchi arxitektura. Muntazam demolar va tez iteratsiyali Agile sprintlar.',
+    'End-to-end coverage: unit tests, integration, accessibility audits, performance benchmarks.':
+      "To'liq qamrov: unit testlar, integratsiya, foydalanish auditi, unumdorlik sinovlari.",
+    'Zero-downtime deployment, monitoring setup, SEO configuration, and stakeholder handoff.':
+      "To'xtovsiz joylashtirish, monitoring sozlash, SEO konfiguratsiya va loyihani topshirish.",
+    'Ongoing maintenance, feature evolution, and performance optimization post-launch.':
+      "Doimiy texnik xizmat, funksiyalarni rivojlantirish va ishga tushgandan keyingi unumdorlik optimizatsiyasi.",
+    'READY TO BUILD': 'YARATISHGA TAYYOR',
+    'Have a project in mind?': "Loyiha g'oyangiz bormi?",
+    "Let's build a scalable digital product for your business.":
+      'Keling, biznesingiz uchun masshtablanuvchi raqamli mahsulot yaratamiz.',
+    'We move fast, we care deeply, and we ship.':
+      "Biz tez ishlaymiz, chuqur g'amxo'rlik qilamiz va natijaga yetkazamiz.",
+    'Start a Project': 'Loyihani boshlash',
+    'No commitment required · Free 30-min strategy call · Response within 24 hours':
+      "Majburiyatsiz · Bepul 30 daqiqalik strategik qo'ng'iroq · 24 soat ichida javob",
   },
 }

@@ -294,16 +294,16 @@ export default function DashboardMockup() {
       <text x="1072" y="474" textAnchor="end" fontFamily={BODY} fontSize="10" fill={TXT_MUTED}>avg.</text>
 
       {/* ── Recent Activity panel ── */}
-      <rect x="776" y="497" width="318" height="66" rx="14" fill={PANEL_BG} stroke={PANEL_BORDER} strokeWidth="1" />
-      <text x="798" y="521" fontFamily={DISPLAY} fontSize="14" fontWeight="700" fill={TXT_PRIMARY}>Recent Activity</text>
+      <rect x="776" y="489" width="318" height="89" rx="14" fill={PANEL_BG} stroke={PANEL_BORDER} strokeWidth="1" />
+      <text x="798" y="511" fontFamily={DISPLAY} fontSize="13.5" fontWeight="700" fill={TXT_PRIMARY}>Recent Activity</text>
       <g fill={TXT_MUTED}>
-        <circle cx="1060" cy="517" r="1.5" />
-        <circle cx="1066" cy="517" r="1.5" />
-        <circle cx="1072" cy="517" r="1.5" />
+        <circle cx="1060" cy="508" r="1.5" />
+        <circle cx="1066" cy="508" r="1.5" />
+        <circle cx="1072" cy="508" r="1.5" />
       </g>
       {[
-        { i: 'S', name: 'Sarah', action: "created 'Campaign Q4'", y: 538 },
-        { i: 'M', name: 'Mike', action: "updated 'Dashboard'", y: 552 },
+        { i: 'A', name: 'Alisher', action: "shipped 'Healthcare Site'", y: 531 },
+        { i: 'B', name: 'Bahrom', action: "deployed 'NextWay App'", y: 559 },
       ].map((a) => (
         <g key={a.i}>
           <circle cx="806" cy={a.y + 1} r="8" fill="url(#avatarG)" opacity="0.9" />

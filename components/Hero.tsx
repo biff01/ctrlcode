@@ -18,7 +18,11 @@ const STATS = [
 export default function Hero() {
   const statsRef = useRef<HTMLDivElement>(null)
   const statsVisible = useInView(statsRef, { once: true })
-  const { t } = useLang()
+  const { t, lang } = useLang()
+
+  // Russian runs ~40% wider than EN/UZ, so "цифровой реальности." overflows the
+  // ~560px headline column at 76px and wraps to a 3rd line. Size it down to fit.
+  const headlineSize = lang === 'ru' ? 52 : 76
 
   return (
     <section
@@ -46,7 +50,7 @@ export default function Hero() {
               <h1
                 key={line}
                 className="font-display font-semibold"
-                style={{ fontSize: 76, letterSpacing: -2.8, lineHeight: 1.08, color: 'var(--text-primary)' }}
+                style={{ fontSize: headlineSize, letterSpacing: -2.8, lineHeight: 1.08, color: 'var(--text-primary)' }}
               >
                 {t(line)}
               </h1>
