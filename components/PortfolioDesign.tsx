@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, ArrowRight } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 import { useTheme } from './ThemeProvider'
@@ -61,12 +61,78 @@ const PROJECTS: Project[] = [
 ]
 
 const STEPS = [
-  { num: '01', title: 'Research & Discovery', desc: 'Stakeholder interviews, competitive analysis, technical scoping, and goal alignment.' },
-  { num: '02', title: 'UI/UX Design', desc: 'Wireframes, interactive prototypes, and pixel-perfect designs anchored in user behavior.' },
-  { num: '03', title: 'Engineering', desc: 'Clean, scalable architecture. Agile sprints with regular demos and fast iteration cycles.' },
-  { num: '04', title: 'QA & Testing', desc: 'End-to-end coverage: unit tests, integration, accessibility audits, performance benchmarks.' },
-  { num: '05', title: 'Launch', desc: 'Zero-downtime deployment, monitoring setup, SEO configuration, and stakeholder handoff.' },
-  { num: '06', title: 'Growth & Support', desc: 'Ongoing maintenance, feature evolution, and performance optimization post-launch.' },
+  {
+    num: '01',
+    title: 'Research & Discovery',
+    desc: 'Stakeholder interviews, competitive analysis, technical scoping, and goal alignment.',
+    details: [
+      '1:1 stakeholder interviews to extract real requirements, not assumptions',
+      'Competitor landscape audit — UX patterns, feature gaps, positioning',
+      'Technical feasibility review and stack recommendation',
+      'Project scope document, timeline, and success metrics agreed upfront',
+      'Risk identification and mitigation planning before a line of code is written',
+    ],
+  },
+  {
+    num: '02',
+    title: 'UI/UX Design',
+    desc: 'Wireframes, interactive prototypes, and pixel-perfect designs anchored in user behavior.',
+    details: [
+      'Low-fidelity wireframes iterated until information architecture is solid',
+      'Interactive Figma prototype for user testing and stakeholder sign-off',
+      'Design system — typography, colors, spacing, and component library',
+      'Accessibility review baked in from the first frame (WCAG 2.1 AA)',
+      'Handoff package with tokens, specs, and annotated screens for engineers',
+    ],
+  },
+  {
+    num: '03',
+    title: 'Engineering',
+    desc: 'Clean, scalable architecture. Agile sprints with regular demos and fast iteration cycles.',
+    details: [
+      'Two-week sprints with a working demo at the end of each cycle',
+      'Modern stack: Next.js, TypeScript, REST/GraphQL APIs, cloud-native infra',
+      'Code reviews on every PR — no cowboy commits to main',
+      'Feature flags for safe rollouts without full redeployments',
+      'Performance budget tracked from day one (Core Web Vitals targets set)',
+    ],
+  },
+  {
+    num: '04',
+    title: 'QA & Testing',
+    desc: 'End-to-end coverage: unit tests, integration, accessibility audits, performance benchmarks.',
+    details: [
+      'Unit and integration test suites covering critical business logic',
+      'End-to-end browser tests (Playwright) for every primary user flow',
+      'Load and stress testing to validate the system under real traffic',
+      'Cross-browser and cross-device verification matrix',
+      'Accessibility audit — screen readers, keyboard navigation, color contrast',
+    ],
+  },
+  {
+    num: '05',
+    title: 'Launch',
+    desc: 'Zero-downtime deployment, monitoring setup, SEO configuration, and stakeholder handoff.',
+    details: [
+      'Blue-green or canary deployment — zero downtime, instant rollback capability',
+      'Monitoring and alerting configured before go-live (uptime, error rate, latency)',
+      'SEO meta tags, sitemap, robots.txt, and structured data validated',
+      'Analytics events verified end-to-end in production',
+      'Full documentation and knowledge transfer to the client team',
+    ],
+  },
+  {
+    num: '06',
+    title: 'Growth & Support',
+    desc: 'Ongoing maintenance, feature evolution, and performance optimization post-launch.',
+    details: [
+      'Monthly performance reports — traffic, conversions, Core Web Vitals',
+      'Proactive dependency updates and security patch cycles',
+      'Feature backlog groomed and prioritized with the product team quarterly',
+      '24/7 uptime monitoring with on-call escalation for critical incidents',
+      'Data-driven iteration: A/B tests, heatmaps, and user feedback loops',
+    ],
+  },
 ]
 
 /* ---------------------------- Project card --------------------------- */
@@ -92,6 +158,7 @@ function ProjectCard({
     <Link href={`/portfolio/${project.slug}`} style={{ display: 'block', textDecoration: 'none' }} aria-label={project.name}>
       <motion.div
         whileHover={{ y: -4, transition: { duration: 0.25 } }}
+        whileTap={{ scale: 0.97, transition: { duration: 0.12 } }}
         className={heightClass}
         style={{
           position: 'relative',
@@ -282,8 +349,77 @@ function Grid({ active }: { active: string }) {
 
 const Divider = () => <div style={{ width: '100%', height: 1, background: LINE }} />
 
+function ProcessStep({ s, isOpen, onToggle }: { s: typeof STEPS[0]; isOpen: boolean; onToggle: () => void }) {
+  const { t } = useLang()
+  return (
+    <div>
+      <button
+        onClick={onToggle}
+        style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}
+      >
+        <div
+          className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-2 lg:flex lg:justify-between lg:gap-8"
+          style={{ padding: 'clamp(20px, 3.5vw, 28px) 0' }}
+        >
+          <span className="font-mono" style={{ fontSize: 13, color: KICKER, letterSpacing: 2, width: 40, flexShrink: 0 }}>{s.num}</span>
+          <span className="font-display font-bold lg:w-[260px]" style={{ fontSize: 'clamp(19px, 5vw, 22px)', letterSpacing: -0.5, color: TEXT, flexShrink: 0 }}>{t(s.title)}</span>
+          <p className="font-body col-span-2 lg:w-[540px]" style={{ fontSize: 14, lineHeight: '23px', color: SUB, flexShrink: 0 }}>{t(s.desc)}</p>
+          <motion.div
+            animate={{ rotate: isOpen ? 90 : 0 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="flex items-center justify-center"
+            style={{
+              width: 44, height: 44, flexShrink: 0, borderRadius: 10,
+              background: isOpen ? TEXT : CHIP_BG,
+              border: `1px solid ${isOpen ? TEXT : CHIP_BORDER}`,
+            }}
+          >
+            <ArrowRight style={{ width: 16, height: 16, color: isOpen ? BG : KICKER }} />
+          </motion.div>
+        </div>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="details"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div
+              className="lg:ml-[calc(40px+1rem)]"
+              style={{
+                display: 'flex', flexDirection: 'column', gap: 10,
+                padding: 'clamp(16px, 3vw, 24px)',
+                marginBottom: 'clamp(16px, 3vw, 24px)',
+                borderRadius: 12,
+                background: CHIP_BG,
+                border: `1px solid ${CHIP_BORDER}`,
+              }}
+            >
+              {s.details.map((bullet, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: KICKER, flexShrink: 0, marginTop: 8 }} />
+                  <span className="font-body" style={{ fontSize: 14, lineHeight: '22px', color: SUB }}>{t(bullet)}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Divider />
+    </div>
+  )
+}
+
 function Process() {
   const { t } = useLang()
+  const [openStep, setOpenStep] = useState<string | null>(null)
+
   return (
     <section style={{ background: BG, padding: 'clamp(64px, 10vw, 96px) 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 64 }}>
       <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 'clamp(40px, 6vw, 56px)' }}>
@@ -304,18 +440,12 @@ function Process() {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <Divider />
           {STEPS.map((s) => (
-            <div key={s.num}>
-              {/* below lg: number + title on one line, description underneath; the arrow is desktop-only */}
-              <div className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-2 lg:flex lg:justify-between lg:gap-8" style={{ padding: '28px 0' }}>
-                <span className="font-mono" style={{ fontSize: 13, color: KICKER, letterSpacing: 2, width: 40, flexShrink: 0 }}>{s.num}</span>
-                <span className="font-display font-bold lg:w-[260px]" style={{ fontSize: 'clamp(19px, 5vw, 22px)', letterSpacing: -0.5, color: TEXT, flexShrink: 0 }}>{t(s.title)}</span>
-                <p className="font-body col-span-2 lg:w-[540px]" style={{ fontSize: 14, lineHeight: '23px', color: SUB, flexShrink: 0 }}>{t(s.desc)}</p>
-                <div className="flex items-center justify-center max-lg:hidden" style={{ width: 44, height: 44, flexShrink: 0, borderRadius: 10, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}` }}>
-                  <ArrowRight style={{ width: 16, height: 16, color: KICKER }} />
-                </div>
-              </div>
-              <Divider />
-            </div>
+            <ProcessStep
+              key={s.num}
+              s={s}
+              isOpen={openStep === s.num}
+              onToggle={() => setOpenStep(openStep === s.num ? null : s.num)}
+            />
           ))}
         </div>
       </div>
