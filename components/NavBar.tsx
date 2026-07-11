@@ -184,7 +184,7 @@ export default function NavBar() {
                 key={label}
                 href={href}
                 ref={(el) => { navLinkRefs.current[i] = el }}
-                className="rounded-full font-body"
+                className={`rounded-full font-body${active ? '' : ' nav-link'}`}
                 style={{
                   position: 'relative',
                   zIndex: 1,
@@ -277,7 +277,7 @@ export default function NavBar() {
               width: PILL_H,
               height: PILL_H,
               borderRadius: 999,
-              background: '#0e0e0e',
+              background: 'rgba(14,14,14,0.5)',
               padding: TOGGLE_RING,
               boxShadow: DARK_PILL_SHADOW,
               flexShrink: 0,
@@ -286,6 +286,7 @@ export default function NavBar() {
             <button
               onClick={toggle}
               aria-label="Toggle theme"
+              className="press"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -316,7 +317,7 @@ export default function NavBar() {
               width: PILL_H,
               height: PILL_H,
               borderRadius: 999,
-              background: '#0e0e0e',
+              background: 'rgba(14,14,14,0.5)',
               padding: TOGGLE_RING,
               boxShadow: DARK_PILL_SHADOW,
               flexShrink: 0,
@@ -326,6 +327,7 @@ export default function NavBar() {
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
+              className="press"
               style={{
                 display: 'flex',
                 alignItems: 'center',
