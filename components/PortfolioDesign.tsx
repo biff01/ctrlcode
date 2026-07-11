@@ -24,8 +24,13 @@ const CHIP_BORDER = 'var(--border)'
 const ACTIVE_BG = 'var(--nav-active-bg)'
 const ACTIVE_TEXT = 'var(--nav-active-color)'
 
-// Card overlays sit on photos, so they stay fixed regardless of theme
-const OVERLAY = 'linear-gradient(0deg, #00000000 0%, #000000F2 100%)'
+// Card overlays sit on photos, so they stay fixed regardless of theme.
+// Darkest at the BOTTOM (where the title sits) fading up to transparent, so the
+// gradient reinforces text legibility instead of dimming the middle of the photo.
+const OVERLAY = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.72) 78%, rgba(0,0,0,0.92) 100%)'
+// Frosted-glass mask — the backdrop blur ramps in only over the bottom third so
+// the imagery stays crisp up top and the caption area reads as premium glass.
+const GLASS_MASK = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 55%, rgba(0,0,0,1) 100%)'
 const CARD_TITLE = '#FFFFFF'
 const CARD_SUB = '#FFFFFFAA'
 const CARD_NUM = '#7C93C4'
@@ -171,7 +176,19 @@ function ProjectCard({
           cursor: 'pointer',
         }}
       >
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '55%', background: OVERLAY, zIndex: 0 }} />
+        {/* Frosted-glass caption base — subtle backdrop blur that fades in toward the bottom */}
+        <div
+          style={{
+            position: 'absolute', left: 0, right: 0, bottom: 0, height: '60%',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
+            maskImage: GLASS_MASK,
+            WebkitMaskImage: GLASS_MASK,
+            zIndex: 0,
+          }}
+        />
+        {/* Gradient overlay for text contrast — darkest at the bottom */}
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '60%', background: OVERLAY, zIndex: 0 }} />
 
         <div style={{ position: 'absolute', left: pad, top: pad, padding: '6px 14px', borderRadius: 100, background: '#FFFFFF16', zIndex: 1 }}>
           <span className="font-body" style={{ fontSize: 12, color: CARD_SUB }}>{t(project.category)}</span>
