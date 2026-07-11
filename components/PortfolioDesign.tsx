@@ -176,10 +176,14 @@ function ProjectCard({
           cursor: 'pointer',
         }}
       >
-        {/* Frosted-glass caption base — subtle backdrop blur that fades in toward the bottom */}
+        {/* Frosted-glass caption base — subtle backdrop blur that fades in toward the bottom.
+            Bottom corners are rounded to match the card so the backdrop-filter layer aligns
+            with the parent's rounded clip (otherwise Chrome leaves a 1px seam at the edge). */}
         <div
           style={{
             position: 'absolute', left: 0, right: 0, bottom: 0, height: '60%',
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
             backdropFilter: 'blur(6px)',
             WebkitBackdropFilter: 'blur(6px)',
             maskImage: GLASS_MASK,
