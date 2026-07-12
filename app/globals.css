@@ -317,6 +317,28 @@
   --footer-input-text: #0D1B4B;
 }
 
+/* ── Nested dark-theme island ─────────────────────── */
+/* Any non-root element with data-theme="dark" (e.g. the hero browser mockup)
+   gets the dark token set re-declared so the cascade works inside a light page.
+   Without this, CSS vars defined only on :root[data-theme="light"] win and the
+   white browser-chrome dots / URL text become invisible on the light bg. */
+[data-theme="dark"]:not(:root) {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface-2: #181818;
+  --surface-3: #1a1a1a;
+  --section-alt: #080808;
+  --border: rgba(255,255,255,0.11);
+  --border-subtle: #2a2a2a;
+  --border-light: #1e1e1e;
+  --card-shadow: none;
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --text-tertiary: #666666;
+  --text-muted: #555555;
+  --kicker: #888888;
+}
+
 /* ── Base ─────────────────────────────────────────── */
 *,
 *::before,
@@ -507,7 +529,9 @@ h3 {
 }
 
 /* Logo lockups: dark theme is the default, so the white logo shows unless
-   [data-theme="light"] is set. */
+   [data-theme="light"] is set (or the system prefers light and no explicit
+   dark override is present). Both images are always in the DOM so the swap
+   happens on first paint without waiting for ThemeProvider to mount. */
 .logo-light {
   display: none;
 }
@@ -518,6 +542,17 @@ h3 {
 
 :root[data-theme="light"] .logo-light {
   display: block;
+}
+
+/* System-preference fallback: show the correct logo before JS sets data-theme.
+   A user-chosen dark override (:root[data-theme="dark"]) wins via specificity. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .logo-dark {
+    display: none;
+  }
+  :root:not([data-theme="dark"]) .logo-light {
+    display: block;
+  }
 }
 
 /* ── Responsive foundations ───────────────────────── */

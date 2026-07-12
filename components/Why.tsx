@@ -70,7 +70,7 @@ export default function Why() {
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.78, ease: [0.22, 1, 0.36, 1] }}
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 'clamp(40px, 5vw, 56px)' }}
         >
           <span
@@ -108,7 +108,7 @@ export default function Why() {
                 viewport={{ once: true, amount: 0.1 }}
                 whileHover={{ y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.5, delay: idx * 0.09, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6, delay: idx * 0.11, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   padding: `clamp(24px, 3.13vw, 32px) clamp(24px, 3.13vw, 32px) clamp(28px, 3.2vw, 32px)`,
                   background: 'linear-gradient(180deg, var(--surface-2) 0%, var(--why-cell) 100%)',

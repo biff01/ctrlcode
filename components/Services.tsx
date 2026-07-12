@@ -579,6 +579,7 @@ export default function Services() {
       style={{
         background: 'var(--section-alt)',
         padding: 'clamp(64px, 10.75vw, 112px) 0 clamp(72px, 11.72vw, 128px)',
+        overflowX: 'clip',
       }}
     >
       <div className="max-lg:px-6" style={{ maxWidth: 1200, margin: '0 auto' }}>
@@ -587,7 +588,7 @@ export default function Services() {
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.84, ease: [0.22, 1, 0.36, 1] }}
           style={{ marginBottom: 'clamp(56px, 8.6vw, 88px)' }}
         >
           <div>
@@ -617,7 +618,7 @@ export default function Services() {
               initial={{ y: 40 }}
               whileInView={{ y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.7, delay: i * 0.14, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.84, delay: i * 0.17, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ backgroundColor: dark ? 'rgba(255,255,255,0.025)' : 'rgba(13,27,75,0.025)', transition: { duration: 0.22 } }}
               style={{
                 flex: 1,
@@ -638,7 +639,7 @@ export default function Services() {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.7, delay: i * 0.14, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.84, delay: i * 0.17, ease: [0.22, 1, 0.36, 1] }}
                 style={{ height: 'clamp(260px, 35.2vw, 360px)', width: '100%' }}
               >
                 <fig.Illo dark={dark} />

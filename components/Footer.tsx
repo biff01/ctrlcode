@@ -428,7 +428,7 @@ export default function Footer() {
             © {new Date().getFullYear()} Ctrl Code. {t('All rights reserved.')}
           </span>
           <div style={legalLinksRowStyle}>
-            <Link href="/privacy" className="font-body nav-link" style={legalLinkStyle}>{t('Privacy')}</Link>
+            <Link href="/privacy-policy" className="font-body nav-link" style={legalLinkStyle}>{t('Privacy Policy')}</Link>
             <Link href="/terms" className="font-body nav-link" style={legalLinkStyle}>{t('Terms')}</Link>
           </div>
         </div>

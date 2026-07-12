@@ -224,8 +224,9 @@ export default function NavBar() {
         className="flex items-center justify-between w-full rounded-full"
         style={NAV_INNER_STYLE}
       >
-        {/* Logo */}
-        <Link href="/" className="flex items-center shrink-0 btn-fade" style={{ textDecoration: 'none' }}>
+        {/* Logo — position:relative + explicit z-index keeps it above any overlay
+            elements regardless of stacking-context changes in sibling nodes. */}
+        <Link href="/" className="flex items-center shrink-0 btn-fade" style={{ textDecoration: 'none', position: 'relative', zIndex: 10 }}>
           <CtrlCodeLogo height={30} />
         </Link>
 
@@ -250,7 +251,7 @@ export default function NavBar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.23, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   position: 'absolute',
                   top: navInd.top,
@@ -261,7 +262,7 @@ export default function NavBar() {
                   background: WHITE_INDICATOR_BG,
                   boxShadow: WHITE_INDICATOR_SHADOW,
                   pointerEvents: 'none',
-                  transition: 'left 0.28s cubic-bezier(0.22, 1, 0.36, 1), width 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease',
+                  transition: 'left 0.35s cubic-bezier(0.22, 1, 0.36, 1), width 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.23s ease',
                   zIndex: 0,
                 }}
               />
@@ -324,7 +325,7 @@ export default function NavBar() {
                 background: WHITE_INDICATOR_BG,
                 boxShadow: WHITE_INDICATOR_SHADOW,
                 transform: `translateX(${activeIdx * SEG_W}px)`,
-                transition: 'transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)',
+                transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
                 pointerEvents: 'none',
               }}
             />
@@ -352,7 +353,7 @@ export default function NavBar() {
                     }
                   }}
                   className="font-mono"
-                  whileHover={!active ? { filter: 'brightness(1.65)', transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } } : {}}
+                  whileHover={!active ? { filter: 'brightness(1.65)', transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } } : {}}
                   style={{
                     position: 'relative',
                     zIndex: 1,
@@ -414,7 +415,7 @@ export default function NavBar() {
                   initial={{ rotate: -90, opacity: 0, scale: 0.7 }}
                   animate={{ rotate: 0, opacity: 1, scale: 1 }}
                   exit={{ rotate: 90, opacity: 0, scale: 0.7 }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.23, ease: [0.22, 1, 0.36, 1] }}
                   style={{ display: 'flex' }}
                 >
                   {theme === 'dark'
@@ -461,10 +462,26 @@ export default function NavBar() {
                 flexShrink: 0,
               }}
             >
-              {menuOpen
-                ? <X style={{ width: 18, height: 18, color: '#0e0e0e' }} />
-                : <Menu style={{ width: 18, height: 18, color: '#0e0e0e' }} />
-              }
+              {/* Fixed-size wrapper so the X and hamburger icons occupy
+                  identical space — position:absolute children mean neither
+                  icon can shift the button's layout when it appears. */}
+              <span style={{ position: 'relative', width: 18, height: 18, display: 'block', flexShrink: 0 }}>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={menuOpen ? 'close' : 'open'}
+                    initial={{ opacity: 0, rotate: -45, scale: 0.7 }}
+                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                    exit={{ opacity: 0, rotate: 45, scale: 0.7 }}
+                    transition={{ duration: 0.23, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    {menuOpen
+                      ? <X style={{ width: 18, height: 18, color: '#0e0e0e' }} />
+                      : <Menu style={{ width: 18, height: 18, color: '#0e0e0e' }} />
+                    }
+                  </motion.span>
+                </AnimatePresence>
+              </span>
             </button>
           </div>
         </div>
@@ -481,7 +498,7 @@ export default function NavBar() {
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.40, ease: [0.22, 1, 0.36, 1] }}
             aria-label={t('Site menu')}
             aria-modal="true"
             role="dialog"
@@ -534,7 +551,7 @@ export default function NavBar() {
                     key={label}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.26, delay: 0.06 + i * 0.05, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.33, delay: 0.06 + i * 0.05, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <Link
                       href={href}
@@ -572,7 +589,7 @@ export default function NavBar() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.36, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.38, delay: 0.36, ease: [0.22, 1, 0.36, 1] }}
               style={{ padding: '32px 32px 0' }}
             >
               <span className="font-mono" style={{
@@ -612,7 +629,7 @@ export default function NavBar() {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.38, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               style={{ padding: '0 16px calc(env(safe-area-inset-bottom, 0px) + 32px)', display: 'flex', flexDirection: 'column', gap: 8 }}
             >
               {/* Language */}
@@ -649,7 +666,7 @@ export default function NavBar() {
                         }
                       }}
                       className="font-mono"
-                      whileHover={!active ? { filter: 'brightness(1.3)', transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } } : {}}
+                      whileHover={!active ? { filter: 'brightness(1.3)', transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } } : {}}
                       style={{
                         flex: 1, height: 48, border: 'none', borderRadius: 10,
                         background: active ? 'var(--nav-active-bg)' : 'transparent',

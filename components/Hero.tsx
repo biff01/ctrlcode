@@ -19,7 +19,7 @@ const STATS = [
 
 const STAT_ANIM_HIDDEN = { opacity: 0, y: 18 } as const
 const STAT_ANIM_VISIBLE = { opacity: 1, y: 0 } as const
-const STAT_TRANSITION_BASE = { duration: 0.55, ease: [0.22, 1, 0.36, 1] } as const
+const STAT_TRANSITION_BASE = { duration: 0.66, ease: [0.22, 1, 0.36, 1] } as const
 
 export default function Hero() {
   const statsRef = useRef<HTMLDivElement>(null)
@@ -72,7 +72,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="order-2 lg:order-1 lg:flex-1 lg:min-w-0"
           style={{ display: 'flex', flexDirection: 'column', gap: 24 }}
         >
@@ -83,8 +83,8 @@ export default function Hero() {
                 key={line}
                 className="font-display font-semibold"
                 style={headlineStyle}
-                duration={0.9}
-                delay={i * 0.15}
+                duration={1.08}
+                delay={i * 0.18}
               >
                 {t(line)}
               </BlurIn>
@@ -96,7 +96,7 @@ export default function Hero() {
             className="font-body"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.78, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
             style={{ fontSize: 'clamp(16px, 1.76vw, 18px)', lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: 540 }}
           >
             {t('We design and build web platforms, mobile apps, CRM systems and AI products for ambitious companies — fast, reliable and beautifully engineered.')}
@@ -107,7 +107,7 @@ export default function Hero() {
             className="flex items-center gap-2 rounded-[20px]"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.46, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.66, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
             style={{
               alignSelf: 'flex-start',
               maxWidth: '100%',
@@ -137,7 +137,7 @@ export default function Hero() {
             className="max-md:flex-col"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.66, delay: 0.70, ease: [0.22, 1, 0.36, 1] }}
             style={{ display: 'flex', gap: 16 }}
           >
             <Link
@@ -182,7 +182,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          transition={{ duration: 1.08, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
           className="order-1 lg:order-2 hero-icon-grid w-full lg:w-[600px] lg:shrink-0"
         >
           <IconGrid height={360} fadeColor="var(--bg)" />
@@ -193,7 +193,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 64 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.36 }}
           className="flex justify-center"
           style={{ paddingTop: 'clamp(44px, 6.7vw, 68px)' }}
         >
@@ -250,7 +250,7 @@ export default function Hero() {
               key={s.label}
               initial={STAT_ANIM_HIDDEN}
               animate={statsVisible ? STAT_ANIM_VISIBLE : STAT_ANIM_HIDDEN}
-              transition={{ ...STAT_TRANSITION_BASE, delay: i * 0.1 }}
+              transition={{ ...STAT_TRANSITION_BASE, delay: i * 0.12 }}
               className="flex flex-col items-center"
               style={{ gap: 8 }}
             >

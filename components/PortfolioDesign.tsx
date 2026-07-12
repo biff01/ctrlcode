@@ -205,11 +205,11 @@ function ProjectCard({
         <div
           style={{
             position: 'absolute', inset: 0,
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
             maskImage: GLASS_MASK,
             WebkitMaskImage: GLASS_MASK,
-            background: 'rgba(255,255,255,0.04)',
+            background: 'rgba(0,0,0,0.45)',
             zIndex: 0,
           }}
         />
@@ -227,10 +227,20 @@ function ProjectCard({
           <ArrowUpRight aria-hidden={true} style={{ width: 16, height: 16, color: '#FFFFFF' }} />
         </motion.div>
 
-        <div style={{ position: 'absolute', left: pad, bottom: pad, display: 'flex', flexDirection: 'column', gap: 8, zIndex: 3 }}>
+        <div
+          style={{
+            position: 'absolute', left: pad, bottom: pad, display: 'flex', flexDirection: 'column', gap: 8, zIndex: 3,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            background: 'rgba(0,0,0,0.45)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: 12,
+            padding: '12px 16px',
+          }}
+        >
           <span className="font-mono" style={{ fontSize: numSize, color: CARD_NUM, letterSpacing: 2 }}>{project.num}</span>
           <span className="font-display font-bold" style={{ fontSize: titleSize, letterSpacing: titleLs, color: CARD_TITLE, lineHeight: 1.05 }}>
-            {project.name}
+            {t(project.name)}
           </span>
         </div>
       </motion.div>
@@ -682,22 +692,23 @@ function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
           transition={{ type: 'spring', stiffness: 130, damping: 20, mass: 0.9, delay: 0.05 }}
         >
           <div style={{ position: 'absolute', left: -6, top: 124, width: 132, height: 132, borderRadius: '50%', border: '1px solid #FFFFFF0B' }} />
+          {/* First circle: IDEA (lightbulb) */}
           <motion.div
             whileHover={{ scale: 1.06, boxShadow: '0 14px 56px rgba(0,0,0,0.6)', transition: { duration: 0.5, ease: SMOOTH } }}
-            style={{ position: 'absolute', left: 0, top: 130, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', boxShadow: '0 10px 50px rgba(0,0,0,0.33)', overflow: 'hidden' }}
+            style={{ position: 'absolute', left: 0, top: 130, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', boxShadow: '0 10px 50px rgba(0,0,0,0.33)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            <div style={{ position: 'absolute', left: 10, top: 10, width: 100, height: 100, borderRadius: '50%', background: '#0A0A15' }} />
-            <motion.div
-              style={{ position: 'absolute', left: 27, top: 27, width: 66, height: 66 }}
-              animate={show ? { rotate: 360 } : {}}
-              transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
-              whileHover={{ scale: 1.14, transition: { duration: 0.5, ease: SMOOTH } }}
-            >
-              <svg viewBox="0 0 110 110" style={{ display: 'block', width: 66, height: 66, overflow: 'visible' }}>
-                <path d="M55 0l8.4 34.7 30.5-18.6-18.6 30.5 34.7 8.4-34.7 8.4 18.6 30.5-30.5-18.6-8.4 34.7-8.4-34.7-30.5 18.6 18.6-30.5-34.7-8.4 34.7-8.4-18.6-30.5 30.5 18.6z" fill="#FFFFFF" />
-              </svg>
-            </motion.div>
+            <svg viewBox="0 0 48 48" width="60" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 6C17.373 6 12 11.373 12 18c0 4.314 2.2 8.116 5.6 10.4.267.186.4.5.4.824V32a1 1 0 001 1h10a1 1 0 001-1v-2.776c0-.324.133-.638.4-.824C33.8 26.116 36 22.314 36 18c0-6.627-5.373-12-12-12z" stroke="#FFFFFF" strokeWidth="2" strokeLinejoin="round"/>
+              <path d="M19 36h10M20.5 40h7" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="24" y1="6" x2="24" y2="3" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="12" y1="12" x2="10" y2="10" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="36" y1="12" x2="38" y2="10" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="8" y1="18" x2="5" y2="18" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="40" y1="18" x2="43" y2="18" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
           </motion.div>
+          {/* IDEA label */}
+          <span className="font-mono" style={{ position: 'absolute', left: 0, top: 258, width: 120, textAlign: 'center', fontSize: 10, color: 'rgba(255,255,255,0.5)', letterSpacing: 2, pointerEvents: 'none' }}>IDEA</span>
         </motion.div>
 
         <motion.div
@@ -733,17 +744,53 @@ function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
           transition={{ type: 'spring', stiffness: 130, damping: 20, mass: 0.9, delay: 0.5 }}
         >
           <div style={{ position: 'absolute', left: 494, top: 124, width: 132, height: 132, borderRadius: '50%', border: '1px solid #FFFFFF0B' }} />
+          {/* Second circle: WEBSITE (browser/monitor) */}
           <motion.div
             whileHover={{ scale: 1.06, filter: 'brightness(1.14)', boxShadow: '0 14px 56px rgba(0,0,0,0.6)', transition: { duration: 0.5, ease: SMOOTH } }}
-            style={{ position: 'absolute', left: 500, top: 130, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', boxShadow: '0 10px 50px rgba(0,0,0,0.33)', overflow: 'hidden' }}
+            style={{ position: 'absolute', left: 500, top: 130, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', boxShadow: '0 10px 50px rgba(0,0,0,0.33)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            <div style={{ position: 'absolute', left: 20, top: 20, width: 80, height: 80, borderRadius: 40, overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(ellipse 50% 50% at 36% 30%, #E0E0E0 0%, #ABABAB 55%, #676767 100%)' }} />
-              {[-12, 10, 32, 54, 76].map((l, i) => (
-                <div key={i} style={{ position: 'absolute', left: l, top: -15, width: 12, height: 120, background: '#0F0F1B', transform: 'rotate(42deg)', transformOrigin: 'top left' }} />
-              ))}
-            </div>
+            <svg viewBox="0 0 48 48" width="58" height="58" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="10" width="36" height="26" rx="3" stroke="#FFFFFF" strokeWidth="2"/>
+              <line x1="6" y1="18" x2="42" y2="18" stroke="#FFFFFF" strokeWidth="2"/>
+              <circle cx="11.5" cy="14" r="1.5" fill="#FFFFFF"/>
+              <circle cx="17.5" cy="14" r="1.5" fill="#FFFFFF"/>
+              <circle cx="23.5" cy="14" r="1.5" fill="#FFFFFF"/>
+              <line x1="12" y1="24" x2="36" y2="24" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.7"/>
+              <line x1="12" y1="29" x2="27" y2="29" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.5"/>
+              <line x1="24" y1="36" x2="24" y2="42" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="18" y1="42" x2="30" y2="42" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
           </motion.div>
+          {/* WEBSITE label */}
+          <span className="font-mono" style={{ position: 'absolute', left: 500, top: 258, width: 120, textAlign: 'center', fontSize: 10, color: 'rgba(255,255,255,0.5)', letterSpacing: 2, pointerEvents: 'none' }}>WEBSITE</span>
+
+          {/* Arrow connector: IDEA → WEBSITE (dashed arrow below the waves) */}
+          <svg
+            viewBox="0 0 380 16"
+            style={{ position: 'absolute', left: 120, top: 292, width: 380, height: 16, overflow: 'visible', zIndex: 2, pointerEvents: 'none' }}
+          >
+            <motion.line
+              x1="0" y1="8" x2="364" y2="8"
+              stroke="rgba(255,255,255,0.22)"
+              strokeWidth="1.5"
+              strokeDasharray="6 5"
+              strokeLinecap="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={show ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+              transition={{ duration: 1.4, delay: 1.2, ease: WS_EASE }}
+            />
+            <motion.path
+              d="M358 3 L374 8 L358 13"
+              fill="none"
+              stroke="rgba(255,255,255,0.22)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ opacity: 0 }}
+              animate={show ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.4, delay: 2.6, ease: WS_EASE }}
+            />
+          </svg>
         </motion.div>
       </div>
     </div>

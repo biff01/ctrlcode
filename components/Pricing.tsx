@@ -2,12 +2,10 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ArrowUpRight, Check } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 import { useTheme } from './ThemeProvider'
-
-type Tab = 'standard' | 'premium'
 
 type Plan = {
   id: string
@@ -21,33 +19,14 @@ type Plan = {
   cta: string
 }
 
-const ENTERPRISE = {
-  id: 'enterprise',
-  name: 'Enterprise',
-  subtitle: 'Dedicated team for complex, long-term projects.',
-  price: '$199',
-  unit: '/ hour',
-  badge: null as string | null,
-  gradient: 'linear-gradient(135deg, #080a18 0%, #171717 50%, #454545 100%)',
-  features: [
-    'Dedicated development team',
-    'Full-stack architecture & planning',
-    'Performance, security & SEO audit',
-    'SLA guarantee & uptime monitoring',
-    'Ongoing retainer available',
-    'Support 24 months',
-  ],
-  cta: 'Contact Us',
-}
-
-const STANDARD_PLANS = [
+const ALL_PLANS: Plan[] = [
   {
     id: 'standard',
     name: 'Standard Plan',
     subtitle: 'Have design ready to build? Or small budget?',
     price: '$49',
     unit: '/ hour',
-    badge: null as string | null,
+    badge: null,
     gradient: 'linear-gradient(135deg, #080a18 0%, #0d1b40 50%, #1a3070 100%)',
     features: [
       'Design-to-code from your wireframe',
@@ -59,13 +38,9 @@ const STANDARD_PLANS = [
     ],
     cta: 'Get Started',
   },
-  ENTERPRISE,
-]
-
-const PREMIUM_PLANS = [
   {
-    id: 'premium',
-    name: 'Premium Plan',
+    id: 'pro',
+    name: 'Pro Plan',
     subtitle: 'Full design & development with priority delivery.',
     price: '$99',
     unit: '/ hour',
@@ -81,15 +56,32 @@ const PREMIUM_PLANS = [
     ],
     cta: 'Get Started',
   },
-  ENTERPRISE,
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    subtitle: 'Dedicated team for complex, long-term projects.',
+    price: '$199',
+    unit: '/ hour',
+    badge: null,
+    gradient: 'linear-gradient(135deg, #080a18 0%, #171717 50%, #454545 100%)',
+    features: [
+      'Dedicated development team',
+      'Full-stack architecture & planning',
+      'Performance, security & SEO audit',
+      'SLA guarantee & uptime monitoring',
+      'Ongoing retainer available',
+      'Support 24 months',
+    ],
+    cta: 'Contact Us',
+  },
 ]
 
 function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }) {
   const [hovered, setHovered] = useState(false)
   const router = useRouter()
   const { t } = useLang()
-  const isPremium = plan.id === 'premium'
-  const showAmber = isPremium && dark
+  const isPro = plan.id === 'pro'
+  const showAmber = isPro && dark
 
   const cardShadow = showAmber
     ? hovered
@@ -109,11 +101,10 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
 
   return (
     <motion.div
-      className="w-full min-w-0 md:w-auto md:flex-1"
+      className="w-full min-w-0"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
       whileHover={{ y: -4, scale: 1.012, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }}
       whileTap={{ scale: 0.99, y: 0, transition: { duration: 0.15 } }}
       onHoverStart={() => setHovered(true)}
@@ -125,7 +116,7 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
         gap: 0,
         borderRadius: 18,
         background: dark ? 'var(--surface-2)' : 'var(--surface)',
-        padding: 16,
+        padding: 'clamp(12px, 3vw, 16px)',
         overflow: 'hidden',
         position: 'relative',
         border: cardBorder,
@@ -149,9 +140,9 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
         style={{
           borderRadius: 14,
           background: plan.gradient,
-          padding: '24px 24px 20px',
-          marginBottom: 20,
-          minHeight: isPremium ? 224 : 200,
+          padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 24px) clamp(14px, 3.5vw, 20px)',
+          marginBottom: 'clamp(14px, 3vw, 20px)',
+          minHeight: isPro ? 224 : 200,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -172,7 +163,7 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
           <div className="flex flex-wrap items-center justify-between" style={{ rowGap: 8 }}>
             <div className="flex items-center" style={{ gap: 8 }}>
               <span style={{ color: showAmber ? '#e8a020' : '#fff', fontSize: 18 }}>•</span>
-              <span className="font-display font-semibold" style={{ fontSize: 'clamp(14px, 4vw, 17px)', color: '#fff' }}>
+              <span className="font-display font-semibold" style={{ fontSize: 'clamp(14px, 3.5vw, 17px)', color: '#fff' }}>
                 {t(plan.name)}
               </span>
             </div>
@@ -195,17 +186,17 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
               </span>
             )}
           </div>
-          <p className="font-body" style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>
+          <p className="font-body" style={{ fontSize: 'clamp(12px, 2.5vw, 13px)', color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>
             {t(plan.subtitle)}
           </p>
         </div>
 
         <div style={{ position: 'relative' }}>
           <div className="flex items-end" style={{ gap: 8 }}>
-            <span className="font-display font-light" style={{ fontSize: 'clamp(44px, 12vw, 62px)', color: '#fff', lineHeight: 1 }}>
+            <span className="font-display font-light" style={{ fontSize: 'clamp(40px, 10vw, 62px)', color: '#fff', lineHeight: 1 }}>
               {plan.price}
             </span>
-            <span className="font-body" style={{ fontSize: 'clamp(14px, 4vw, 18px)', color: 'var(--text-muted)', paddingBottom: 4 }}>
+            <span className="font-body" style={{ fontSize: 'clamp(13px, 3vw, 18px)', color: 'var(--text-muted)', paddingBottom: 4 }}>
               {t(plan.unit)}
             </span>
           </div>
@@ -234,7 +225,7 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
             ) : (
               <span style={{ color: 'var(--text-secondary)', fontSize: 14, flexShrink: 0, marginTop: 1 }}>•</span>
             )}
-            <span className="font-body text-sm md:text-[13.5px]" style={{ color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+            <span className="font-body" style={{ fontSize: 'clamp(12px, 2.5vw, 13.5px)', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
               {t(f)}
             </span>
           </li>
@@ -253,13 +244,13 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
         }}
         whileTap={{ y: 0, filter: 'brightness(0.95)' }}
         transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-        className="flex items-center font-body font-semibold w-full justify-between md:w-auto md:justify-normal md:self-start"
+        className="flex items-center font-body font-semibold w-full justify-between"
         style={{
           background: showAmber
             ? 'linear-gradient(135deg, #a06000 0%, #d48000 50%, #e09500 100%)'
             : 'var(--btn-primary-bg)',
           color: 'var(--btn-primary-color)',
-          fontSize: 'clamp(13px, 3.5vw, 15px)',
+          fontSize: 'clamp(13px, 3vw, 15px)',
           borderRadius: 99,
           padding: '8px 8px 8px 20px',
           marginTop: 20,
@@ -295,100 +286,32 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
 }
 
 export default function Pricing() {
-  const [tab, setTab] = useState<Tab>('standard')
   const [quoteHovered, setQuoteHovered] = useState(false)
   const router = useRouter()
   const { t } = useLang()
   const { theme } = useTheme()
   const dark = theme === 'dark'
-  const plans = tab === 'premium' ? PREMIUM_PLANS : STANDARD_PLANS
 
   return (
     <section style={{ background: 'var(--bg)', padding: 'clamp(32px, 5vw, 60px) 0 clamp(60px, 8vw, 96px)' }}>
       <div className="px-5 md:px-6 lg:px-0" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-        {/* Header row — stacks on mobile, single row from tablet up */}
-        <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between md:gap-0" style={{ marginBottom: 8 }}>
+        {/* Header */}
+        <div style={{ marginBottom: 8 }}>
           <h2
             className="font-display font-bold"
             style={{ fontSize: 'clamp(30px, 6vw, 42px)', letterSpacing: '-0.0357em', color: 'var(--text-primary)' }}
           >
             {t('Our Pricing')}
           </h2>
-          <div
-            role="tablist"
-            aria-label="Pricing tier"
-            className="max-md:w-full"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              background: dark ? 'var(--surface-3)' : 'var(--surface-2)',
-              borderRadius: 99,
-              padding: '4px',
-              gap: 2,
-              position: 'relative',
-            }}
-          >
-            {(['standard', 'premium'] as Tab[]).map((tabKey) => {
-              const active = tab === tabKey
-              return (
-                <button
-                  key={tabKey}
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => setTab(tabKey)}
-                  className="font-body rounded-full inline-flex items-center justify-center min-h-11 lg:min-h-0 max-md:flex-1 btn-fade focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-                  style={{
-                    padding: '7px 16px',
-                    fontSize: '0.8125rem',
-                    position: 'relative',
-                    background: 'transparent',
-                    color: active
-                      ? dark ? 'var(--text-primary)' : '#FFFFFF'
-                      : dark ? 'var(--text-tertiary)' : 'var(--text-tertiary)',
-                    fontWeight: active ? 500 : 400,
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'background 0.22s cubic-bezier(0.22,1,0.36,1), color 0.22s cubic-bezier(0.22,1,0.36,1)',
-                    zIndex: 1,
-                  }}
-                >
-                  {active && (
-                    <motion.span
-                      layoutId="pricing-tab-indicator"
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        borderRadius: 99,
-                        background: dark ? 'var(--tab-active)' : '#0D1B4B',
-                        zIndex: -1,
-                      }}
-                      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                    />
-                  )}
-                  {t(tabKey === 'standard' ? 'Standard Plan' : 'Premium Plan')}
-                </button>
-              )
-            })}
-          </div>
         </div>
 
-        {/* Plan cards — stacked on mobile, side by side from tablet up */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            className="flex flex-col md:flex-row"
-            style={{ gap: 12 }}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {plans.map((plan, i) => (
-              <PricingCard key={plan.id} plan={plan} i={i} dark={dark} />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        {/* Plan cards — 1 col on mobile, 2 on tablet, 3 on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: 12 }}>
+          {ALL_PLANS.map((plan, i) => (
+            <PricingCard key={plan.id} plan={plan} i={i} dark={dark} />
+          ))}
+        </div>
 
         {/* Custom Quote bar */}
         <motion.button

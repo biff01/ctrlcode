@@ -198,9 +198,9 @@ function Card({ card, imgClassName, onShowcase }: { card: ProjectCard; imgClassN
   const { t } = useLang()
   return (
     <motion.div
-      whileHover={{ y: -4, transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } }}
+      whileHover={{ y: -6, boxShadow: '0 24px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.08)', transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
       whileTap={{ scale: 0.98, transition: { duration: 0.12 } }}
-      className="flex flex-col overflow-hidden card-shadow-lift"
+      className="flex flex-col overflow-hidden group"
       style={cardOuterStyle}
     >
       <div className={imgClassName} style={cardImgWrapStyle}>
@@ -209,32 +209,50 @@ function Card({ card, imgClassName, onShowcase }: { card: ProjectCard; imgClassN
           alt={t(card.name)}
           fill
           sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 400px"
+          className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
           style={{ objectFit: 'cover' }}
           placeholder="blur"
           blurDataURL={SHIMMER}
         />
       </div>
       <div
-        className="flex items-end justify-between gap-3 p-5 md:p-6 lg:gap-0 lg:p-8"
-        style={cardBodyStyle}
+        className="flex items-end justify-between gap-3 lg:gap-0"
+        style={{ ...cardBodyStyle, padding: '20px 24px 24px' }}
       >
         <div style={cardTextColStyle}>
           <span
             className="font-body"
-            style={{ fontSize: 12, color: 'var(--text-tertiary)', letterSpacing: 0.5 }}
+            style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 1.2, textTransform: 'uppercase' }}
           >
             {t(card.category)}
           </span>
           <span
             className="font-display font-bold"
-            style={{ fontSize: 'clamp(20px, 2.5vw, 26px)', letterSpacing: -0.4, lineHeight: 1.1, color: 'var(--text-primary)' }}
+            style={{ fontSize: 'clamp(18px, 2vw, 24px)', letterSpacing: -0.4, lineHeight: 1.15, color: 'var(--text-primary)' }}
           >
             {t(card.name)}
           </span>
           <DatePill date={card.date} />
           <LivePill href={card.liveUrl} onShowcase={onShowcase} />
         </div>
-        <DetailsButton slug={card.slug} name={card.name} />
+        <Link
+          href={`/portfolio/${card.slug}`}
+          aria-label={`${t('View case study')}: ${t(card.name)}`}
+          className="flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110 group-hover:bg-[var(--text-primary)] group-hover:border-transparent"
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: 12,
+            background: 'var(--pill-bg)',
+            border: '1px solid var(--card-border)',
+          }}
+        >
+          <ArrowUpRight
+            aria-hidden={true}
+            className="transition-colors duration-300 group-hover:text-[var(--bg)]"
+            style={{ width: 20, height: 20, color: 'var(--text-primary)' }}
+          />
+        </Link>
       </div>
     </motion.div>
   )
@@ -244,9 +262,9 @@ function FeaturedCard({ card, onShowcase }: { card: ProjectCard; onShowcase?: ()
   const { t } = useLang()
   return (
     <motion.div
-      whileHover={{ y: -4, transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } }}
+      whileHover={{ y: -6, boxShadow: '0 24px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.08)', transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
       whileTap={{ scale: 0.98, transition: { duration: 0.12 } }}
-      className="flex flex-col overflow-hidden card-shadow-lift"
+      className="flex flex-col overflow-hidden group"
       style={cardOuterStyle}
     >
       <div className="aspect-[4/3] md:aspect-[16/9] lg:aspect-auto lg:h-[460px]" style={cardImgWrapStyle}>
@@ -255,32 +273,50 @@ function FeaturedCard({ card, onShowcase }: { card: ProjectCard; onShowcase?: ()
           alt={t(card.name)}
           fill
           sizes="(max-width: 1023px) 100vw, 780px"
+          className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
           style={{ objectFit: 'cover' }}
           placeholder="blur"
           blurDataURL={SHIMMER}
         />
       </div>
       <div
-        className="flex items-end justify-between gap-3 p-5 md:p-6 lg:gap-0 lg:p-8"
-        style={cardBodyStyle}
+        className="flex items-end justify-between gap-3 lg:gap-0"
+        style={{ ...cardBodyStyle, padding: '20px 24px 24px' }}
       >
         <div style={cardTextColStyle}>
           <span
             className="font-body"
-            style={{ fontSize: 12, color: 'var(--text-tertiary)', letterSpacing: 0.5 }}
+            style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 1.2, textTransform: 'uppercase' }}
           >
             {t(card.category)}
           </span>
           <span
             className="font-display font-bold"
-            style={{ fontSize: 'clamp(26px, 5.5vw, 38px)', letterSpacing: 'clamp(-1.2px, -0.12vw, -0.6px)', lineHeight: 1.1, color: 'var(--text-primary)' }}
+            style={{ fontSize: 'clamp(26px, 5.5vw, 36px)', letterSpacing: 'clamp(-1.2px, -0.12vw, -0.6px)', lineHeight: 1.1, color: 'var(--text-primary)' }}
           >
             {t(card.name)}
           </span>
           <DatePill date={card.date} />
           <LivePill href={card.liveUrl} onShowcase={onShowcase} />
         </div>
-        <DetailsButton slug={card.slug} name={card.name} />
+        <Link
+          href={`/portfolio/${card.slug}`}
+          aria-label={`${t('View case study')}: ${t(card.name)}`}
+          className="flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110 group-hover:bg-[var(--text-primary)] group-hover:border-transparent"
+          style={{
+            width: 68,
+            height: 68,
+            borderRadius: 14,
+            background: 'var(--pill-bg)',
+            border: '1px solid var(--card-border)',
+          }}
+        >
+          <ArrowUpRight
+            aria-hidden={true}
+            className="transition-colors duration-300 group-hover:text-[var(--bg)]"
+            style={{ width: 24, height: 24, color: 'var(--text-primary)' }}
+          />
+        </Link>
       </div>
     </motion.div>
   )
