@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowUpRight, ChevronDown } from 'lucide-react'
@@ -14,8 +15,8 @@ interface AccordionItem {
 }
 
 // cardSlug names the project in lib/projects.ts that showcases the service. CRM &
-// ERP and AI Solutions have no such project yet, so their cards fall back to the
-// portfolio index.
+// ERP and AI Solutions have no such project yet, so their cards render in a
+// disabled state rather than linking to the portfolio index.
 
 const SERVICES = [
   {
@@ -110,48 +111,62 @@ const SERVICES = [
   },
 ]
 
-function ServiceCard({ image, category, title, date, slug }: {
+function ServiceCard({ image, category, title, date, slug, priority = false }: {
   image: string
   category: string
   title: string
   date: string
   slug?: string
+  priority?: boolean
 }) {
   const { t } = useLang()
-  return (
-    <Link
-      href={slug ? `/portfolio/${slug}` : '/portfolio'}
-      className="max-md:w-full md:flex-1"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        borderRadius: 16,
-        overflow: 'hidden',
-        background: 'var(--card-bg)',
-        border: '1px solid var(--card-border)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        boxShadow: 'var(--card-shadow)',
-        textDecoration: 'none',
-        cursor: 'pointer',
-      }}
-    >
+  const [hovered, setHovered] = useState(false)
+  const [imgLoaded, setImgLoaded] = useState(false)
+
+  const innerStyle: React.CSSProperties = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    background: 'var(--card-bg)',
+    border: '1px solid var(--card-border)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    textDecoration: 'none',
+    cursor: slug ? 'pointer' : 'default',
+  }
+
+  const cardContent = (
+    <>
       {/* Image */}
       <div
         style={{
-          height: 240,
-          borderRadius: 10,
-          backgroundImage: `url('${image}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          position: 'relative',
+          height: 'clamp(160px, 30vw, 240px)',
+          overflow: 'hidden',
           flexShrink: 0,
+          background: 'var(--surface-2)',
         }}
-      />
+      >
+        <Image
+          src={image}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          priority={priority}
+          style={{
+            objectFit: 'cover',
+            opacity: imgLoaded ? 1 : 0,
+            transition: 'opacity 0.4s ease',
+          }}
+          onLoad={() => setImgLoaded(true)}
+        />
+      </div>
 
       {/* Card Body */}
       <div
         style={{
-          padding: 'clamp(20px, 5vw, 28px)',
+          padding: 'clamp(20px, 4vw, 32px)',
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'space-between',
@@ -160,13 +175,13 @@ function ServiceCard({ image, category, title, date, slug }: {
         }}
       >
         {/* Card Info */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <span className="font-body" style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
             {t(category)}
           </span>
           <span
             className="font-display"
-            style={{ fontSize: 22, fontWeight: 700, letterSpacing: -0.4, lineHeight: 1.1, color: 'var(--text-primary)' }}
+            style={{ fontSize: 'clamp(18px, 2.4vw, 22px)', fontWeight: 700, letterSpacing: -0.4, lineHeight: 1.1, color: 'var(--text-primary)' }}
           >
             {t(title)}
           </span>
@@ -176,10 +191,10 @@ function ServiceCard({ image, category, title, date, slug }: {
               padding: '6px 14px',
               background: 'var(--pill-bg)',
               border: '1px solid var(--pill-border)',
-              borderRadius: 40,
+              borderRadius: 9999,
             }}
           >
-            <span className="font-body" style={{ fontSize: 12, color: 'var(--pill-text)' }}>{date}</span>
+            <span className="font-body" style={{ fontSize: 12, color: 'var(--pill-text)' }}>{t(date)}</span>
           </div>
         </div>
 
@@ -189,18 +204,54 @@ function ServiceCard({ image, category, title, date, slug }: {
             width: 68,
             height: 68,
             borderRadius: 14,
-            background: 'var(--pill-bg)',
+            background: hovered ? 'var(--text-primary)' : 'var(--pill-bg)',
             border: '1px solid var(--card-border)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
+            transition: 'background 0.22s ease, border-color 0.22s ease',
+            opacity: slug ? 1 : 0.4,
           }}
         >
-          <ArrowUpRight style={{ width: 24, height: 24, color: 'var(--text-primary)' }} />
+          <ArrowUpRight
+            style={{
+              width: 24,
+              height: 24,
+              color: hovered ? 'var(--bg)' : 'var(--text-primary)',
+              transform: hovered ? 'rotate(45deg) translate(1px,-1px)' : 'none',
+              transition: 'transform 0.22s cubic-bezier(0.22,1,0.36,1), color 0.22s ease',
+            }}
+          />
         </div>
       </div>
-    </Link>
+    </>
+  )
+
+  return (
+    <motion.div
+      whileHover={{ y: -4, boxShadow: '0 2px 0 rgba(255,255,255,0.06), 0 12px 40px rgba(0,0,0,0.38)', transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
+      whileTap={{ scale: 0.98, transition: { duration: 0.12, ease: [0.22, 1, 0.36, 1] } }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      className="max-md:w-full md:flex-1"
+      style={{
+        display: 'flex',
+        borderRadius: 16,
+        overflow: 'hidden',
+        boxShadow: '0 2px 0 rgba(255,255,255,0), 0 12px 40px rgba(0,0,0,0)',
+      }}
+    >
+      {slug ? (
+        <Link href={`/portfolio/${slug}`} style={innerStyle}>
+          {cardContent}
+        </Link>
+      ) : (
+        <div style={innerStyle}>
+          {cardContent}
+        </div>
+      )}
+    </motion.div>
   )
 }
 
@@ -210,27 +261,45 @@ function AccordionRow({ item, open, onToggle }: {
   onToggle: () => void
 }) {
   const { t } = useLang()
+  const [btnHovered, setBtnHovered] = useState(false)
+  const panelId = `accordion-${item.label.replace(/\s+/g, '-')}`
+  const btnId = `btn-${item.label.replace(/\s+/g, '-')}`
   return (
     <div>
       <div style={{ height: 1, background: 'var(--accordion-line)' }} />
-      <button
+      <motion.button
+        id={btnId}
         type="button"
         onClick={onToggle}
         aria-expanded={open}
+        aria-controls={panelId}
+        onMouseEnter={() => setBtnHovered(true)}
+        onMouseLeave={() => setBtnHovered(false)}
+        whileHover={{ x: 2, transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } }}
+        whileTap={{ scale: 0.98 }}
         style={{
           width: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 16,
-          padding: '18px 0',
+          padding: '16px 0',
           background: 'transparent',
           border: 'none',
           cursor: 'pointer',
           textAlign: 'left',
         }}
       >
-        <span className="font-body" style={{ fontSize: 16, color: 'var(--text-primary)' }}>{t(item.label)}</span>
+        <span
+          className="font-body"
+          style={{
+            fontSize: 16,
+            color: open ? 'var(--text-primary)' : btnHovered ? 'var(--text-secondary)' : 'var(--text-primary)',
+            transition: 'color 0.18s ease',
+          }}
+        >
+          {t(item.label)}
+        </span>
         <ChevronDown
           style={{
             width: 18,
@@ -238,14 +307,18 @@ function AccordionRow({ item, open, onToggle }: {
             color: open ? 'var(--text-primary)' : 'var(--text-tertiary)',
             flexShrink: 0,
             transform: open ? 'rotate(180deg)' : 'none',
-            transition: 'transform 0.28s cubic-bezier(0.22,1,0.36,1), color 0.2s ease',
+            opacity: btnHovered && !open ? 0.6 : 1,
+            transition: 'transform 0.28s cubic-bezier(0.22,1,0.36,1), color 0.2s ease, opacity 0.18s ease',
           }}
         />
-      </button>
+      </motion.button>
       {/* Animate the measured height rather than a fixed max-height: the detail
           copy wraps differently per language, and a guessed cap either clips it
           or leaves the transition idling before it snaps shut. */}
       <motion.div
+        id={panelId}
+        role="region"
+        aria-labelledby={btnId}
         initial={false}
         animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
         transition={{
@@ -256,13 +329,18 @@ function AccordionRow({ item, open, onToggle }: {
       >
         <p
           className="font-body"
-          style={{ fontSize: 14.5, lineHeight: 1.6, color: 'var(--text-secondary)', margin: 0, maxWidth: 540, paddingBottom: 20 }}
+          style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--text-secondary)', margin: 0, maxWidth: 540, paddingBottom: 20 }}
         >
           {t(item.detail)}
         </p>
       </motion.div>
     </div>
   )
+}
+
+const FADE_UP = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.52, ease: [0.22, 1, 0.36, 1] } },
 }
 
 function ServiceText({ num, price, title, desc, accordion }: {
@@ -276,10 +354,17 @@ function ServiceText({ num, price, title, desc, accordion }: {
   // Only one row per service block is open; clicking the open row closes it.
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   return (
-    <div className="max-md:w-full md:flex-1" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+    <motion.div
+      className="max-md:w-full md:flex-1"
+      variants={{ hidden: { opacity: 1 }, visible: { transition: { staggerChildren: 0.08 } } }}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-80px' }}
+      style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
+    >
       {/* Num + Price Row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <span className="font-mono" style={{ fontSize: 13, color: '#4E6A99', letterSpacing: 2 }}>
+      <motion.div variants={FADE_UP} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <span className="font-mono" style={{ fontSize: 13, color: 'var(--kicker)', letterSpacing: 2 }}>
           {num}
         </span>
         <div
@@ -291,37 +376,50 @@ function ServiceText({ num, price, title, desc, accordion }: {
             borderRadius: 100,
           }}
         >
-          <span className="font-mono" style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{price}</span>
+          <span className="font-mono" style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{t(price)}</span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Title */}
-      <h2
-        className="font-display"
-        style={{ fontSize: 'clamp(30px, 7.5vw, 40px)', fontWeight: 700, letterSpacing: 'clamp(-1.5px, -0.15vw, -0.8px)', color: 'var(--text-primary)', margin: 0, lineHeight: 1.1 }}
-      >
-        {t(title)}
-      </h2>
+      <motion.div variants={FADE_UP}>
+        <h2
+          className="font-display"
+          style={{ fontSize: 'clamp(30px, 7.5vw, 40px)', fontWeight: 700, letterSpacing: 'clamp(-1.5px, -0.15vw, -0.8px)', color: 'var(--text-primary)', margin: 0, lineHeight: 1.1 }}
+        >
+          {t(title)}
+        </h2>
+      </motion.div>
 
       {/* Desc */}
-      <p className="font-body" style={{ fontSize: 15, lineHeight: 1.65, color: 'var(--text-secondary)', margin: 0 }}>
-        {t(desc)}
-      </p>
+      <motion.div variants={FADE_UP}>
+        <p className="font-body" style={{ fontSize: 'clamp(14px, 1.3vw, 16px)', lineHeight: 1.65, color: 'var(--text-secondary)', margin: 0 }}>
+          {t(desc)}
+        </p>
+      </motion.div>
 
       {/* Accordion — opt out of scroll anchoring so the browser doesn't correct
           scroll position on every frame of the height animation. */}
-      <div style={{ paddingTop: 20, overflowAnchor: 'none' }}>
-        {accordion.map((item, i) => (
-          <AccordionRow
-            key={item.label}
-            item={item}
-            open={openIndex === i}
-            onToggle={() => setOpenIndex((cur) => (cur === i ? null : i))}
-          />
-        ))}
-        <div style={{ height: 1, background: 'var(--accordion-line)' }} />
-      </div>
-    </div>
+      <motion.div variants={FADE_UP}>
+        <div style={{ paddingTop: 20, overflowAnchor: 'none' }}>
+          {accordion.map((item, i) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, x: -12 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <AccordionRow
+                item={item}
+                open={openIndex === i}
+                onToggle={() => setOpenIndex((cur) => (cur === i ? null : i))}
+              />
+            </motion.div>
+          ))}
+          <div style={{ height: 1, background: 'var(--accordion-line)' }} />
+        </div>
+      </motion.div>
+    </motion.div>
   )
 }
 
@@ -332,8 +430,14 @@ export default function ServiceBlocks() {
       {/* Top border */}
       <div style={{ height: 1, background: 'var(--border-subtle)', marginBottom: 0 }} />
 
-      {SERVICES.map((svc) => (
-        <div key={svc.num}>
+      {SERVICES.map((svc, i) => (
+        <motion.div
+          key={svc.num}
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+        >
           {/* Text always leads in the DOM so the stacked mobile layout reads
               copy first; md:flex-row-reverse restores the alternating desktop
               order for the cardLeft blocks. */}
@@ -356,11 +460,12 @@ export default function ServiceBlocks() {
               title={svc.cardTitle}
               date={svc.cardDate}
               slug={svc.cardSlug}
+              priority={i === 0}
             />
           </div>
           {/* Divider between blocks */}
           <div style={{ height: 1, background: 'var(--border-subtle)' }} />
-        </div>
+        </motion.div>
       ))}
       </div>
     </section>

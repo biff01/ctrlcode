@@ -1,5 +1,8 @@
 'use client'
 
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 
 const FAQS = [
@@ -25,65 +28,122 @@ const FAQS = [
   },
 ]
 
+const ROW_STYLE = { padding: '24px 0', borderTop: '1px solid var(--faq-border)' } as const
+
 export default function FAQ() {
   const { t } = useLang()
+  const [openIdx, setOpenIdx] = useState<number | null>(null)
+  const listRef = useRef<HTMLDivElement>(null)
+  const listVisible = useInView(listRef, { once: true, margin: '-40px' })
+
   return (
-    <section style={{ background: 'var(--bg)' }}>
+    <section aria-labelledby="faq-heading" style={{ background: 'var(--bg)' }}>
       <div
         style={{
           maxWidth: 1000,
           margin: '0 auto',
-          padding: '0 24px clamp(64px, 12vw, 104px)',
+          padding: 'clamp(64px, 9vw, 96px) 24px clamp(64px, 12vw, 112px)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 'clamp(28px, 6vw, 40px)',
+          gap: 'clamp(32px, 6vw, 40px)',
         }}
       >
-        {/* Header */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <span className="font-mono" style={{ fontSize: 12, letterSpacing: 1.5, color: '#4A6FA5' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
+        >
+          <span className="font-mono" style={{ fontSize: 12, letterSpacing: 1.5, color: 'var(--kicker)' }}>
             {t('FAQ')}
           </span>
           <h2
-            className="font-display"
-            style={{ fontSize: 'clamp(28px, 6vw, 38px)', fontWeight: 600, letterSpacing: '-0.0316em', color: 'var(--text-primary)', margin: 0 }}
+            id="faq-heading"
+            className="font-display font-semibold"
+            style={{ fontSize: 'clamp(32px, 5vw, 48px)', letterSpacing: '-0.03em', color: 'var(--text-primary)', margin: 0 }}
           >
             {t('Questions, answered.')}
           </h2>
-        </div>
+        </motion.div>
 
-        {/* List */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {FAQS.map((item) => (
-            <div
+        <div
+          ref={listRef}
+          style={{ display: 'flex', flexDirection: 'column', borderBottom: '1px solid var(--faq-border)' }}
+        >
+          {FAQS.map((item, idx) => (
+            <motion.div
               key={item.q}
-              className="flex flex-col gap-3 md:flex-row md:gap-12"
-              style={{
-                padding: '26px 0',
-                borderTop: '1px solid var(--faq-border)',
-              }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={listVisible ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: idx * 0.09, ease: [0.22, 1, 0.36, 1] }}
+              style={ROW_STYLE}
             >
-              <h3
-                className="font-display md:w-[340px]"
+              <motion.button
+                aria-expanded={openIdx === idx}
+                onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
+                whileHover={{ x: 3, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
+                whileTap={{ scale: 0.99 }}
                 style={{
-                  flex: 'none',
-                  fontSize: 17,
-                  fontWeight: 600,
-                  letterSpacing: -0.2,
-                  lineHeight: 1.4,
-                  color: 'var(--text-primary)',
-                  margin: 0,
+                  width: '100%',
+                  textAlign: 'left',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 8,
+                  borderRadius: 4,
                 }}
               >
-                {t(item.q)}
-              </h3>
-              <p
-                className="font-body"
-                style={{ fontSize: 15, lineHeight: 1.65, color: 'var(--text-secondary)', margin: 0 }}
-              >
-                {t(item.a)}
-              </p>
-            </div>
+                <h3
+                  className="font-display md:min-w-[260px] md:max-w-[380px]"
+                  style={{
+                    flexShrink: 0,
+                    fontSize: 'clamp(16px, 1.5vw, 20px)',
+                    fontWeight: 600,
+                    letterSpacing: -0.2,
+                    lineHeight: 1.4,
+                    color: 'var(--text-primary)',
+                    margin: 0,
+                  }}
+                >
+                  {t(item.q)}
+                </h3>
+                <motion.div
+                  animate={{ rotate: openIdx === idx ? 180 : 0 }}
+                  transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
+                  style={{ color: 'var(--text-secondary)', flexShrink: 0 }}
+                >
+                  <ChevronDown size={18} />
+                </motion.div>
+              </motion.button>
+              <AnimatePresence initial={false}>
+                {openIdx === idx && (
+                  <motion.div
+                    key="answer"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{
+                      default: { ease: [0.4, 0, 0.2, 1], duration: 0.32 },
+                      height: { duration: 0.32, ease: [0.4, 0, 0.2, 1] },
+                      opacity: { duration: 0.22, ease: 'linear', delay: 0.06 },
+                    }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    <p
+                      className="font-body"
+                      style={{ fontSize: 15, lineHeight: 1.65, color: 'var(--text-secondary)', margin: 0, paddingTop: 12 }}
+                    >
+                      {t(item.a)}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           ))}
         </div>
       </div>

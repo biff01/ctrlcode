@@ -1,5 +1,6 @@
 'use client'
 
+import { motion } from 'framer-motion'
 import { useLang } from './LanguageProvider'
 import { BlurIn } from './ui/blur-in'
 
@@ -8,8 +9,10 @@ export default function PricingHero() {
   return (
     <section style={{ background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}>
       {/* Soft purple glow */}
-      <div
+      <motion.div
         aria-hidden
+        animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.05, 1] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
         style={{
           position: 'absolute',
           top: -160,
@@ -35,22 +38,32 @@ export default function PricingHero() {
           gap: 20,
         }}
       >
-        <span className="font-mono" style={{ fontSize: 12, letterSpacing: 1.5, color: '#4A6FA5' }}>
+        <motion.span
+          className="font-mono"
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          style={{ fontSize: 12, letterSpacing: 1.5, color: 'var(--kicker)' }}
+        >
           {t('PRICING')}
-        </span>
+        </motion.span>
         <BlurIn
+          as="h1"
           className="font-display"
           style={{ fontSize: 'clamp(36px, 9vw, 64px)', fontWeight: 600, letterSpacing: '-0.0375em', lineHeight: 1.05, color: 'var(--text-primary)', margin: 0 }}
           duration={0.9}
         >
           {t('Invest in what ships.')}
         </BlurIn>
-        <p
+        <motion.p
           className="font-body"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
           style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: 560, margin: 0 }}
         >
           {t('Fixed scopes, milestone payments and a free consultation before any commitment.')}
-        </p>
+        </motion.p>
       </div>
     </section>
   )

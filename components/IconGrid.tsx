@@ -1,104 +1,220 @@
 'use client'
 
+import { useRef, useCallback, useMemo, useEffect } from 'react'
+import { motion, useMotionValue, useTransform, useSpring, type MotionValue } from 'framer-motion'
 import {
-  Command, Asterisk, Activity, Headphones, Triangle, Dog, Sparkles,
-  Mail, Box, MessageSquare, Package, type LucideIcon,
+  Globe, Smartphone, Brain, Cpu, BarChart2, Layers, Zap,
+  Activity, Sparkles, Mail, Box, MessageSquare, type LucideIcon,
 } from 'lucide-react'
-import { useTheme } from './ThemeProvider'
 
 const TILE = 110
 const CENTER = 130
 const ICON = 34
 const GAP = 12
+const MAX_DIST = 190
+const SHRINK_DIST = 380
+const MAX_SCALE = 1.40
+const SHRINK_AMOUNT = 0.10
+const TILE_RADIUS = 24
 
-interface Tile { Icon: LucideIcon; op: number; key: string }
+const ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: GAP,
+}
+
+function smoothstep(t: number) { return t * t * (3 - 2 * t) }
+
+function getDockScale(d: number): number {
+  if (d < MAX_DIST) {
+    const ease = smoothstep(1 - d / MAX_DIST)
+    return 1 + (MAX_SCALE - 1) * ease
+  }
+  if (d < SHRINK_DIST) {
+    const t = (d - MAX_DIST) / (SHRINK_DIST - MAX_DIST)
+    return 1 - SHRINK_AMOUNT * smoothstep(1 - t)
+  }
+  return 1
+}
+
+function getDockOpacity(d: number): number {
+  if (d < MAX_DIST) {
+    return 1
+  }
+  if (d < SHRINK_DIST) {
+    const t = (d - MAX_DIST) / (SHRINK_DIST - MAX_DIST)
+    return 1 - 0.18 * smoothstep(1 - t)
+  }
+  return 1
+}
+
+interface Tile { Icon: LucideIcon; key: string }
 
 const ROW_TOP: Tile[] = [
-  { Icon: Command, op: 0.7, key: 'command' },
-  { Icon: Asterisk, op: 0.7, key: 'asterisk' },
-  { Icon: Activity, op: 0.7, key: 'activity' },
-  { Icon: Headphones, op: 0.7, key: 'headphones' },
+  { Icon: Globe, key: 'globe' },
+  { Icon: Smartphone, key: 'smartphone' },
+  { Icon: Activity, key: 'activity' },
+  { Icon: Brain, key: 'brain' },
 ]
 const ROW_MID_LEFT: Tile[] = [
-  { Icon: Triangle, op: 0.7, key: 'triangle' },
-  { Icon: Dog, op: 0.7, key: 'dog' },
-  { Icon: Sparkles, op: 0.7, key: 'sparkles' },
+  { Icon: Layers, key: 'layers' },
+  { Icon: Zap, key: 'zap' },
+  { Icon: Sparkles, key: 'sparkles' },
 ]
 const ROW_MID_RIGHT: Tile[] = [
-  { Icon: Mail, op: 0.7, key: 'mail' },
-  { Icon: Box, op: 0.7, key: 'box' },
-  { Icon: MessageSquare, op: 0.7, key: 'message' },
+  { Icon: Mail, key: 'mail' },
+  { Icon: Box, key: 'box' },
+  { Icon: MessageSquare, key: 'message' },
 ]
 const ROW_BOTTOM: Tile[] = [
-  { Icon: Package, op: 0.7, key: 'package' },
-  { Icon: Headphones, op: 0.7, key: 'headphones-b' },
-  { Icon: Activity, op: 0.7, key: 'activity-b' },
-  { Icon: Sparkles, op: 0.7, key: 'sparkles-b' },
+  { Icon: BarChart2, key: 'barchart2' },
+  { Icon: Cpu, key: 'cpu' },
+  { Icon: Activity, key: 'activity-b' },
+  { Icon: Sparkles, key: 'sparkles-b' },
 ]
 
+interface DockTileProps {
+  Icon: LucideIcon
+  mouseX: MotionValue<number>
+  mouseY: MotionValue<number>
+  containerRef: React.RefObject<HTMLDivElement | null>
+  tileBg: string
+  tileBorder: string
+  iconColor: string
+}
+
+function DockTile({ Icon, mouseX, mouseY, containerRef, tileBg, tileBorder, iconColor }: DockTileProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  const centerRef = useRef({ cx: 0, cy: 0 })
+
+  useEffect(() => {
+    const update = () => {
+      const el = ref.current
+      const container = containerRef.current
+      if (!el || !container) return
+      const cRect = container.getBoundingClientRect()
+      const eRect = el.getBoundingClientRect()
+      centerRef.current = {
+        cx: eRect.left - cRect.left + eRect.width / 2,
+        cy: eRect.top - cRect.top + eRect.height / 2,
+      }
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    if (ref.current) ro.observe(ref.current)
+    return () => ro.disconnect()
+  }, [])
+
+  const dist = useTransform([mouseX, mouseY], ([mx, my]: number[]) => {
+    const { cx, cy } = centerRef.current
+    return Math.sqrt((mx - cx) ** 2 + (my - cy) ** 2)
+  })
+
+  const scale = useTransform(dist, getDockScale)
+  const opacity = useTransform(dist, getDockOpacity)
+
+  const springScale = useSpring(scale, { stiffness: 140, damping: 20, mass: 1.0 })
+  const springOpacity = useSpring(opacity, { stiffness: 140, damping: 20, mass: 1.0 })
+
+  const spacerSize = useTransform(springScale, (s) => TILE * s)
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{
+        width: spacerSize,
+        height: spacerSize,
+        flexShrink: 0,
+        position: 'relative',
+        zIndex: 1,
+      }}
+    >
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: TILE,
+          height: TILE,
+          marginTop: -(TILE / 2),
+          marginLeft: -(TILE / 2),
+          scale: springScale,
+          opacity: springOpacity,
+          borderRadius: TILE_RADIUS,
+          background: tileBg,
+          border: `1px solid ${tileBorder}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          willChange: 'transform, opacity',
+          cursor: 'pointer',
+        }}
+      >
+        <Icon style={{ width: ICON, height: ICON, color: iconColor }} strokeWidth={1.6} />
+      </motion.div>
+    </motion.div>
+  )
+}
+
 interface IconGridProps {
-  /** Fixed clip-box height. */
   height?: number
-  /** Colour the vignette fades the edges into. */
   fadeColor?: string
 }
 
-/**
- * Decorative icon field with a glowing "Ctrl Code" centre tile and a radial
- * vignette that clips + fades the surrounding tiles into the background.
- * Designed to be embedded (e.g. beside the hero headline) — no section wrapper.
- */
 export default function IconGrid({ height = 360, fadeColor = 'var(--bg)' }: IconGridProps) {
-  const { theme } = useTheme()
-  const dark = theme === 'dark'
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mouseX = useMotionValue(-9999)
+  const mouseY = useMotionValue(-9999)
 
-  const tileBg = dark
-    ? 'linear-gradient(180deg, #1D1D1D 0%, #131313 100%)'
-    : 'linear-gradient(180deg, #FFFFFF 0%, #EEF0F6 100%)'
-  const tileBorder = dark ? '#262626' : '#E2E4EF'
-  const iconColor = dark ? '#FFFFFF' : '#0D1B4B'
-
-  const centerBg = dark
-    ? 'radial-gradient(circle, #3A3A3A 0%, #262626 50%, #1C1C1C 100%)'
-    : 'radial-gradient(circle, #FFFFFF 0%, #F4F5FA 55%, #E7EAF3 100%)'
-  const centerBorder = dark ? '#444444' : '#D9DCEA'
-  const centerText = dark ? '#FFFFFF' : '#0D1B4B'
-  const centerGlow = dark
-    ? '0 0 100px 10px rgba(255,255,255,0.10), 0 0 40px 4px rgba(255,255,255,0.05)'
-    : '0 18px 50px rgba(13,27,75,0.12), 0 4px 14px rgba(13,27,75,0.07)'
-
-  // Radial vignette fading the grid edges into the background.
+  const tileBg = 'linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%)'
+  const tileBorder = 'var(--border)'
+  const iconColor = 'var(--text-primary)'
+  const centerBg = 'radial-gradient(circle, var(--surface-3) 0%, var(--surface-2) 50%, var(--surface) 100%)'
+  const centerBorder = 'var(--border-subtle)'
+  const centerText = 'var(--text-primary)'
+  const centerGlow = 'var(--center-tile-glow, 0 0 60px 6px rgba(128,128,128,0.08), 0 8px 30px rgba(0,0,0,0.08))'
   const vignette = `radial-gradient(ellipse 72% 78% at 50% 50%, transparent 22%, ${fadeColor} 72%)`
 
-  const Tile = ({ Icon, op }: { Icon: LucideIcon; op: number }) => (
-    <div
-      style={{
-        width: TILE,
-        height: TILE,
-        borderRadius: 22,
-        background: tileBg,
-        border: `1px solid ${tileBorder}`,
-        opacity: op,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-      }}
-    >
-      <Icon style={{ width: ICON, height: ICON, color: iconColor }} strokeWidth={1.6} />
-    </div>
+  const tileProps = useMemo(
+    () => ({ mouseX, mouseY, containerRef, tileBg, tileBorder, iconColor }),
+    [mouseX, mouseY, containerRef, tileBg, tileBorder, iconColor]
   )
 
-  const rowStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: GAP,
-  }
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    mouseX.set(e.clientX - rect.left)
+    mouseY.set(e.clientY - rect.top)
+  }, [mouseX, mouseY])
+
+  const resetMouse = useCallback(() => {
+    mouseX.set(-9999)
+    mouseY.set(-9999)
+  }, [mouseX, mouseY])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0]
+    const rect = e.currentTarget.getBoundingClientRect()
+    mouseX.set(touch.clientX - rect.left)
+    mouseY.set(touch.clientY - rect.top)
+  }, [mouseX, mouseY])
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: `min(${height}px, 70vw)`, overflow: 'hidden' }}>
-      {/* Icon field — centred, overflowing tiles get clipped by the box */}
+    <div
+      ref={containerRef}
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: `min(${height}px, 70vw)`,
+        overflow: 'hidden',
+        ['--tile-size' as string]: `clamp(72px, 18vw, ${TILE}px)`,
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={resetMouse}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={resetMouse}
+      onTouchCancel={resetMouse}
+    >
       <div
         style={{
           position: 'absolute',
@@ -107,27 +223,24 @@ export default function IconGrid({ height = 360, fadeColor = 'var(--bg)' }: Icon
           transform: 'translate(-50%, -50%)',
         }}
       >
-        {/* Scale wrapper — shrinks the fixed-px tile field below desktop */}
         <div
           className="max-md:scale-[0.62] md:max-lg:scale-[0.85]"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 16,
-          }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}
         >
-          <div style={{ ...rowStyle, paddingRight: 50 }}>
-            {ROW_TOP.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
+          <div style={{ ...ROW_STYLE, paddingRight: 48 }}>
+            {ROW_TOP.map((t) => <DockTile key={t.key} Icon={t.Icon} {...tileProps} />)}
           </div>
 
-          <div style={rowStyle}>
-            {ROW_MID_LEFT.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
-            <div
+          <div style={ROW_STYLE}>
+            {ROW_MID_LEFT.map((t) => <DockTile key={t.key} Icon={t.Icon} {...tileProps} />)}
+
+            <motion.div
+              whileHover={{ scale: 1.06 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 width: CENTER,
                 height: CENTER,
-                borderRadius: 26,
+                borderRadius: TILE_RADIUS,
                 background: centerBg,
                 border: `1px solid ${centerBorder}`,
                 boxShadow: centerGlow,
@@ -135,6 +248,9 @@ export default function IconGrid({ height = 360, fadeColor = 'var(--bg)' }: Icon
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
+                position: 'relative',
+                zIndex: 2,
+                cursor: 'pointer',
               }}
             >
               <span
@@ -143,17 +259,17 @@ export default function IconGrid({ height = 360, fadeColor = 'var(--bg)' }: Icon
               >
                 Ctrl Code
               </span>
-            </div>
-            {ROW_MID_RIGHT.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
+            </motion.div>
+
+            {ROW_MID_RIGHT.map((t) => <DockTile key={t.key} Icon={t.Icon} {...tileProps} />)}
           </div>
 
-          <div style={{ ...rowStyle, paddingLeft: 50 }}>
-            {ROW_BOTTOM.map((t) => <Tile key={t.key} Icon={t.Icon} op={t.op} />)}
+          <div style={{ ...ROW_STYLE, paddingLeft: 48 }}>
+            {ROW_BOTTOM.map((t) => <DockTile key={t.key} Icon={t.Icon} {...tileProps} />)}
           </div>
         </div>
       </div>
 
-      {/* Vignette overlay */}
       <div aria-hidden style={{ position: 'absolute', inset: 0, background: vignette, pointerEvents: 'none' }} />
     </div>
   )

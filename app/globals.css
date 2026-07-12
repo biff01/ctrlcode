@@ -5,15 +5,41 @@
   --font-body: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
-  --color-bg: #0a0a0a;
-  --color-surface: #111111;
-  --color-surface-2: #1a1a1a;
-  --color-border-subtle: #2a2a2a;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border-subtle: var(--border-subtle);
   --color-purple: #582cff;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #aaaaaa;
-  --color-text-tertiary: #666666;
-  --color-accent-3: #888888;
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-accent-3: var(--accent-3);
+}
+
+/* ── Theme transition ─────────────────────────────── */
+/* View Transitions API: whole-page cross-fade, zero interference with Framer Motion */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.38s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    mix-blend-mode: normal;
+  }
+}
+
+/* Fallback for browsers without View Transitions: briefly enable property transitions */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition:
+      background-color 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+      fill 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+      stroke 0.38s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
 }
 
 /* ── Theme tokens ─────────────────────────────────── */
@@ -37,10 +63,13 @@
   --border-faint: #141414;
 
   --kicker: #888888;
+  --accent-3: #888888;
 
-  --card-bg: rgba(255,255,255,0.051);
+  --glow-radial: rgba(255,255,255,0.04);
+
+  --card-bg: rgba(255,255,255,0.05);
   --card-border: rgba(255,255,255,0.11);
-  --card-shadow: 0 1px 0 rgba(255,255,255,0.1), 0 16px 48px rgba(0,0,0,0.5);
+  --card-shadow: none;
 
   --nav-glass: rgba(255,255,255,0.06);
   --nav-pill: #1a1a1a;
@@ -49,8 +78,11 @@
   --nav-inactive: #999999;
   --nav-btn: #1a1a1a;
   --nav-divider: #333333;
+  --nav-accent: #6ea6ff;
+  --brand-cta-gradient: linear-gradient(135deg, #1a50cc 0%, #3b7ef6 100%);
+  --brand-cta-shadow: 0 4px 20px rgba(26,80,204,0.35);
 
-  --pill-bg: rgba(255,255,255,0.059);
+  --pill-bg: rgba(255,255,255,0.06);
   --pill-border: rgba(255,255,255,0.10);
   --pill-text: #aaaaaa;
 
@@ -60,6 +92,7 @@
 
   --btn-primary-bg: #ffffff;
   --btn-primary-color: #0a0a0a;
+  --btn-primary-shadow: 0 6px 24px rgba(255,255,255,0.13);
   --btn-secondary-bg: rgba(255,255,255,0.04);
   --btn-secondary-border: #2a2a2a;
   --btn-secondary-color: #ffffff;
@@ -84,6 +117,49 @@
 
   --trust-border: #141414;
   --tab-active: #303030;
+
+  --card-num-color: #7C93C4;
+  --hero-band-bg: #0a0a0a;
+  --accent-indigo: #6366f1;
+  --status-amber: #F59E0B;
+  --status-orange: #F97316;
+  --cta-dark-from: #040404eb;
+  --cta-dark-to: #111217eb;
+
+  /* Glass circle tokens (used by BookACall) */
+  --glass-bg: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.094) 100%), rgba(24,24,24,0.56);
+  --glass-border: 1px solid rgba(255,255,255,0.118);
+  --glass-shadow: 0 6px 28px 2px rgba(0,0,0,0.435), 0 1px 6px rgba(255,255,255,0.133);
+
+  --accent-saas: #582cff;
+  --accent-mobile: #22c55e;
+  --accent-web: #3b82f6;
+  --accent-branding: #f59e0b;
+  --accent-ecom: #ec4899;
+  --card-shadow-hover: none;
+
+  --overlay-bg: rgba(0,0,0,0.72);
+  --text-on-overlay: #ffffff;
+  --text-on-overlay-muted: rgba(255,255,255,0.65);
+  --showcase-canvas: #ffffff;
+
+  --overlay-mid: #454545;
+  --overlay-dark-gradient: #111217;
+
+  /* Case study page tokens */
+  --text-label: #6B6B6B;
+  --chrome: rgba(20,20,20,0.95);
+  --hero-shadow: 0 40px 120px rgba(0,0,0,0.7);
+  --arrow-faint: rgba(255,255,255,0.25);
+  --arrow-very-faint: rgba(255,255,255,0.15);
+  --nav-link: rgba(255,255,255,0.45);
+  --nav-center: rgba(255,255,255,0.25);
+  --case-hover-shadow: 0 16px 40px rgba(0,0,0,0.45);
+  --process-hover-bg: rgba(255,255,255,0.025);
+  --cta-section-bg: radial-gradient(ellipse 800px 400px at 50% 100%, rgba(136,136,136,0.06) 0%, transparent 65%), #0a0a0a;
+
+  /* Footer radius token */
+  --footer-radius: 36px;
 
   /* Footer (dark) */
   --footer-bg:
@@ -125,10 +201,13 @@
   --border-faint: #E2E4EF;
 
   --kicker: #4A6FA5;
+  --accent-3: #536080;
+
+  --glow-radial: rgba(13,27,75,0.04);
 
   --card-bg: #ffffff;
   --card-border: #E2E4EF;
-  --card-shadow: 0 2px 8px rgba(13,27,75,0.08), 0 16px 40px rgba(13,27,75,0.06);
+  --card-shadow: none;
 
   --nav-glass: rgba(255,255,255,0.88);
   --nav-pill: #EEF0F8;
@@ -137,6 +216,9 @@
   --nav-inactive: #536080;
   --nav-btn: #EEF0F8;
   --nav-divider: #E2E4EF;
+  --nav-accent: #1a50cc;
+  --brand-cta-gradient: linear-gradient(135deg, #1a50cc 0%, #3b7ef6 100%);
+  --brand-cta-shadow: 0 4px 20px rgba(26,80,204,0.25);
 
   --pill-bg: rgba(13,27,75,0.05);
   --pill-border: #E2E4EF;
@@ -148,6 +230,7 @@
 
   --btn-primary-bg: #0D1B4B;
   --btn-primary-color: #ffffff;
+  --btn-primary-shadow: 0 6px 24px rgba(13,27,75,0.18);
   --btn-secondary-bg: rgba(13,27,75,0.05);
   --btn-secondary-border: #E2E4EF;
   --btn-secondary-color: #0D1B4B;
@@ -172,6 +255,46 @@
 
   --trust-border: #E2E4EF;
   --tab-active: #ffffff;
+
+  --card-num-color: #4A6FA5;
+  --hero-band-bg: #F7F8FC;
+  --accent-indigo: #6366f1;
+  --status-amber: #F59E0B;
+  --status-orange: #F97316;
+  --cta-dark-from: #040404eb;
+  --cta-dark-to: #111217eb;
+
+  /* Glass circle tokens (used by BookACall) */
+  --glass-bg: rgba(255,255,255,0.72);
+  --glass-border: 1px solid rgba(13,27,75,0.1);
+  --glass-shadow: 0 6px 28px 2px rgba(0,0,0,0.08), 0 1px 6px rgba(0,0,0,0.04);
+
+  --accent-saas: #582cff;
+  --accent-mobile: #16a34a;
+  --accent-web: #2563eb;
+  --accent-branding: #d97706;
+  --accent-ecom: #db2777;
+  --card-shadow-hover: none;
+
+  --overlay-bg: rgba(0,0,0,0.72);
+  --text-on-overlay: #ffffff;
+  --text-on-overlay-muted: rgba(255,255,255,0.65);
+  --showcase-canvas: #ffffff;
+
+  /* Case study page tokens */
+  --text-label: #888888;
+  --chrome: rgba(230,232,238,0.95);
+  --hero-shadow: 0 40px 80px rgba(13,27,75,0.12);
+  --arrow-faint: rgba(13,27,75,0.25);
+  --arrow-very-faint: rgba(13,27,75,0.18);
+  --nav-link: rgba(13,27,75,0.5);
+  --nav-center: rgba(13,27,75,0.3);
+  --case-hover-shadow: 0 16px 40px rgba(13,27,75,0.13);
+  --process-hover-bg: rgba(13,27,75,0.025);
+  --cta-section-bg: radial-gradient(ellipse 800px 400px at 50% 100%, rgba(74,111,165,0.06) 0%, transparent 65%), #ffffff;
+
+  /* Footer radius token */
+  --footer-radius: 36px;
 
   /* Footer (light) — Pencil node tOhv3 */
   --footer-bg:
@@ -203,6 +326,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 /* Safety net: nothing may push the page sideways. `clip` (not hidden) avoids
@@ -217,7 +341,10 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: color 0.25s ease;
+  transition: color 0.25s ease, background-color 0.25s ease;
+  font-family: var(--font-body, var(--font-inter, sans-serif));
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 /* ── Interaction polish ───────────────────────────── */
@@ -242,13 +369,36 @@ textarea:focus-visible,
 select:focus-visible,
 [role='button']:focus-visible,
 [role='tab']:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--text-primary) 65%, transparent);
-  outline-offset: 3px;
+  outline: 2px solid var(--text-primary);
+  outline-offset: 4px;
+}
+
+/* Skip-to-content link for keyboard navigation. */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  padding: 10px 20px;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
+  font-family: var(--font-inter);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 0;
 }
 
 /* Uniform press feedback for plain (non-framer-motion) CTAs and pills. */
 .press {
   transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.press:hover {
+  filter: brightness(1.06);
 }
 .press:active {
   transform: scale(0.97);
@@ -261,8 +411,99 @@ h3 {
   text-wrap: balance;
 }
 
+/* ── Hover utilities for non-framer-motion elements ─── */
+/* Subtle lift + brightness for CTA buttons and social icons. */
+.btn-lift {
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-lift:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.07);
+}
+.btn-lift:active {
+  transform: translateY(0);
+  filter: brightness(0.95);
+}
+
+/* Brightness-only hover for pill / outline buttons that shouldn't lift. */
+.btn-fade {
+  transition: filter 0.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-fade:hover {
+  filter: brightness(1.12);
+}
+.btn-fade:active {
+  filter: brightness(0.93);
+}
+
+/* Social icon inner — scales the SVG independently on parent hover. */
+.social-icon-inner {
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-lift:hover .social-icon-inner {
+  transform: scale(1.18);
+}
+
+/* CTA arrow — slides right on parent hover. */
+.btn-lift:hover .cta-arrow {
+  transform: translateX(3px);
+}
+
+/* Nav link hover — uses color transition for reliable cross-theme visibility. */
+.nav-link {
+  transition: color 0.2s ease;
+}
+.nav-link:hover {
+  color: var(--text-primary);
+  filter: none;
+}
+
+/* Card hover — used for Link-wrapper cards that can't use framer-motion directly. */
+.card-hover {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow);
+}
+.card-hover:active {
+  transform: translateY(-1px);
+}
+
+/* Card shadow deepening — paired with framer-motion whileHover lift on Work cards. */
+.card-shadow-lift {
+  transition: box-shadow 0.25s ease;
+}
+.card-shadow-lift:hover {
+  box-shadow: none;
+}
+:root[data-theme="light"] .card-shadow-lift:hover {
+  box-shadow: none;
+}
+
 :root[data-theme="light"] .book-overlay {
   opacity: 0 !important;
+}
+
+@media (prefers-color-scheme: light) {
+  .book-overlay {
+    opacity: 0 !important;
+  }
+}
+
+:root[data-theme="light"] .cta-section {
+  background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(13,27,75,0.06) 0%, transparent 70%), var(--cta-bg);
+}
+
+@media (prefers-color-scheme: light) {
+  .cta-section {
+    background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(13,27,75,0.06) 0%, transparent 70%), var(--cta-bg);
+  }
 }
 
 /* Logo lockups: dark theme is the default, so the white logo shows unless
@@ -280,10 +521,6 @@ h3 {
 }
 
 /* ── Responsive foundations ───────────────────────── */
-html {
-  -webkit-text-size-adjust: 100%;
-}
-
 /* Media never forces horizontal scroll. (svg excluded: icon sizing is explicit.) */
 img,
 video {

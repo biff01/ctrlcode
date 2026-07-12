@@ -22,15 +22,27 @@ export default function FeaturedCaseStudy() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
         >
-          <span className="font-mono" style={{ fontSize: 11, letterSpacing: 3, color: 'var(--text-muted)' }}>
+          <span className="font-mono" style={{ fontSize: 11, letterSpacing: 1.5, color: 'var(--text-muted)' }}>
             {t('FEATURED WORK')}
           </span>
           <Link
             href="/portfolio"
-            className="flex items-center gap-2 font-body"
-            style={{ fontSize: 13, color: 'var(--text-tertiary)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'none' }}
+            className="flex items-center gap-2 font-body group"
+            style={{
+              fontSize: 13,
+              color: 'var(--text-tertiary)',
+              textDecoration: 'none',
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
           >
-            {t('All projects')} <ArrowUpRight style={{ width: 14, height: 14 }} />
+            {t('All projects')}
+            <ArrowUpRight
+              aria-hidden={true}
+              className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              style={{ width: 14, height: 14 }}
+            />
           </Link>
         </motion.div>
 
@@ -43,9 +55,9 @@ export default function FeaturedCaseStudy() {
           className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-16 p-6 md:p-10 lg:p-14"
           style={{
             background: 'var(--featured-card)',
-            borderRadius: 20,
+            borderRadius: 16,
             border: '1px solid var(--featured-border)',
-            overflow: 'hidden',
+            boxShadow: 'var(--card-shadow)',
           }}
         >
           {/* Left — text */}
@@ -74,53 +86,61 @@ export default function FeaturedCaseStudy() {
             {/* Headline */}
             <h2
               className="font-display font-bold"
-              style={{ fontSize: 'clamp(28px, 5.5vw, 38px)', letterSpacing: 'clamp(-1.4px, -0.14vw, -0.7px)', lineHeight: 1.15, color: 'var(--text-primary)' }}
+              style={{ fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: 'clamp(-1.4px, -0.14vw, -0.7px)', lineHeight: 1.15, color: 'var(--text-primary)' }}
             >
               {t('From idea to $1M ARR')}<br />{t('in 8 months.')}
             </h2>
 
             {/* Description */}
-            <p className="font-body" style={{ fontSize: 15, lineHeight: 1.8, color: 'var(--text-secondary)' }}>
+            <p className="font-body" style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
               {t("We built NuroMedical's entire platform from scratch — analytics, user management, billing, and AI-powered clinical insights. The client went from 0 to $1M ARR within their first year of launch.")}
             </p>
 
             {/* Tech stack */}
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {TECH.map((t) => (
+              {TECH.map((tech) => (
                 <span
-                  key={t}
+                  key={tech}
                   className="font-mono"
                   style={{
                     fontSize: 11,
-                    padding: '5px 12px',
+                    padding: '4px 12px',
                     borderRadius: 6,
                     background: 'var(--tag-bg)',
                     border: '1px solid var(--tag-border)',
                     color: 'var(--tag-color)',
                   }}
                 >
-                  {t}
+                  {tech}
                 </span>
               ))}
             </div>
 
             {/* CTA */}
-            <Link
-              href="/portfolio"
-              className="flex items-center gap-2 font-body font-semibold"
-              style={{
-                alignSelf: 'flex-start',
-                background: 'var(--btn-primary-bg)',
-                color: 'var(--btn-primary-color)',
-                fontSize: 14,
-                padding: '12px 24px',
-                borderRadius: 8,
-                boxShadow: '0 4px 20px rgba(255,255,255,0.1)',
-                textDecoration: 'none',
-              }}
+            <motion.div
+              whileHover={{ scale: 1.02, transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } }}
+              whileTap={{ scale: 0.97, transition: { duration: 0.1 } }}
+              style={{ alignSelf: 'flex-start' }}
             >
-              {t('Read Case Study')} <ArrowRight style={{ width: 15, height: 15 }} />
-            </Link>
+              <Link
+                href="/portfolio"
+                className="flex items-center gap-2 font-body font-semibold"
+                style={{
+                  background: 'var(--btn-primary-bg)',
+                  color: 'var(--btn-primary-color)',
+                  fontSize: 14,
+                  padding: '13px 24px',
+                  borderRadius: 8,
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08)',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                {t('Read Case Study')} <ArrowRight aria-hidden={true} style={{ width: 15, height: 15 }} />
+              </Link>
+            </motion.div>
           </div>
 
           {/* Right — image */}
@@ -139,7 +159,7 @@ export default function FeaturedCaseStudy() {
           >
             <Image
               src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=960&q=80"
-              alt="NuroMedical analytics dashboard"
+              alt={t('NuroMedical analytics dashboard')}
               fill
               sizes="(max-width: 1023px) 100vw, 480px"
               style={{ objectFit: 'cover' }}

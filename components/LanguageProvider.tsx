@@ -1,21 +1,20 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import type { ReactNode } from 'react'
 import { translations } from '@/lib/translations'
 
 export type Lang = 'en' | 'ru' | 'uz'
 
-const LANGS: Lang[] = ['en', 'ru', 'uz']
+const LANG_ORDER: Lang[] = ['uz', 'en', 'ru']
 
 const LangCtx = createContext<{
   lang: Lang
   setLang: (l: Lang) => void
-  cycle: () => void
   t: (s: string) => string
 }>({
-  lang: 'en',
+  lang: 'uz',
   setLang: () => {},
-  cycle: () => {},
   t: (s) => s,
 })
 
@@ -23,33 +22,32 @@ export function useLang() {
   return useContext(LangCtx)
 }
 
-export default function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('en')
-  const [mounted, setMounted] = useState(false)
+export default function LanguageProvider({
+  children,
+  initialLang = 'uz',
+}: {
+  children: ReactNode
+  initialLang?: Lang
+}) {
+  const [lang, setLangState] = useState<Lang>(initialLang)
 
+  // Persist to cookie so the server reads the right lang on next request
   useEffect(() => {
-    setMounted(true)
-    const saved = localStorage.getItem('lang') as Lang | null
-    if (saved === 'en' || saved === 'ru' || saved === 'uz') setLangState(saved)
-  }, [])
+    document.cookie = `lang=${lang};path=/;max-age=31536000;SameSite=Lax`
+  }, [lang])
 
-  useEffect(() => {
-    if (!mounted) return
-    localStorage.setItem('lang', lang)
-    document.documentElement.setAttribute('lang', lang)
-  }, [lang, mounted])
-
-  const setLang = (l: Lang) => setLangState(l)
-  const cycle = () => setLangState((l) => LANGS[(LANGS.indexOf(l) + 1) % LANGS.length])
-
-  const t = (s: string) => {
-    if (lang === 'en') return s
-    return translations[lang]?.[s] ?? s
-  }
-
-  return (
-    <LangCtx.Provider value={{ lang, setLang, cycle, t }}>
-      {children}
-    </LangCtx.Provider>
+  const t = useCallback(
+    (s: string) => {
+      if (lang === 'en') return s
+      return translations[lang]?.[s] ?? s
+    },
+    [lang]
   )
+
+  const value = useMemo(
+    () => ({ lang, setLang: setLangState, t }),
+    [lang, t]
+  )
+
+  return <LangCtx.Provider value={value}>{children}</LangCtx.Provider>
 }

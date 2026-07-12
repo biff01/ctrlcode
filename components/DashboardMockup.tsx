@@ -3,6 +3,9 @@
 /* Self-contained dark "Lumina" analytics dashboard, drawn as inline SVG.
    Replaces the static showcase.png inside the Hero browser mockup. */
 
+import { useId } from 'react'
+import { useLang } from './LanguageProvider'
+
 const PURPLE = '#8b5cf6'
 const PURPLE_LT = '#a78bfa'
 const GREEN = '#34d399'
@@ -107,6 +110,15 @@ function NavIcon({ label, x, y, color }: { label: string; x: number; y: number; 
 }
 
 export default function DashboardMockup() {
+  const { t } = useLang()
+  const uid = useId().replace(/:/g, '')
+  const ID = {
+    revFill: `${uid}-revFill`,
+    revLine: `${uid}-revLine`,
+    sparkUp: `${uid}-sparkUp`,
+    avatarG: `${uid}-avatarG`,
+  }
+
   return (
     <svg
       viewBox="0 0 1120 580"
@@ -116,23 +128,44 @@ export default function DashboardMockup() {
       xmlns="http://www.w3.org/2000/svg"
       style={{ display: 'block' }}
     >
+      <title>Lumina analytics dashboard showing revenue growth, user retention, and recent team activity</title>
       <defs>
-        <linearGradient id="revFill" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={ID.revFill} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={PURPLE} stopOpacity="0.42" />
           <stop offset="100%" stopColor={PURPLE} stopOpacity="0" />
         </linearGradient>
-        <linearGradient id="revLine" x1="0" y1="0" x2="1" y2="0">
+        <linearGradient id={ID.revLine} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor={PURPLE} />
           <stop offset="100%" stopColor={PURPLE_LT} />
         </linearGradient>
-        <linearGradient id="sparkUp" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={ID.sparkUp} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={PURPLE} stopOpacity="0.35" />
           <stop offset="100%" stopColor={PURPLE} stopOpacity="0" />
         </linearGradient>
-        <linearGradient id="avatarG" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={ID.avatarG} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={PURPLE_LT} />
           <stop offset="100%" stopColor={PURPLE} />
         </linearGradient>
+        <style>{`
+          .rev-line {
+            stroke-dasharray: 1200;
+            stroke-dashoffset: 1200;
+            animation: drawLine 1.6s cubic-bezier(0.22,1,0.36,1) 0.5s forwards;
+          }
+          .rev-area { opacity:0; animation: fadeUp 0.9s ease 1.3s forwards; }
+          .stat-card { opacity:0; }
+          .sc0 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.08s forwards; }
+          .sc1 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.18s forwards; }
+          .sc2 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.28s forwards; }
+          .sc3 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.38s forwards; }
+          @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+          }
+          @keyframes fadeUp {
+            from { opacity:0; transform: translateY(6px); }
+            to   { opacity:1; transform: translateY(0); }
+          }
+        `}</style>
       </defs>
 
       {/* Base */}
@@ -143,7 +176,7 @@ export default function DashboardMockup() {
 
       {/* ── Logo ── */}
       <g>
-        <path d="M28,34 l9,7 -9,7 -9,-7 Z" fill="url(#avatarG)" />
+        <path d="M28,34 l9,7 -9,7 -9,-7 Z" fill={`url(#${ID.avatarG})`} />
         <path d="M28,44 l9,7 -9,7 -9,-7 Z" fill={PURPLE} opacity="0.5" />
         <text x="52" y="50" fontFamily={DISPLAY} fontSize="17" fontWeight="700" fill={TXT_PRIMARY}>Ctrl Code</text>
       </g>
@@ -161,29 +194,29 @@ export default function DashboardMockup() {
             fontWeight={n.active ? 600 : 500}
             fill={n.active ? '#e9e4ff' : TXT_SECONDARY}
           >
-            {n.label}
+            {t(n.label)}
           </text>
         </g>
       ))}
 
       {/* ── Header: search + actions ── */}
-      <rect x="250" y="26" width="366" height="42" rx="11" fill="#101016" stroke={PANEL_BORDER} strokeWidth="1" />
+      <rect x="250" y="26" width="366" height="42" rx="12" fill="#101016" stroke={PANEL_BORDER} strokeWidth="1" />
       <g stroke={TXT_MUTED} strokeWidth="1.7" fill="none" strokeLinecap="round">
         <circle cx="274" cy="47" r="5.5" />
         <line x1="278.5" y1="51.5" x2="283" y2="56" />
       </g>
-      <text x="294" y="52" fontFamily={BODY} fontSize="14" fill={TXT_MUTED}>Search</text>
+      <text x="294" y="52" fontFamily={BODY} fontSize="14" fill={TXT_MUTED}>{t('Search')}</text>
 
       <g stroke={TXT_SECONDARY} strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round">
         <path d="M986,40 h14 v11 h-14 Z M990,40 v-3 h6 v3" />
         <path d="M1030,39 c-4,0 -6,3 -6,7 c0,5 -3,6 -3,6 h18 c0,0 -3,-1 -3,-6 c0,-4 -2,-7 -6,-7 Z M1027,55 a3,3 0 0 0 6,0" />
       </g>
-      <circle cx="1070" cy="47" r="18" fill="url(#avatarG)" />
+      <circle cx="1070" cy="47" r="18" fill={`url(#${ID.avatarG})`} />
       <text x="1070" y="52" textAnchor="middle" fontFamily={DISPLAY} fontSize="14" fontWeight="700" fill="#fff">J</text>
 
       {/* ── Page title + controls ── */}
       <text x="250" y="150" fontFamily={DISPLAY} fontSize="27" fontWeight="700" fill={TXT_PRIMARY} letterSpacing="-0.5">
-        Performance Overview
+        {t('Performance Overview')}
       </text>
       <rect x="858" y="126" width="182" height="38" rx="10" fill={PANEL_BG} stroke={PANEL_BORDER} strokeWidth="1" />
       <g stroke={PURPLE_LT} strokeWidth="1.6" fill="none" strokeLinecap="round">
@@ -201,12 +234,12 @@ export default function DashboardMockup() {
       </g>
 
       {/* ── Stat cards ── */}
-      {CARDS.map((c) => {
+      {CARDS.map((c, index) => {
         const sp = spark(c.spark, c.x + CARD_W - 92, CARD_Y + 78, 70, 30)
         return (
-          <g key={c.title}>
+          <g key={c.title} className={`stat-card sc${index}`}>
             <rect x={c.x} y={CARD_Y} width={CARD_W} height={CARD_H} rx="14" fill={PANEL_BG} stroke={PANEL_BORDER} strokeWidth="1" />
-            <text x={c.x + 22} y={CARD_Y + 32} fontFamily={BODY} fontSize="13.5" fill={TXT_SECONDARY}>{c.title}</text>
+            <text x={c.x + 22} y={CARD_Y + 32} fontFamily={BODY} fontSize="13.5" fill={TXT_SECONDARY}>{t(c.title)}</text>
             <g fill={TXT_MUTED}>
               <circle cx={c.x + CARD_W - 40} cy={CARD_Y + 27} r="1.6" />
               <circle cx={c.x + CARD_W - 33} cy={CARD_Y + 27} r="1.6" />
@@ -218,7 +251,7 @@ export default function DashboardMockup() {
             <text x={c.x + 22} y={CARD_Y + 104} fontFamily={BODY} fontSize="12.5" fontWeight="600" fill={c.color}>
               {c.badge}
             </text>
-            <path d={sp.area} fill="url(#sparkUp)" />
+            <path d={sp.area} fill={`url(#${ID.sparkUp})`} />
             <path d={sp.line} fill="none" stroke={c.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </g>
         )
@@ -226,7 +259,7 @@ export default function DashboardMockup() {
 
       {/* ── Revenue Growth panel ── */}
       <rect x="250" y="331" width="510" height="232" rx="14" fill={PANEL_BG} stroke={PANEL_BORDER} strokeWidth="1" />
-      <text x="272" y="363" fontFamily={DISPLAY} fontSize="16" fontWeight="700" fill={TXT_PRIMARY}>Revenue Growth</text>
+      <text x="272" y="363" fontFamily={DISPLAY} fontSize="16" fontWeight="700" fill={TXT_PRIMARY}>{t('Revenue Growth')}</text>
       <g fill={TXT_MUTED}>
         <circle cx="725" cy="357" r="1.6" />
         <circle cx="732" cy="357" r="1.6" />
@@ -248,8 +281,8 @@ export default function DashboardMockup() {
         </g>
       ))}
 
-      <path d={REVENUE_AREA} fill="url(#revFill)" />
-      <path d={REVENUE_LINE} fill="none" stroke="url(#revLine)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={REVENUE_AREA} fill={`url(#${ID.revFill})`} className="rev-area" />
+      <path d={REVENUE_LINE} fill="none" stroke={`url(#${ID.revLine})`} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" className="rev-line" />
 
       {/* x labels */}
       {[
@@ -273,7 +306,7 @@ export default function DashboardMockup() {
 
       {/* ── User Retention panel ── */}
       <rect x="776" y="331" width="318" height="150" rx="14" fill={PANEL_BG} stroke={PANEL_BORDER} strokeWidth="1" />
-      <text x="798" y="363" fontFamily={DISPLAY} fontSize="16" fontWeight="700" fill={TXT_PRIMARY}>User Retention</text>
+      <text x="798" y="363" fontFamily={DISPLAY} fontSize="16" fontWeight="700" fill={TXT_PRIMARY}>{t('User Retention')}</text>
       <text x="1072" y="363" textAnchor="end" fontFamily={BODY} fontSize="12" fill={TXT_SECONDARY}>65% avg.</text>
       {HEAT.map((row, r) =>
         row.map((op, col) => (
@@ -295,7 +328,7 @@ export default function DashboardMockup() {
 
       {/* ── Recent Activity panel ── */}
       <rect x="776" y="489" width="318" height="89" rx="14" fill={PANEL_BG} stroke={PANEL_BORDER} strokeWidth="1" />
-      <text x="798" y="511" fontFamily={DISPLAY} fontSize="13.5" fontWeight="700" fill={TXT_PRIMARY}>Recent Activity</text>
+      <text x="798" y="511" fontFamily={DISPLAY} fontSize="13.5" fontWeight="700" fill={TXT_PRIMARY}>{t('Recent Activity')}</text>
       <g fill={TXT_MUTED}>
         <circle cx="1060" cy="508" r="1.5" />
         <circle cx="1066" cy="508" r="1.5" />
@@ -306,7 +339,7 @@ export default function DashboardMockup() {
         { i: 'B', name: 'Bahrom', action: "deployed 'NextWay App'", y: 559 },
       ].map((a) => (
         <g key={a.i}>
-          <circle cx="806" cy={a.y + 1} r="8" fill="url(#avatarG)" opacity="0.9" />
+          <circle cx="806" cy={a.y + 1} r="8" fill={`url(#${ID.avatarG})`} opacity="0.9" />
           <text x="806" y={a.y + 4} textAnchor="middle" fontFamily={DISPLAY} fontSize="8.5" fontWeight="700" fill="#fff">{a.i}</text>
           <text x="822" y={a.y + 4} fontFamily={BODY} fontSize="11.5" fill={TXT_SECONDARY}>
             <tspan fontWeight="700" fill={TXT_PRIMARY}>{a.name}</tspan> {a.action}

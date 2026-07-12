@@ -3,7 +3,7 @@ import Footer from '@/components/Footer'
 
 export default function LoginPage() {
   return (
-    <main style={{ background: '#0a0a0a', minHeight: '100vh' }}>
+    <main style={{ background: 'var(--bg)', minHeight: '100vh' }}>
       <AuthForm mode="login" />
       <Footer />
     </main>

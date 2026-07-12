@@ -10,6 +10,31 @@ const STATS = [
   { number: '5+', label: 'Years of Experience' },
 ]
 
+const STAT_ITEM_STYLE = {
+  flex: 1,
+  minWidth: 0,
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: 8,
+  paddingTop: 'clamp(24px, 3.5vw, 40px)',
+  paddingBottom: 'clamp(24px, 3.5vw, 40px)',
+  cursor: 'default',
+}
+
+const STAT_NUMBER_STYLE = {
+  fontSize: 'clamp(32px, 9vw, 48px)',
+  letterSpacing: 'clamp(-1.6px, -0.3vw, -1px)',
+  lineHeight: 1,
+  color: 'var(--text-primary)',
+}
+
+const STAT_LABEL_STYLE = {
+  fontSize: 'clamp(11px, 1.1vw, 13px)',
+  letterSpacing: 0.8,
+  color: 'var(--text-tertiary)',
+  textTransform: 'uppercase' as const,
+}
+
 export default function StatsStrip() {
   const { t } = useLang()
   return (
@@ -33,29 +58,23 @@ export default function StatsStrip() {
         {STATS.map((stat, i) => (
           <motion.div
             key={stat.label}
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.04, transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } }}
             viewport={{ once: true }}
             transition={{ duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className={i === 0 ? '' : 'md:pl-12'}
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 6,
-              paddingTop: 'clamp(24px, 3.6vw, 36px)',
-              paddingBottom: 'clamp(24px, 3.6vw, 36px)',
-            }}
+            className={i === 0 ? '' : 'md:pl-12 md:border-l md:border-[var(--border-light)]'}
+            style={STAT_ITEM_STYLE}
           >
             <span
               className="font-display font-semibold"
-              style={{ fontSize: 'clamp(32px, 9vw, 44px)', letterSpacing: 'clamp(-1.6px, -0.3vw, -1px)', lineHeight: 1, color: 'var(--text-primary)' }}
+              style={STAT_NUMBER_STYLE}
             >
               {stat.number}
             </span>
             <span
-              className="font-body"
-              style={{ fontSize: 12, letterSpacing: 0.3, color: 'var(--text-muted)', textTransform: 'uppercase' }}
+              className="font-mono"
+              style={STAT_LABEL_STYLE}
             >
               {t(stat.label)}
             </span>

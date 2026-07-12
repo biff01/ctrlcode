@@ -14,10 +14,18 @@ interface BlurInProps {
   /** Inline styles — lets callers keep their own per-page typography. */
   style?: CSSProperties;
   variant?: Variants;
+  /** Animation duration in seconds. Recommended range: 0.4–0.8. */
   duration?: number;
   /** Stagger the entrance (seconds). */
   delay?: number;
+  /** Semantic element rendered by the component. Defaults to 'h1'. */
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
 }
+
+const DEFAULT_VARIANTS: Variants = {
+  hidden: { filter: "blur(10px)", opacity: 0 },
+  visible: { filter: "blur(0px)", opacity: 1 },
+};
 
 const BlurIn = ({
   word,
@@ -25,32 +33,39 @@ const BlurIn = ({
   className,
   style,
   variant,
-  duration = 1,
+  duration = 0.7,
   delay = 0,
+  as = 'h1',
 }: BlurInProps) => {
-  const defaultVariants: Variants = {
-    hidden: { filter: "blur(10px)", opacity: 0 },
-    visible: { filter: "blur(0px)", opacity: 1 },
-  };
-  const combinedVariants = variant || defaultVariants;
+  const combinedVariants = variant ?? DEFAULT_VARIANTS;
+  const MotionTag = motion[as];
+
+  const resolvedStyle: CSSProperties | undefined = !children
+    ? {
+        fontSize: 'clamp(2.25rem, 5vw + 1rem, 4.5rem)',
+        lineHeight: 'var(--lh-hero, 1.1)',
+        letterSpacing: 'var(--tracking-heading, -0.02em)',
+        ...style,
+      }
+    : style;
 
   return (
-    <motion.h1
+    <MotionTag
       initial="hidden"
       animate="visible"
-      transition={{ duration, delay }}
+      transition={{ type: 'tween', duration, delay, ease: [0.22, 1, 0.36, 1] }}
       variants={combinedVariants}
-      style={style}
+      style={resolvedStyle}
       className={cn(
         // Default shadcn typography only applies to the plain-`word` usage;
         // when `children` is supplied the caller owns the styling.
         !children &&
-          "font-display text-center text-4xl font-bold tracking-[-0.02em] drop-shadow-sm md:text-7xl md:leading-[5rem]",
+          "font-display text-center font-bold drop-shadow-sm",
         className,
       )}
     >
       {children ?? word}
-    </motion.h1>
+    </MotionTag>
   );
 };
 
