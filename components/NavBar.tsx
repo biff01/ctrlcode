@@ -378,7 +378,7 @@ export default function NavBar() {
 
           {/* Theme toggle — dark circle, white 3D floating button */}
           <div
-            className="p-px lg:p-[2px]"
+            className="p-0 lg:p-[2px] opacity-40 lg:opacity-100"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -429,7 +429,7 @@ export default function NavBar() {
 
           {/* Hamburger — same dark-ring / white-button language as the theme toggle */}
           <div
-            className="flex lg:hidden p-px"
+            className="flex lg:hidden p-0 opacity-40"
             style={{
               alignItems: 'center',
               justifyContent: 'center',
@@ -688,8 +688,7 @@ export default function NavBar() {
         {menuOpen && (
           <motion.div
             key="close-pill"
-            className="lg:hidden"
-            className="p-px"
+            className="lg:hidden p-0 opacity-40"
             style={{
               position: 'fixed',
               top: 20,

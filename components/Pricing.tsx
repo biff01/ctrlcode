@@ -12,7 +12,6 @@ type Plan = {
   name: string
   subtitle: string
   price: string
-  unit: string
   badge: string | null
   gradient: string
   features: string[]
@@ -21,56 +20,54 @@ type Plan = {
 
 const ALL_PLANS: Plan[] = [
   {
-    id: 'standard',
-    name: 'Standard Plan',
-    subtitle: 'Have design ready to build? Or small budget?',
-    price: '$49',
-    unit: '/ hour',
+    id: 'start',
+    name: '🚀 Start',
+    subtitle: 'Perfect for small businesses and startups.',
+    price: '$1,500',
     badge: null,
     gradient: 'linear-gradient(135deg, #080a18 0%, #0d1b40 50%, #1a3070 100%)',
     features: [
-      'Design-to-code from your wireframe',
-      'Design with Figma, Framer',
-      'Implement with Webflow, React, WordPress, Laravel/PHP',
-      'Fully remote delivery',
-      'Fast turnaround, Mon–Fri',
-      'Support 6 months',
+      'Single-page website',
+      'Basic UI/UX Design',
+      'Responsive Design',
+      'Contact Form',
+      'SEO Ready',
+      '2 Weeks Delivery',
     ],
     cta: 'Get Started',
   },
   {
     id: 'pro',
-    name: 'Pro Plan',
-    subtitle: 'Full design & development with priority delivery.',
-    price: '$99',
-    unit: '/ hour',
+    name: '💼 Pro',
+    subtitle: 'Ideal for growing businesses.',
+    price: '$3,500',
     badge: 'Most Popular',
     gradient: 'linear-gradient(145deg, #0c0800 0%, #1e1100 28%, #3a2000 54%, #6a3a00 76%, #9a5a00 100%)',
     features: [
-      'Everything in Standard',
-      'Custom UI/UX design from scratch',
-      'React, Next.js & TypeScript apps',
-      'CMS & API integrations',
-      'Priority support & faster turnaround',
-      'Support 12 months',
+      'Corporate Website',
+      'Admin Panel',
+      'CMS Integration',
+      'Advanced UI/UX',
+      'SEO Optimization',
+      '4-6 Weeks Delivery',
     ],
     cta: 'Get Started',
   },
   {
-    id: 'enterprise',
-    name: 'Enterprise',
-    subtitle: 'Dedicated team for complex, long-term projects.',
-    price: '$199',
-    unit: '/ hour',
+    id: 'premium',
+    name: '🏢 Premium',
+    subtitle: 'For enterprises and complex digital products.',
+    price: '$7,500',
     badge: null,
     gradient: 'linear-gradient(135deg, #080a18 0%, #171717 50%, #454545 100%)',
     features: [
-      'Dedicated development team',
-      'Full-stack architecture & planning',
-      'Performance, security & SEO audit',
-      'SLA guarantee & uptime monitoring',
-      'Ongoing retainer available',
-      'Support 24 months',
+      'Custom Web Platform',
+      'CRM / ERP Integration',
+      'AI Features',
+      'API Integrations',
+      'High Performance',
+      'Dedicated Support',
+      '8+ Weeks Delivery',
     ],
     cta: 'Contact Us',
   },
@@ -87,7 +84,7 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
     ? hovered
       ? '0 0 0 1px rgba(200,140,30,0.45), 0 14px 48px rgba(140,80,0,0.28), 0 4px 18px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,200,80,0.08)'
       : '0 0 0 1px rgba(200,140,30,0.12), 0 10px 40px rgba(140,80,0,0.16), 0 2px 10px rgba(0,0,0,0.14)'
-    : 'none'
+    : 'var(--card-shadow)'
 
   const cardBorder = hovered
     ? showAmber
@@ -192,19 +189,12 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
         </div>
 
         <div style={{ position: 'relative' }}>
-          <div className="flex items-end" style={{ gap: 8 }}>
-            <span className="font-display font-light" style={{ fontSize: 'clamp(40px, 10vw, 62px)', color: '#fff', lineHeight: 1 }}>
-              {plan.price}
-            </span>
-            <span className="font-body" style={{ fontSize: 'clamp(13px, 3vw, 18px)', color: 'var(--text-muted)', paddingBottom: 4 }}>
-              {t(plan.unit)}
-            </span>
-          </div>
-          {showAmber && (
-            <p className="font-body" style={{ fontSize: 12, color: 'rgba(220,160,40,0.75)', marginTop: 6, letterSpacing: 0.2 }}>
-              {t('Best value · Save up to 40% vs. agency rates')}
-            </p>
-          )}
+          <p className="font-mono" style={{ fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>
+            {t('from')}
+          </p>
+          <span className="font-display font-light" style={{ fontSize: 'clamp(40px, 10vw, 62px)', color: '#fff', lineHeight: 1 }}>
+            {plan.price}
+          </span>
         </div>
       </div>
 
@@ -326,20 +316,33 @@ export default function Pricing() {
             transition: 'box-shadow 0.3s cubic-bezier(0.22,1,0.36,1), border-color 0.3s ease',
           }}
         >
-          <span
-            className="font-display font-semibold"
-            style={{
-              fontSize: 'clamp(20px, 5vw, 28px)',
-              color: 'var(--text-primary)',
-              letterSpacing: -0.5,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              minWidth: 0,
-            }}
-          >
-            {t('Custom Quote')}
-          </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, overflow: 'hidden' }}>
+            <span
+              className="font-display font-semibold"
+              style={{
+                fontSize: 'clamp(18px, 4vw, 26px)',
+                color: 'var(--text-primary)',
+                letterSpacing: -0.4,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {t('Need a custom solution?')}
+            </span>
+            <span
+              className="font-body"
+              style={{
+                fontSize: 'clamp(12px, 2vw, 14px)',
+                color: 'var(--text-secondary)',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {t('Every project is unique. Contact us for a tailored proposal and project estimate.')}
+            </span>
+          </div>
           <div
             aria-hidden="true"
             style={{

@@ -5,6 +5,7 @@ import { Mail, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import NewsletterForm from './NewsletterForm'
 import { useLang } from './LanguageProvider'
+import ITparkCard from './ITparkCard'
 
 function LinkedinIcon() {
   return (
@@ -420,6 +421,11 @@ export default function Footer() {
           <a href="tel:+998770007878" className="font-body nav-link" style={mobileContactLinkStyle}>
             +998 77 000 78 78
           </a>
+        </div>
+
+        {/* ── IT Park badge ── */}
+        <div style={{ paddingBottom: 16 }}>
+          <ITparkCard />
         </div>
 
         {/* ── Copyright ── */}

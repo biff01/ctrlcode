@@ -113,7 +113,7 @@ export default function Why() {
                   padding: `clamp(24px, 3.13vw, 32px) clamp(24px, 3.13vw, 32px) clamp(28px, 3.2vw, 32px)`,
                   background: 'linear-gradient(180deg, var(--surface-2) 0%, var(--why-cell) 100%)',
                   borderTop: '1px solid var(--why-cell-border)',
-                    display: 'flex',
+                  display: 'flex',
                   flexDirection: 'column',
                   gap: 16,
                   cursor: 'default',

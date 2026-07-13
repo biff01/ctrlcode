@@ -69,7 +69,7 @@
 
   --card-bg: rgba(255,255,255,0.05);
   --card-border: rgba(255,255,255,0.11);
-  --card-shadow: none;
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.28), 0 1px 3px rgba(0,0,0,0.16);
 
   --nav-glass: rgba(255,255,255,0.06);
   --nav-pill: #1a1a1a;
@@ -207,7 +207,7 @@
 
   --card-bg: #ffffff;
   --card-border: #E2E4EF;
-  --card-shadow: none;
+  --card-shadow: 0 1px 3px rgba(13,27,75,0.05), 0 4px 20px rgba(13,27,75,0.08);
 
   --nav-glass: rgba(255,255,255,0.88);
   --nav-pill: #EEF0F8;
@@ -331,7 +331,7 @@
   --border: rgba(255,255,255,0.11);
   --border-subtle: #2a2a2a;
   --border-light: #1e1e1e;
-  --card-shadow: none;
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.28), 0 1px 3px rgba(0,0,0,0.16);
   --text-primary: #ffffff;
   --text-secondary: #aaaaaa;
   --text-tertiary: #666666;
