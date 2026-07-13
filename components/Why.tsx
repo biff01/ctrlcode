@@ -120,12 +120,9 @@ export default function Why() {
                   willChange: 'transform',
                 }}
               >
-                <motion.div
-                  whileHover={{ scale: 1.12, rotate: idx % 2 === 0 ? 8 : -8, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } }}
-                  style={{ display: 'inline-block' }}
-                >
+                <div style={{ display: 'inline-block' }}>
                   <Icon style={{ width: 22, height: 22, color: 'var(--text-primary)' }} strokeWidth={1.6} />
-                </motion.div>
+                </div>
                 <h3
                   className="font-display font-semibold"
                   style={{ fontSize: 'clamp(20px, 2.2vw, 24px)', lineHeight: 1.3, color: 'var(--text-primary)', letterSpacing: -0.2 }}

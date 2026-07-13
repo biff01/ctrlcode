@@ -1,376 +1,155 @@
 'use client'
 
-import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
-import { ArrowUpRight, ExternalLink, Maximize2 } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { ArrowUpRight } from 'lucide-react'
 import { useLang } from './LanguageProvider'
-import ProjectShowcase from './ProjectShowcase'
-import { getProjectBySlug } from '@/lib/projects'
 
-interface ProjectCard {
+/* ---------- identical constants to PortfolioDesign ---------- */
+
+const OVERLAY = 'linear-gradient(180deg, transparent 0%, transparent 32%, rgba(0,0,0,0.12) 50%, rgba(0,0,0,0.58) 68%, rgba(0,0,0,0.84) 84%, rgba(0,0,0,0.96) 100%)'
+const CARD_TITLE = '#FFFFFF'
+const CARD_NUM = 'var(--card-num-color)'
+
+const SMOOTH = [0.16, 1, 0.3, 1] as const
+
+const cardVariants = {
+  rest: { y: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.12), 0 8px 32px rgba(0,0,0,0.08)' },
+  hover: { y: -4, boxShadow: '0 4px 16px rgba(0,0,0,0.18), 0 12px 40px rgba(0,0,0,0.14)', transition: { duration: 0.5, ease: SMOOTH } },
+  tap: { scale: 0.97, transition: { duration: 0.15 } },
+}
+
+const arrowVariants = {
+  rest: { x: 0, y: 0, background: '#FFFFFF0A' },
+  hover: { x: 1, y: -1, background: '#FFFFFF18', transition: { duration: 0.4, ease: SMOOTH } },
+}
+
+const IMG = (id: string) =>
+  `https://images.unsplash.com/${id}?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400`
+
+const SHOT = (slug: string) => `/showcase/${slug}-desktop.webp`
+
+interface Project {
   name: string
   category: string
-  date: string
+  num: string
   image: string
-  /** External product site. Omit when the project has no live site — the button is then hidden. */
-  liveUrl?: string
-  /** Case-study slug, opened by the arrow icon button. Must exist in lib/projects.ts. */
+  bgPosition?: string
   slug: string
 }
 
-const SHIMMER = `data:image/svg+xml;base64,${Buffer.from('<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#1a1a1a"/></svg>').toString('base64')}`
-
-const FEATURED: ProjectCard = {
-  name: 'AI Workflow Platform',
-  category: 'SaaS Platform',
-  date: 'Jan 2025',
-  image: 'https://images.unsplash.com/photo-1707332287886-84315bbb04bb?w=1200&q=80',
-  // No live site yet.
-  slug: 'ai-workflow-platform',
-}
-
-const SIDE_CARDS: ProjectCard[] = [
-  {
-    name: 'Logistics Management',
-    category: 'Web App',
-    date: 'Mar 2024',
-    image: 'https://images.unsplash.com/photo-1692384359344-42fd4a15603c?w=800&q=80',
-    liveUrl: 'https://softms.io/',
-    slug: 'logistics-management',
-  },
-  {
-    name: 'Real Estate Platform',
-    category: 'Website Design',
-    date: 'Jun 2024',
-    image: 'https://images.unsplash.com/photo-1585164216355-cfe3ca9c961d?w=800&q=80',
-    liveUrl: 'https://uzautomotors.com/',
-    slug: 'real-estate-platform',
-  },
+/* Same 6 projects as the Portfolio page — single source of truth */
+const PROJECTS: Project[] = [
+  { name: 'Nano Medical',       category: 'Healthcare',  num: '01', image: IMG('photo-1738778578755-87e3caccd36d'),  slug: 'healthcare-website' },
+  { name: 'UZAUTO Motors',      category: 'Automotive',  num: '02', image: SHOT('real-estate-platform'), bgPosition: 'top center', slug: 'real-estate-platform' },
+  { name: 'Darsly',             category: 'E-Learning',  num: '03', image: SHOT('darsly'),              bgPosition: 'top center', slug: 'darsly' },
+  { name: 'Education Platform', category: 'E-Commerce',  num: '04', image: SHOT('education-platform'),  bgPosition: 'top center', slug: 'education-platform' },
+  { name: 'SOFTMS',             category: 'CRM',         num: '05', image: SHOT('logistics-management'), bgPosition: 'top center', slug: 'logistics-management' },
+  { name: 'Sello Brand',        category: 'Branding',    num: '06', image: IMG('photo-1718670013988-c6e3edb92345'), slug: 'brand-identity' },
 ]
 
-const GRID_CARDS: ProjectCard[] = [
-  {
-    name: 'Education Platform',
-    category: 'EdTech',
-    date: 'Sep 2024',
-    image: 'https://images.unsplash.com/photo-1767449280971-46e438b1ce4a?w=800&q=80',
-    liveUrl: 'https://darsly.uz/en/partners',
-    slug: 'education-platform',
-  },
-  {
-    name: 'Healthcare Website',
-    category: 'Healthcare',
-    date: 'Feb 2025',
-    image: 'https://images.unsplash.com/photo-1613191413911-1032184f4035?w=800&q=80',
-    liveUrl: 'https://nanomedicalclinic.com/',
-    slug: 'healthcare-website',
-  },
-  {
-    name: 'Mobile Application',
-    category: 'Mobile App',
-    date: 'Apr 2025',
-    image: 'https://images.unsplash.com/photo-1700667282848-994df515c0d7?w=800&q=80',
-    // No live site yet.
-    slug: 'mobile-application',
-  },
-]
+/* ---------- identical ProjectCard to PortfolioDesign ---------- */
 
-const datePillStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  borderRadius: 9999,
-  background: 'var(--pill-bg)',
-  border: '1px solid var(--pill-border)',
-  padding: '6px 12px',
-  alignSelf: 'flex-start',
-}
-
-const pillStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 8,
-  borderRadius: 9999,
-  background: 'var(--btn-secondary-bg)',
-  border: '1px solid var(--border)',
-  padding: '8px 16px',
-  alignSelf: 'flex-start',
-  fontSize: 12,
-  color: 'var(--text-primary)',
-  textDecoration: 'none',
-  cursor: 'pointer',
-  transition: 'filter 0.2s ease, opacity 0.2s ease, border-color 0.2s ease',
-}
-
-const cardOuterStyle: React.CSSProperties = {
-  borderRadius: 16,
-  background: 'var(--card-bg)',
-  border: '1px solid var(--card-border)',
-  boxShadow: 'var(--card-shadow)',
-  height: '100%',
-}
-
-const cardImgWrapStyle: React.CSSProperties = {
-  width: '100%',
-  position: 'relative',
-  overflow: 'hidden',
-  borderRadius: 10,
-}
-
-const cardBodyStyle: React.CSSProperties = { flex: 1 }
-
-const cardTextColStyle: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-  minWidth: 0,
-}
-
-function DatePill({ date }: { date: string }) {
+function ProjectCard({
+  project,
+  heightClass,
+  pad,
+  titleSize,
+  titleLs,
+  numSize,
+}: {
+  project: Project
+  heightClass: string
+  pad: number | string
+  titleSize: number | string
+  titleLs: number | string
+  numSize: number
+}) {
   const { t } = useLang()
   return (
-    <div style={datePillStyle}>
-      <span className="font-body" style={{ fontSize: 12, color: 'var(--pill-text)' }}>
-        {t(date)}
-      </span>
-    </div>
-  )
-}
-
-/**
- * Opens the in-site showcase when the project has captured screenshots, else the
- * external product site in a new tab. Renders nothing when the project has neither,
- * so projects without a live site show no button at all.
- */
-function LivePill({ href, onShowcase }: { href?: string; onShowcase?: () => void }) {
-  const { t } = useLang()
-
-  if (onShowcase) {
-    return (
-      <button onClick={onShowcase} className="font-body min-h-[44px] lg:min-h-0 btn-fade press" style={pillStyle}>
-        {t('View Live Product')}
-        <Maximize2 aria-hidden={true} style={{ width: 12, height: 12 }} />
-      </button>
-    )
-  }
-
-  if (!href) return null
-
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="font-body min-h-[44px] lg:min-h-0 btn-fade press" style={pillStyle}>
-      {t('View Live Product')}
-      <ExternalLink aria-hidden={true} style={{ width: 12, height: 12 }} />
-    </a>
-  )
-}
-
-/** Opens the internal case-study page. */
-function DetailsButton({ slug, name }: { slug: string; name: string }) {
-  const { t } = useLang()
-  return (
-    <motion.div
-      whileHover={{ scale: 1.09 }}
-      whileTap={{ scale: 0.93 }}
-      transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-      style={{ flexShrink: 0 }}
-    >
-      <Link
-        href={`/portfolio/${slug}`}
-        aria-label={`${t('View case study')}: ${t(name)}`}
-        className="flex items-center justify-center w-[52px] h-[52px] lg:w-[68px] lg:h-[68px]"
-        style={{
-          borderRadius: 14,
-          background: 'var(--pill-bg)',
-          border: '1px solid var(--card-border)',
-          boxShadow: '0 1px 0 var(--border-subtle)',
-          cursor: 'pointer',
-          transition: 'background 0.2s ease, border-color 0.2s ease',
-        }}
+    <Link href={`/portfolio/${project.slug}`} style={{ display: 'block', textDecoration: 'none' }} aria-label={project.name}>
+      <motion.div
+        variants={cardVariants}
+        initial="rest"
+        whileHover="hover"
+        whileTap="tap"
+        className={heightClass}
+        style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', cursor: 'pointer' }}
       >
-        <ArrowUpRight aria-hidden={true} style={{ width: 24, height: 24, color: 'var(--text-primary)', transition: 'transform 0.2s ease' }} />
-      </Link>
-    </motion.div>
-  )
-}
-
-function Card({ card, imgClassName, onShowcase }: { card: ProjectCard; imgClassName: string; onShowcase?: () => void }) {
-  const { t } = useLang()
-  return (
-    <motion.div
-      whileHover={{ y: -6, boxShadow: '0 24px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.08)', transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
-      whileTap={{ scale: 0.98, transition: { duration: 0.12 } }}
-      className="flex flex-col overflow-hidden group"
-      style={cardOuterStyle}
-    >
-      <div className={imgClassName} style={cardImgWrapStyle}>
         <Image
-          src={card.image}
-          alt={t(card.name)}
+          src={project.image}
+          alt={project.name}
           fill
-          sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 400px"
-          className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
-          style={{ objectFit: 'cover' }}
-          placeholder="blur"
-          blurDataURL={SHIMMER}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          style={{ objectFit: 'cover', objectPosition: project.bgPosition ?? 'center' }}
         />
-      </div>
-      <div
-        className="flex items-end justify-between gap-3 lg:gap-0"
-        style={{ ...cardBodyStyle, padding: '20px 24px 24px' }}
-      >
-        <div style={cardTextColStyle}>
-          <span
-            className="font-body"
-            style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 1.2, textTransform: 'uppercase' }}
-          >
-            {t(card.category)}
-          </span>
-          <span
-            className="font-display font-bold"
-            style={{ fontSize: 'clamp(18px, 2vw, 24px)', letterSpacing: -0.4, lineHeight: 1.15, color: 'var(--text-primary)' }}
-          >
-            {t(card.name)}
-          </span>
-          <DatePill date={card.date} />
-          <LivePill href={card.liveUrl} onShowcase={onShowcase} />
+        <div style={{ position: 'absolute', inset: 0, background: OVERLAY, zIndex: 0 }} />
+
+        {/* Category chip — glassmorphism only here */}
+        <div style={{ position: 'absolute', left: pad, top: pad, padding: '8px 16px', borderRadius: 100, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', zIndex: 1 }}>
+          <span className="font-body" style={{ fontSize: 14, color: CARD_TITLE }}>{t(project.category)}</span>
         </div>
-        <Link
-          href={`/portfolio/${card.slug}`}
-          aria-label={`${t('View case study')}: ${t(card.name)}`}
-          className="flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110 group-hover:bg-[var(--text-primary)] group-hover:border-transparent"
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: 12,
-            background: 'var(--pill-bg)',
-            border: '1px solid var(--card-border)',
-          }}
+
+        <motion.div
+          variants={arrowVariants}
+          className="flex items-center justify-center"
+          style={{ position: 'absolute', right: pad, top: pad, width: 48, height: 48, borderRadius: 10, border: '1px solid #FFFFFF22', zIndex: 2 }}
         >
-          <ArrowUpRight
-            aria-hidden={true}
-            className="transition-colors duration-300 group-hover:text-[var(--bg)]"
-            style={{ width: 20, height: 20, color: 'var(--text-primary)' }}
-          />
-        </Link>
-      </div>
-    </motion.div>
+          <ArrowUpRight aria-hidden={true} style={{ width: 16, height: 16, color: '#FFFFFF' }} />
+        </motion.div>
+
+        <div style={{ position: 'absolute', left: pad, bottom: pad, display: 'flex', flexDirection: 'column', gap: 8, zIndex: 3 }}>
+          <span className="font-mono" style={{ fontSize: numSize, color: CARD_NUM, letterSpacing: 2 }}>{project.num}</span>
+          <span className="font-display font-bold" style={{ fontSize: titleSize, letterSpacing: titleLs, color: CARD_TITLE, lineHeight: 1.05 }}>
+            {t(project.name)}
+          </span>
+        </div>
+      </motion.div>
+    </Link>
   )
 }
 
-function FeaturedCard({ card, onShowcase }: { card: ProjectCard; onShowcase?: () => void }) {
-  const { t } = useLang()
-  return (
-    <motion.div
-      whileHover={{ y: -6, boxShadow: '0 24px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.08)', transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
-      whileTap={{ scale: 0.98, transition: { duration: 0.12 } }}
-      className="flex flex-col overflow-hidden group"
-      style={cardOuterStyle}
-    >
-      <div className="aspect-[4/3] md:aspect-[16/9] lg:aspect-auto lg:h-[460px]" style={cardImgWrapStyle}>
-        <Image
-          src={card.image}
-          alt={t(card.name)}
-          fill
-          sizes="(max-width: 1023px) 100vw, 780px"
-          className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
-          style={{ objectFit: 'cover' }}
-          placeholder="blur"
-          blurDataURL={SHIMMER}
-        />
-      </div>
-      <div
-        className="flex items-end justify-between gap-3 lg:gap-0"
-        style={{ ...cardBodyStyle, padding: '20px 24px 24px' }}
-      >
-        <div style={cardTextColStyle}>
-          <span
-            className="font-body"
-            style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 1.2, textTransform: 'uppercase' }}
-          >
-            {t(card.category)}
-          </span>
-          <span
-            className="font-display font-bold"
-            style={{ fontSize: 'clamp(26px, 5.5vw, 36px)', letterSpacing: 'clamp(-1.2px, -0.12vw, -0.6px)', lineHeight: 1.1, color: 'var(--text-primary)' }}
-          >
-            {t(card.name)}
-          </span>
-          <DatePill date={card.date} />
-          <LivePill href={card.liveUrl} onShowcase={onShowcase} />
-        </div>
-        <Link
-          href={`/portfolio/${card.slug}`}
-          aria-label={`${t('View case study')}: ${t(card.name)}`}
-          className="flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110 group-hover:bg-[var(--text-primary)] group-hover:border-transparent"
-          style={{
-            width: 68,
-            height: 68,
-            borderRadius: 14,
-            background: 'var(--pill-bg)',
-            border: '1px solid var(--card-border)',
-          }}
-        >
-          <ArrowUpRight
-            aria-hidden={true}
-            className="transition-colors duration-300 group-hover:text-[var(--bg)]"
-            style={{ width: 24, height: 24, color: 'var(--text-primary)' }}
-          />
-        </Link>
-      </div>
-    </motion.div>
-  )
-}
+/* ---------- Work section ---------- */
 
 export default function Work() {
   const { t } = useLang()
-  const [openSlug, setOpenSlug] = useState<string | null>(null)
-
-  const openProject = openSlug ? getProjectBySlug(openSlug) : undefined
-
-  const showcaseHandlers = useMemo(() => {
-    const make = (slug: string) =>
-      getProjectBySlug(slug)?.showcase ? () => setOpenSlug(slug) : undefined
-    return {
-      featured: make(FEATURED.slug),
-      side: SIDE_CARDS.map(c => make(c.slug)),
-      grid: GRID_CARDS.map(c => make(c.slug)),
-    }
-  }, [])
 
   return (
     <section
-      style={{ background: 'var(--bg)', padding: 'clamp(56px, 10vw, 96px) 0 clamp(64px, 11vw, 110px)', position: 'relative', overflow: 'hidden' }}
+      style={{
+        background: 'var(--bg)',
+        padding: 'clamp(56px, 10vw, 96px) 0 clamp(64px, 11vw, 110px)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
-      {/* Section glow */}
+      {/* Ambient glow */}
       <div
         style={{
           position: 'absolute',
           background: 'radial-gradient(ellipse, var(--glow-radial, rgba(255,255,255,0.04)) 0%, transparent 70%)',
-          width: 1280,
-          height: 960,
-          left: 80,
-          top: 200,
+          width: 1280, height: 960, left: 80, top: 200,
           pointerEvents: 'none',
           filter: 'blur(140px)',
         }}
       />
 
-      <div className="px-5 md:px-8 lg:px-0" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
-        {/* Header */}
+      <div
+        className="px-5 md:px-8 lg:px-0"
+        style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 4vw, 24px)' }}
+      >
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-0"
-          style={{ marginBottom: 32 }}
+          style={{ marginBottom: 8 }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <span
-              className="font-mono"
-              style={{ fontSize: 11, letterSpacing: 1.5, color: 'var(--text-tertiary)' }}
-            >
+            <span className="font-mono" style={{ fontSize: 11, letterSpacing: 1.5, color: 'var(--text-tertiary)' }}>
               {t('SELECTED WORK')}
             </span>
             <h2
@@ -379,96 +158,84 @@ export default function Work() {
             >
               {t('Work that speaks for itself.')}
             </h2>
-            <p
-              className="font-body"
-              style={{ fontSize: 15, lineHeight: 1.8, color: 'var(--text-secondary)', maxWidth: 520 }}
-            >
+            <p className="font-body" style={{ fontSize: 15, lineHeight: 1.8, color: 'var(--text-secondary)', maxWidth: 520 }}>
               {t('A collection of products, platforms, and digital systems built with clarity, speed, and precision.')}
             </p>
           </div>
           <Link
             href="/portfolio"
-            className="group flex items-center justify-center w-full min-h-[44px] py-3 lg:w-auto lg:justify-start lg:min-h-0 lg:py-3 font-body btn-fade press focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--kicker)]"
-            style={{
-              gap: 10,
-              paddingInline: 22,
-              borderRadius: 8,
-              background: 'var(--btn-secondary-bg)',
-              border: '1px solid var(--border)',
-              color: 'var(--pill-text)',
-              fontSize: 13,
-              textDecoration: 'none',
-              transition: 'filter 0.2s ease, border-color 0.2s ease',
-            }}
+            className="group flex items-center justify-center w-full min-h-[44px] lg:w-auto lg:min-h-0 font-body btn-fade press focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--kicker)]"
+            style={{ gap: 10, padding: '12px 22px', borderRadius: 8, background: 'var(--btn-secondary-bg)', border: '1px solid var(--border)', color: 'var(--pill-text)', fontSize: 13, textDecoration: 'none' }}
           >
-            {t('All projects')} <span className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"><ArrowUpRight aria-hidden={true} style={{ width: 15, height: 15 }} /></span>
+            {t('All projects')}
+            <span className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <ArrowUpRight aria-hidden={true} style={{ width: 15, height: 15 }} />
+            </span>
           </Link>
         </motion.div>
 
-        {/* Featured row */}
-        <div
-          className="flex flex-col lg:flex-row lg:items-stretch"
-          style={{ gap: 24 }}
+        {/* Row 1 — featured (PROJECTS[0]) */}
+        <motion.div
+          initial={{ opacity: 0, y: 36 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:flex-1 min-w-0"
-          >
-            <FeaturedCard card={FEATURED} onShowcase={showcaseHandlers.featured} />
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-col w-full lg:basis-[400px] lg:shrink-0" style={{ gap: 24 }}>
-            {SIDE_CARDS.map((card, i) => (
-              <motion.div
-                key={card.name}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.7, delay: (i + 1) * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                style={{ flex: 1, minWidth: 0 }}
-              >
-                <Card card={card} imgClassName="aspect-[16/10] lg:aspect-auto lg:h-[200px]" onShowcase={showcaseHandlers.side[i]} />
-              </motion.div>
-            ))}
-          </div>
-        </div>
+          <ProjectCard
+            project={PROJECTS[0]}
+            heightClass="aspect-[4/3] md:aspect-auto md:h-[420px] lg:h-[460px]"
+            pad="clamp(16px, 3vw, 24px)"
+            titleSize="clamp(28px, 7vw, 44px)"
+            titleLs="clamp(-1.5px, -0.25vw, -0.75px)"
+            numSize={12}
+          />
+        </motion.div>
 
-        {/* Grid row — 2-up on tablet, the last card spanning the full row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex" style={{ gap: 24 }}>
-          {GRID_CARDS.map((card, i) => (
+        {/* Row 2 — two columns (PROJECTS[1], [2]) */}
+        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 16 }}>
+          {[PROJECTS[1], PROJECTS[2]].map((p, i) => (
             <motion.div
-              key={card.name}
+              key={p.name}
               initial={{ opacity: 0, y: 36 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className={i === 2 ? 'md:col-span-2' : undefined}
-              style={{ flex: 1, minWidth: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Card
-                card={card}
-                imgClassName={i === 2
-                  ? 'aspect-[16/10] md:aspect-[2/1] lg:aspect-auto lg:h-[240px]'
-                  : 'aspect-[16/10] lg:aspect-auto lg:h-[240px]'}
-                onShowcase={showcaseHandlers.grid[i]}
+              <ProjectCard
+                project={p}
+                heightClass="aspect-[4/3] md:aspect-auto md:h-[320px] lg:h-[340px]"
+                pad="clamp(14px, 2.6vw, 20px)"
+                titleSize="clamp(24px, 6vw, 34px)"
+                titleLs="clamp(-1px, -0.18vw, -0.5px)"
+                numSize={12}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Row 3 — three columns (PROJECTS[3], [4], [5]) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: 16 }}>
+          {[PROJECTS[3], PROJECTS[4], PROJECTS[5]].map((p, i) => (
+            <motion.div
+              key={p.name}
+              className={i === 2 ? 'md:max-lg:col-span-2' : undefined}
+              initial={{ opacity: 0, y: 36 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <ProjectCard
+                project={p}
+                heightClass="aspect-[4/3] md:aspect-auto md:h-[300px]"
+                pad={16}
+                titleSize="clamp(20px, 5vw, 22px)"
+                titleLs="clamp(-0.5px, -0.1vw, -0.25px)"
+                numSize={11}
               />
             </motion.div>
           ))}
         </div>
       </div>
-
-      <AnimatePresence>
-        {openProject?.showcase && (
-          <ProjectShowcase
-            name={openProject.name}
-            showcase={openProject.showcase}
-            liveUrl={openProject.liveUrl}
-            onClose={() => setOpenSlug(null)}
-          />
-        )}
-      </AnimatePresence>
     </section>
   )
 }

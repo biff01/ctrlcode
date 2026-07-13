@@ -202,20 +202,9 @@ function ProjectCard({
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           style={{ objectFit: 'cover', objectPosition: project.bgPosition ?? 'center' }}
         />
-        <div
-          style={{
-            position: 'absolute', inset: 0,
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            maskImage: GLASS_MASK,
-            WebkitMaskImage: GLASS_MASK,
-            background: 'rgba(0,0,0,0.45)',
-            zIndex: 0,
-          }}
-        />
         <div style={{ position: 'absolute', inset: 0, background: OVERLAY, zIndex: 0 }} />
 
-        <div style={{ position: 'absolute', left: pad, top: pad, padding: '8px 16px', borderRadius: 100, background: 'rgba(0,0,0,0.55)', zIndex: 1 }}>
+        <div style={{ position: 'absolute', left: pad, top: pad, padding: '8px 16px', borderRadius: 100, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', zIndex: 1 }}>
           <span className="font-body" style={{ fontSize: 14, color: CARD_TITLE }}>{t(project.category)}</span>
         </div>
 
@@ -227,17 +216,7 @@ function ProjectCard({
           <ArrowUpRight aria-hidden={true} style={{ width: 16, height: 16, color: '#FFFFFF' }} />
         </motion.div>
 
-        <div
-          style={{
-            position: 'absolute', left: pad, bottom: pad, display: 'flex', flexDirection: 'column', gap: 8, zIndex: 3,
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            background: 'rgba(0,0,0,0.45)',
-            border: '1px solid rgba(255,255,255,0.12)',
-            borderRadius: 12,
-            padding: '12px 16px',
-          }}
-        >
+        <div style={{ position: 'absolute', left: pad, bottom: pad, display: 'flex', flexDirection: 'column', gap: 8, zIndex: 3 }}>
           <span className="font-mono" style={{ fontSize: numSize, color: CARD_NUM, letterSpacing: 2 }}>{project.num}</span>
           <span className="font-display font-bold" style={{ fontSize: titleSize, letterSpacing: titleLs, color: CARD_TITLE, lineHeight: 1.05 }}>
             {t(project.name)}
@@ -272,21 +251,23 @@ function Header({ active, onChange }: { active: string; onChange: (f: string) =>
             </p>
           </motion.div>
 
-          <MotionLink
-            href="/portfolio"
-            className="flex items-center max-lg:min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--text-primary)] rounded-lg"
-            whileHover="hovered"
-            whileTap={{ scale: 0.97 }}
-            style={{ gap: 10, padding: '11px 22px', borderRadius: 8, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}`, textDecoration: 'none' }}
-          >
-            <span className="font-body" style={{ fontSize: 13, color: SUB }}>{t('All projects')}</span>
-            <motion.span
-              variants={{ hovered: { x: 2, y: -2 } }}
-              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          <div className="flex flex-col items-end" style={{ gap: 16, flexShrink: 0 }}>
+            <MotionLink
+              href="/portfolio"
+              className="flex items-center max-lg:min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--text-primary)] rounded-lg"
+              whileHover="hovered"
+              whileTap={{ scale: 0.97 }}
+              style={{ gap: 10, padding: '11px 22px', borderRadius: 8, background: CHIP_BG, border: `1px solid ${CHIP_BORDER}`, textDecoration: 'none' }}
             >
-              <ArrowUpRight aria-hidden={true} style={{ width: 15, height: 15, color: SUB }} />
-            </motion.span>
-          </MotionLink>
+              <span className="font-body" style={{ fontSize: 13, color: SUB }}>{t('All projects')}</span>
+              <motion.span
+                variants={{ hovered: { x: 2, y: -2 } }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <ArrowUpRight aria-hidden={true} style={{ width: 15, height: 15, color: SUB }} />
+              </motion.span>
+            </MotionLink>
+          </div>
         </div>
 
         <div
@@ -708,7 +689,7 @@ function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
             </svg>
           </motion.div>
           {/* IDEA label */}
-          <span className="font-mono" style={{ position: 'absolute', left: 0, top: 258, width: 120, textAlign: 'center', fontSize: 10, color: 'rgba(255,255,255,0.5)', letterSpacing: 2, pointerEvents: 'none' }}>IDEA</span>
+          <span className="font-mono" style={{ position: 'absolute', left: 0, top: 258, width: 120, textAlign: 'center', fontSize: 11, fontWeight: 600, color: dark ? 'rgba(255,255,255,0.88)' : '#000000', letterSpacing: 2, pointerEvents: 'none' }}>IDEA</span>
         </motion.div>
 
         <motion.div
@@ -762,7 +743,7 @@ function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
             </svg>
           </motion.div>
           {/* WEBSITE label */}
-          <span className="font-mono" style={{ position: 'absolute', left: 500, top: 258, width: 120, textAlign: 'center', fontSize: 10, color: 'rgba(255,255,255,0.5)', letterSpacing: 2, pointerEvents: 'none' }}>WEBSITE</span>
+          <span className="font-mono" style={{ position: 'absolute', left: 500, top: 258, width: 120, textAlign: 'center', fontSize: 11, fontWeight: 600, color: dark ? 'rgba(255,255,255,0.88)' : '#000000', letterSpacing: 2, pointerEvents: 'none' }}>WEBSITE</span>
 
           {/* Arrow connector: IDEA → WEBSITE (dashed arrow below the waves) */}
           <svg
@@ -771,7 +752,7 @@ function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
           >
             <motion.line
               x1="0" y1="8" x2="364" y2="8"
-              stroke="rgba(255,255,255,0.22)"
+              stroke={dark ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.7)'}
               strokeWidth="1.5"
               strokeDasharray="6 5"
               strokeLinecap="round"
@@ -782,7 +763,7 @@ function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
             <motion.path
               d="M358 3 L374 8 L358 13"
               fill="none"
-              stroke="rgba(255,255,255,0.22)"
+              stroke={dark ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.7)'}
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"

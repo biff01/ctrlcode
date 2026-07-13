@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useLang } from './LanguageProvider'
 
 const COINBASE_BLUE = '#1652F0' /* Coinbase brand blue — intentional */
 const LOGO_SIZE = 'clamp(16px, 2vw, 22px)'
@@ -169,6 +170,7 @@ const logos = [
 ]
 
 export default function TrustStrip() {
+  const { t } = useLang()
   return (
     <section aria-label="Trusted by leading companies" style={{ background: 'var(--bg)', padding: '56px 0', borderTop: '1px solid var(--trust-border)' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px, 4vw, 40px)' }}>
@@ -186,7 +188,7 @@ export default function TrustStrip() {
             marginBottom: 40,
           }}
         >
-          Trusted by leading teams
+          {t('Trusted by leading teams')}
         </motion.p>
         <div
           className="flex flex-wrap items-center justify-center gap-x-10 gap-y-8 lg:flex-nowrap lg:justify-between lg:gap-x-0"

@@ -296,16 +296,6 @@ export default function Pricing() {
     <section style={{ background: 'var(--bg)', padding: 'clamp(32px, 5vw, 60px) 0 clamp(60px, 8vw, 96px)' }}>
       <div className="px-5 md:px-6 lg:px-0" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-        {/* Header */}
-        <div style={{ marginBottom: 8 }}>
-          <h2
-            className="font-display font-bold"
-            style={{ fontSize: 'clamp(30px, 6vw, 42px)', letterSpacing: '-0.0357em', color: 'var(--text-primary)' }}
-          >
-            {t('Our Pricing')}
-          </h2>
-        </div>
-
         {/* Plan cards — 1 col on mobile, 2 on tablet, 3 on desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: 12 }}>
           {ALL_PLANS.map((plan, i) => (

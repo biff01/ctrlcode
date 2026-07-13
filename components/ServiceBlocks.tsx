@@ -474,6 +474,7 @@ function CRMDashboardVisual() {
 
 // 4. AI Solutions — floating neural-net particles, pulsing center node, cycling chat bubble
 function AISolutionsVisual() {
+  const { t } = useLang()
   const [chatIndex, setChatIndex] = useState(0)
   useEffect(() => {
     const id = setInterval(() => setChatIndex(c => (c + 1) % AI_BUBBLES.length), 2800)
@@ -586,7 +587,7 @@ function AISolutionsVisual() {
               letterSpacing: 0.2,
             }}
           >
-            {AI_BUBBLES[chatIndex]}
+            {t(AI_BUBBLES[chatIndex])}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -596,6 +597,7 @@ function AISolutionsVisual() {
 
 // 5. Creative & Branding — 3 logo mark SVGs cycling with crossfade
 function CreativeBrandingVisual() {
+  const { t } = useLang()
   const [current, setCurrent] = useState(0)
   useEffect(() => {
     const id = setInterval(() => setCurrent(c => (c + 1) % 3), 2500)
@@ -694,7 +696,7 @@ function CreativeBrandingVisual() {
             opacity: 0.75,
             textTransform: 'uppercase',
           }}>
-            {BRAND_LOGO_LABELS[current]}
+            {t(BRAND_LOGO_LABELS[current])}
           </span>
         </motion.div>
       </AnimatePresence>

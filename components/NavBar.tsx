@@ -378,6 +378,7 @@ export default function NavBar() {
 
           {/* Theme toggle — dark circle, white 3D floating button */}
           <div
+            className="p-px lg:p-[2px]"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -386,7 +387,6 @@ export default function NavBar() {
               height: PILL_H,
               borderRadius: 999,
               background: 'rgba(14,14,14,0.5)',
-              padding: TOGGLE_RING,
               boxShadow: DARK_PILL_SHADOW,
               flexShrink: 0,
             }}
@@ -429,7 +429,7 @@ export default function NavBar() {
 
           {/* Hamburger — same dark-ring / white-button language as the theme toggle */}
           <div
-            className="flex lg:hidden"
+            className="flex lg:hidden p-px"
             style={{
               alignItems: 'center',
               justifyContent: 'center',
@@ -437,7 +437,6 @@ export default function NavBar() {
               height: PILL_H,
               borderRadius: 999,
               background: 'rgba(14,14,14,0.5)',
-              padding: TOGGLE_RING,
               boxShadow: DARK_PILL_SHADOW,
               flexShrink: 0,
             }}
@@ -513,33 +512,8 @@ export default function NavBar() {
               overflowY: 'auto',
             }}
           >
-            {/* ── Top bar: logo + close ── */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '12px 20px',
-              borderBottom: '1px solid var(--border)',
-              flexShrink: 0,
-            }}>
-              <Link href="/" onClick={() => setMenuOpen(false)} style={{ textDecoration: 'none', display: 'flex' }}>
-                <CtrlCodeLogo height={28} />
-              </Link>
-              <button
-                onClick={() => { setMenuOpen(false); hamburgerRef.current?.focus() }}
-                aria-label={t('Close menu')}
-                className="press btn-fade"
-                style={{
-                  width: 44, height: 44, borderRadius: 999,
-                  background: 'var(--nav-btn)',
-                  border: 'none', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <X style={{ width: 18, height: 18, color: 'var(--text-primary)' }} />
-              </button>
-            </div>
+            {/* Height spacer — keeps nav links below the header height */}
+            <div style={{ height: 88, flexShrink: 0, borderBottom: '1px solid var(--border)' }} />
 
             {/* ── Nav links ── */}
             <div style={{ padding: '16px 16px 0', display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -701,6 +675,60 @@ export default function NavBar() {
                 {t('Start a project')}
               </Link>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Close pill — rendered OUTSIDE the drawer's motion.div so position:fixed
+          resolves to the viewport (not to the drawer's transform context).
+          Mounted/unmounted separately but in sync with menuOpen.
+          top: header py-3(12) + inner pt(8) = 20px
+          right: header px-5(20) + inner pr(16) = 36px                       */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="close-pill"
+            className="lg:hidden"
+            className="p-px"
+            style={{
+              position: 'fixed',
+              top: 20,
+              right: 36,
+              zIndex: 52,
+              width: PILL_H,
+              height: PILL_H,
+              borderRadius: 999,
+              background: 'rgba(14,14,14,0.5)',
+              boxShadow: DARK_PILL_SHADOW,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            initial={{ opacity: 0, scale: 0.7, rotate: -45 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, scale: 0.7, rotate: 45 }}
+            transition={{ duration: 0.25, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <button
+              onClick={() => { setMenuOpen(false); hamburgerRef.current?.focus() }}
+              aria-label={t('Close menu')}
+              className="press btn-fade"
+              style={{
+                width: TOGGLE_BTN,
+                height: TOGGLE_BTN,
+                borderRadius: 999,
+                background: WHITE_INDICATOR_BG,
+                boxShadow: WHITE_INDICATOR_SHADOW,
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <X style={{ width: 18, height: 18, color: '#0e0e0e' }} />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

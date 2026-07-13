@@ -180,6 +180,17 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     '+998 77 000 78 78': '+998 77 000 78 78',
     'info@ctrlcode.uz': 'info@ctrlcode.uz',
 
+    // ── TrustStrip ──
+    'Trusted by leading teams': 'Доверяют ведущие команды',
+
+    // ── ServiceBlocks visuals ──
+    'Processing request…': 'Обработка запроса…',
+    'Analyzing data…': 'Анализ данных…',
+    'Done — here is your result.': 'Готово — вот результат.',
+    'Geometric': 'Геометрический',
+    'Initial Mark': 'Начальный знак',
+    'Minimal': 'Минимальный',
+
     // ── ConsultStrip ──
     'Not sure what you need?': 'Не уверены, что вам нужно?',
     "Book a free 30-minute call — we'll help you scope it and send an estimate within 48 hours.":
@@ -216,6 +227,7 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Pages': 'Страницы',
     'All rights reserved.': 'Все права защищены.',
     'Privacy': 'Конфиденциальность',
+    'Privacy Policy': 'Политика конфиденциальности',
     'Terms': 'Условия',
     'Email': 'Электронная почта',
     'Benefits': 'Преимущества',
@@ -276,6 +288,11 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Email address': 'Адрес эл. почты',
     'Subscribe': 'Подписаться',
     'Enter a valid email.': 'Введите корректный email.',
+
+    // ── Services figures ──
+    'PURPOSE': 'ЦЕЛЬ',
+    'INTELLIGENCE': 'ИНТЕЛЛЕКТ',
+    'VELOCITY': 'СКОРОСТЬ',
 
     // ── ServicesHero ──
     'SERVICES': 'УСЛУГИ',
@@ -769,8 +786,19 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     '+998 77 000 78 78': '+998 77 000 78 78',
     'info@ctrlcode.uz': 'info@ctrlcode.uz',
 
+    // ── TrustStrip ──
+    'Trusted by leading teams': 'Yetakchi jamoalar ishonadi',
+
+    // ── ServiceBlocks visuals ──
+    'Processing request…': "So'rov qayta ishlanmoqda…",
+    'Analyzing data…': "Ma'lumotlar tahlil qilinmoqda…",
+    'Done — here is your result.': 'Tayyor — natijangiz tayyor.',
+    'Geometric': 'Geometrik',
+    'Initial Mark': "Boshlang'ich belgi",
+    'Minimal': 'Minimal',
+
     // ── ConsultStrip ──
-    'Not sure what you need?': 'Nima kerakligiga ishonchingiz komil emasmi?',
+    'Not sure what you need?': 'Nima kerak ekanligini bilmaysizmi?',
     "Book a free 30-minute call — we'll help you scope it and send an estimate within 48 hours.":
       "Bepul 30 daqiqalik qo'ng'iroqqa yoziling — biz hajmini aniqlashga yordam beramiz va 48 soat ichida baho yuboramiz.",
 
@@ -805,6 +833,7 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Pages': 'Sahifalar',
     'All rights reserved.': 'Barcha huquqlar himoyalangan.',
     'Privacy': 'Maxfiylik',
+    'Privacy Policy': 'Maxfiylik siyosati',
     'Terms': 'Shartlar',
     'Email': 'Elektron pochta',
     'Benefits': 'Afzalliklar',
@@ -865,6 +894,11 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Email address': 'Email manzili',
     'Subscribe': 'Obuna boʻlish',
     'Enter a valid email.': "To'g'ri email kiriting.",
+
+    // ── Services figures ──
+    'PURPOSE': 'MAQSAD',
+    'INTELLIGENCE': 'AQLIYAT',
+    'VELOCITY': 'TEZLIK',
 
     // ── ServicesHero ──
     'SERVICES': 'XIZMATLAR',

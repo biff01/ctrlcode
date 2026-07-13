@@ -15,6 +15,7 @@ import { useTheme } from './ThemeProvider'
 
 const SMOOTH = [0.16, 1, 0.3, 1] as const
 
+
 /* ─────────────────────────────────────────────────────────────────────────
  * Shared drag helpers
  * These illustrations render at 100% width with a fixed viewBox, so on screen
@@ -633,7 +634,7 @@ export default function Services() {
                 className="font-mono"
                 style={{ fontSize: 12, letterSpacing: 1.5, color: 'var(--text-tertiary)', marginBottom: 24 }}
               >
-                {fig.label}
+                {t(fig.label)}
               </span>
               <motion.div
                 initial={{ opacity: 0 }}
