@@ -4,7 +4,28 @@
 
 export type Lang = 'en' | 'ru' | 'uz'
 
-export const translations: Record<'ru' | 'uz', Record<string, string>> = {
+export const translations: Partial<Record<Lang, Record<string, string>>> = {
+  // ── English source overrides ──
+  // The in-component English literals double as the lookup keys. Entries here
+  // override that source text with the professionally rewritten copy, keyed by
+  // the ORIGINAL literal. Anything not listed falls back to the literal via `?? s`.
+  en: {
+    // ── Services ──
+    'A new species of product tool.': 'Software, engineered end to end.',
+    'Purpose-built for modern teams with AI workflows at its core, Ctrl Code sets a new standard for planning and building products.':
+      'Ctrl Code is a modern software studio with AI woven through every stage — from planning and design to build and launch.',
+    'Built for purpose': 'Built with intent',
+    'Ctrl Code is shaped by the practices and principles of world-class product teams — every decision serves the outcome.':
+      'Every project follows the practices of world-class engineering teams — each decision made to serve the outcome.',
+    'Designed for workflows shared by humans and AI, from planning through execution and post-launch optimisation.':
+      'We build practical AI into what we ship — from planning and execution to post-launch optimisation and support.',
+    'Reduces noise and restores momentum so your team can ship with clarity, confidence, and relentless focus.':
+      'We cut through complexity and keep delivery moving, so your product ships with clarity, confidence, and focus.',
+    // ── BookACall ──
+    "Ctrl Code — we don't just build websites, we craft digital experiences that make brands feel sharper, faster, and more powerful.":
+      "Ctrl Code — we don't just build websites, we engineer digital products that make ambitious companies faster, sharper and more competitive.",
+    // EN_END
+  },
   ru: {
     // ── NavBar ──
     'Home': 'Главная',
@@ -35,18 +56,18 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'SUPPORT & CARE': 'ПОДДЕРЖКА И ЗАБОТА',
 
     // ── Services ──
-    'A new species of product tool.': 'Новый вид продуктового инструмента.',
+    'A new species of product tool.': 'Разработка ПО от идеи до запуска.',
     'Purpose-built for modern teams with AI workflows at its core, Ctrl Code sets a new standard for planning and building products.':
-      'Созданный для современных команд с AI-процессами в основе, Ctrl Code задаёт новый стандарт планирования и создания продуктов.',
-    'Built for purpose': 'Создан с целью',
+      'Ctrl Code — современная студия разработки, где AI встроен на каждом этапе: от планирования и дизайна до сборки и запуска.',
+    'Built for purpose': 'Осмысленный подход',
     'Ctrl Code is shaped by the practices and principles of world-class product teams — every decision serves the outcome.':
-      'Ctrl Code сформирован практиками и принципами продуктовых команд мирового класса — каждое решение работает на результат.',
+      'Каждый проект следует практикам инженерных команд мирового класса — каждое решение работает на результат.',
     'Powered by AI agents': 'На базе AI-агентов',
     'Designed for workflows shared by humans and AI, from planning through execution and post-launch optimisation.':
-      'Разработан для процессов, где вместе работают люди и AI — от планирования и реализации до оптимизации после запуска.',
+      'Мы встраиваем практичный AI в то, что создаём — от планирования и реализации до оптимизации и поддержки.',
     'Designed for speed': 'Создан для скорости',
     'Reduces noise and restores momentum so your team can ship with clarity, confidence, and relentless focus.':
-      'Убирает шум и возвращает темп, чтобы ваша команда выпускала продукт ясно, уверенно и сфокусированно.',
+      'Мы убираем лишнюю сложность и держим темп, чтобы продукт выходил ясно, уверенно и точно в срок.',
 
     // ── Work ──
     'SELECTED WORK': 'ИЗБРАННЫЕ РАБОТЫ',
@@ -135,9 +156,9 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Most Popular': 'Самый популярный',
     'Our Pricing': 'Наши цены',
     'from': 'от',
-    '🚀 Start': '🚀 Старт',
-    '💼 Pro': '💼 Про',
-    '🏢 Premium': '🏢 Премиум',
+    'Start': 'Старт',
+    'Pro': 'Про',
+    'Premium': 'Премиум',
     'Perfect for small businesses and startups.': 'Идеально для малого бизнеса и стартапов.',
     'Ideal for growing businesses.': 'Для растущего бизнеса.',
     'For enterprises and complex digital products.': 'Для предприятий и сложных цифровых продуктов.',
@@ -167,9 +188,12 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
 
     // ── BookACall ──
     "Ctrl Code — we don't just build websites, we craft digital experiences that make brands feel sharper, faster, and more powerful.":
-      'Ctrl Code — мы не просто создаём сайты, мы создаём цифровой опыт, который делает бренды острее, быстрее и сильнее.',
+      'Ctrl Code — мы не просто создаём сайты, мы разрабатываем цифровые продукты, которые делают компании быстрее, сильнее и конкурентнее.',
     'Design by Wizerdui': 'Дизайн: Wizerdui',
     'Website': 'Сайт',
+    'Book a call': 'Записаться на звонок',
+    'Instagram': 'Instagram',
+    'Dribbble': 'Dribbble',
 
     // ── FinalCTA ──
     'Have an idea?': 'Есть идея?',
@@ -495,6 +519,10 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Technical SEO pass, performance tuning and Core Web Vitals.': 'Технический SEO-проход, оптимизация производительности и Core Web Vitals.',
     'Add': 'Добавить',
     'In cart': 'В корзине',
+    'Add items to enable checkout': 'Добавьте товары для оформления заказа',
+    'Add at least one item to continue.': 'Добавьте хотя бы один товар для продолжения.',
+    'Remove one': 'Убрать один',
+    'Add one': 'Добавить один',
 
     // ── AuthForm ──
     'Account created': 'Аккаунт создан',
@@ -504,6 +532,10 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Sign in': 'Войти',
     'Start your project with Ctrl Code.': 'Начните ваш проект с Ctrl Code.',
     'Welcome back — log in to continue.': 'С возвращением — войдите, чтобы продолжить.',
+    'John Smith': 'Иван Иванов',
+    'you@example.com': 'you@example.com',
+    'Hide password': 'Скрыть пароль',
+    'Show password': 'Показать пароль',
     'FULL NAME': 'ПОЛНОЕ ИМЯ',
     'PASSWORD': 'ПАРОЛЬ',
     'CONFIRM PASSWORD': 'ПОДТВЕРДИТЕ ПАРОЛЬ',
@@ -659,18 +691,18 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'SUPPORT & CARE': "QOʻLLAB-QUVVATLASH VA GʻAMXOʻRLIK",
 
     // ── Services ──
-    'A new species of product tool.': 'Mahsulot vositasining yangi turi.',
+    'A new species of product tool.': "Boshidan oxirigacha dasturiy ta'minot.",
     'Purpose-built for modern teams with AI workflows at its core, Ctrl Code sets a new standard for planning and building products.':
-      "Zamonaviy jamoalar uchun AI jarayonlari asosida yaratilgan Ctrl Code mahsulotlarni rejalashtirish va yaratishda yangi standart o'rnatadi.",
-    'Built for purpose': 'Maqsad uchun yaratilgan',
+      "Ctrl Code — AI har bir bosqichga singdirilgan zamonaviy dasturlash studiyasi: rejalashtirish va dizayndan yig'ish va ishga tushirishgacha.",
+    'Built for purpose': 'Maqsadli yondashuv',
     'Ctrl Code is shaped by the practices and principles of world-class product teams — every decision serves the outcome.':
-      "Ctrl Code jahon darajasidagi mahsulot jamoalarining amaliyoti va tamoyillari asosida shakllangan — har bir qaror natijaga xizmat qiladi.",
+      "Har bir loyiha jahon darajasidagi muhandislik jamoalari amaliyotiga amal qiladi — har bir qaror natijaga xizmat qiladi.",
     'Powered by AI agents': 'AI agentlari asosida',
     'Designed for workflows shared by humans and AI, from planning through execution and post-launch optimisation.':
-      "Odamlar va AI birgalikda ishlaydigan jarayonlar uchun — rejalashtirishdan bajarishgacha va ishga tushgandan keyingi optimallashtirishgacha.",
+      "Biz yaratadigan mahsulotlarga amaliy AI ni singdiramiz — rejalashtirish va bajarishdan optimallashtirish va qo'llab-quvvatlashgacha.",
     'Designed for speed': 'Tezlik uchun yaratilgan',
     'Reduces noise and restores momentum so your team can ship with clarity, confidence, and relentless focus.':
-      "Shovqinni kamaytiradi va sur'atni tiklaydi, shunda jamoangiz aniqlik, ishonch va to'liq diqqat bilan ishga tushiradi.",
+      "Biz ortiqcha murakkablikni olib tashlaymiz va sur'atni saqlaymiz, shunda mahsulot aniq, ishonchli va o'z vaqtida chiqadi.",
 
     // ── Work ──
     'SELECTED WORK': 'TANLANGAN ISHLAR',
@@ -696,7 +728,7 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'All Projects': 'Barcha loyihalar',
     'Start Your Project': 'Loyihangizni boshlang',
     'Ready to build something great?': 'Ajoyib narsa yaratishga tayyormisiz?',
-    "Let's discuss your idea and turn it into a product your users will love.": 'Keling g\'oyangizni muhokama qilaylik va uni foydalanuvchilaringiz sevadigan mahsulotga aylantiraylik.',
+    "Let's discuss your idea and turn it into a product your users will love.": "Keling, g'oyangizni muhokama qilaylik va uni foydalanuvchilaringiz sevadigan mahsulotga aylantiraylik.",
     'Get in touch': 'Bog\'lanish',
     'View all work': 'Barcha ishlar',
     'View case study': 'Loyihani ochish',
@@ -759,9 +791,9 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Most Popular': 'Eng mashhur',
     'Our Pricing': 'Bizning narxlarimiz',
     'from': 'dan',
-    '🚀 Start': '🚀 Start',
-    '💼 Pro': '💼 Pro',
-    '🏢 Premium': '🏢 Premium',
+    'Start': 'Start',
+    'Pro': 'Pro',
+    'Premium': 'Premium',
     'Perfect for small businesses and startups.': 'Kichik biznes va startaplar uchun ideal.',
     'Ideal for growing businesses.': "O'sayotgan biznes uchun.",
     'For enterprises and complex digital products.': 'Yirik korxonalar va murakkab raqamli mahsulotlar uchun.',
@@ -791,13 +823,16 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
 
     // ── BookACall ──
     "Ctrl Code — we don't just build websites, we craft digital experiences that make brands feel sharper, faster, and more powerful.":
-      "Ctrl Code — biz shunchaki saytlar yaratmaymiz, biz brendlarni yanada aniq, tez va kuchli qiladigan raqamli tajribalarni yaratamiz.",
+      "Ctrl Code — biz shunchaki saytlar yaratmaymiz, biz kompaniyalarni tezroq, kuchliroq va raqobatbardosh qiladigan raqamli mahsulotlar ishlab chiqamiz.",
     'Design by Wizerdui': 'Dizayn: Wizerdui',
     'Website': 'Sayt',
+    'Book a call': "Qo'ng'iroqqa yozilish",
+    'Instagram': 'Instagram',
+    'Dribbble': 'Dribbble',
 
     // ── FinalCTA ──
     'Have an idea?': "G'oyangiz bormi?",
-    "Let's ship it together.": 'Birga oshiramiz!',
+    "Let's ship it together.": 'Keling, birga yaratamiz!',
     "Book a free 30-minute consultation — we'll estimate your project within 48 hours.":
       "Bepul 30 daqiqalik konsultatsiyaga yoziling — biz loyihangizni 48 soat ichida baholaymiz.",
     'Book free consultation': 'Bepul konsultatsiya',
@@ -811,7 +846,7 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     // ── ServiceBlocks visuals ──
     'Processing request…': "So'rov qayta ishlanmoqda…",
     'Analyzing data…': "Ma'lumotlar tahlil qilinmoqda…",
-    'Done — here is your result.': 'Tayyor — natijangiz tayyor.',
+    'Done — here is your result.': 'Tayyor — mana natijangiz.',
     'Geometric': 'Geometrik',
     'Initial Mark': "Boshlang'ich belgi",
     'Minimal': 'Minimal',
@@ -874,7 +909,7 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Download Certificate': "Sertifikatni yuklab olish",
     'Verified and Authenticated': "Tasdiqlangan va autentifikatsiyalangan",
     'Your Trusted Technology Partner': "Sizning ishonchli texnologiya hamkoringiz",
-    'This certificate confirms that Ctrl Code LLC is an officially registered resident of IT Park Uzbekistan — the leading technology park in the country.': "Ushbu sertifikat Ctrl Code MChJ O'zbekiston IT Park ning rasmiy ro'yxatdan o'tgan rezidenti ekanligini tasdiqiaydi.",
+    'This certificate confirms that Ctrl Code LLC is an officially registered resident of IT Park Uzbekistan — the leading technology park in the country.': "Ushbu sertifikat Ctrl Code MChJ O'zbekiston IT Park ning rasmiy ro'yxatdan o'tgan rezidenti ekanligini tasdiqlaydi.",
     'What this means for you': "Bu siz uchun nimani anglatadi",
     'Compliance with Uzbekistan IT legislation and international business standards': "O'zbekiston IT qonunchiligi va xalqaro biznes standartlariga to'liq muvofiqlik",
     'Tax optimisation that lets us offer competitive rates without compromising quality': "Soliq optimizatsiyasi sifatdan voz kechmasdan raqobatbardosh narxlarni taklif qilish imkonini beradi",
@@ -1001,7 +1036,7 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'AI Platform': 'AI platforma',
     'Creative & Branding': 'Kreativ va brending',
     'Identity, product design and motion that make your company look as good as it works.':
-      "Kompaniyangizni ishlashi kabi chiroyli ko'rsatadigan aynelik, mahsulot dizayni va animatsiya.",
+      "Kompaniyangizni ishi kabi chiroyli ko'rsatadigan brend identifikatsiyasi, mahsulot dizayni va animatsiya.",
     'Logo & brand identity': 'Logotip va brend identifikatsiyasi',
     'UI/UX design systems': 'UI/UX dizayn tizimlari',
     'Motion & 3D visuals': 'Animatsiya va 3D vizuallar',
@@ -1119,6 +1154,10 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Technical SEO pass, performance tuning and Core Web Vitals.': 'Texnik SEO tekshiruvi, unumdorlikni sozlash va Core Web Vitals.',
     'Add': "Qo'shish",
     'In cart': 'Savatda',
+    'Add items to enable checkout': "Rasmiylashtirish uchun mahsulot qo'shing",
+    'Add at least one item to continue.': "Davom etish uchun kamida bitta mahsulot qo'shing.",
+    'Remove one': 'Birini olib tashlash',
+    'Add one': "Birini qo'shish",
 
     // ── AuthForm ──
     'Account created': 'Hisob yaratildi',
@@ -1128,6 +1167,10 @@ export const translations: Record<'ru' | 'uz', Record<string, string>> = {
     'Sign in': 'Kirish',
     'Start your project with Ctrl Code.': 'Loyihangizni Ctrl Code bilan boshlang.',
     'Welcome back — log in to continue.': 'Xush kelibsiz — davom etish uchun kiring.',
+    'John Smith': 'Ism Familiya',
+    'you@example.com': 'you@example.com',
+    'Hide password': 'Parolni yashirish',
+    'Show password': "Parolni ko'rsatish",
     'FULL NAME': "TO'LIQ ISM",
     'PASSWORD': 'PAROL',
     'CONFIRM PASSWORD': 'PAROLNI TASDIQLANG',

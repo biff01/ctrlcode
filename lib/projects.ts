@@ -791,10 +791,10 @@ const PROJECTS: Project[] = [
   },
   {
     slug: 'real-estate-platform',
-    name: 'Real Estate Platform',
-    tagline: 'A listings and showroom platform built to turn browsing into qualified enquiries.',
-    description: 'A listings and showroom platform built to turn browsing into qualified enquiries.',
-    tags: ['Website Design', 'Catalogue', 'Web'],
+    name: 'UZAUTO Motors',
+    tagline: 'A vehicle showroom platform built to turn browsing into qualified enquiries.',
+    description: 'A vehicle showroom platform built to turn browsing into qualified enquiries.',
+    tags: ['Website Design', 'Automotive', 'Web'],
     category: 'Website Design',
     type: 'Marketing Website',
     timeline: '6–8 Weeks',
@@ -804,9 +804,9 @@ const PROJECTS: Project[] = [
       { value: '90+', label: 'Lighthouse' },
       { value: '3s', label: 'Time to Interactive' },
     ],
-    heroImage: 'https://images.unsplash.com/photo-1585164216355-cfe3ca9c961d?w=1200&q=80',
+    heroImage: '/showcase/real-estate-platform-desktop.webp',
     overviewDescription:
-      'The Real Estate Platform presents a large catalogue without making it feel large. Filtering, comparison, and a media-rich detail view guide a visitor from casual browsing to a submitted enquiry in as few steps as possible.',
+      'UZAUTO Motors presents a large vehicle catalogue without making it feel large. Filtering, comparison, and a media-rich detail view guide a visitor from casual browsing to a submitted enquiry in as few steps as possible.',
     skills: [
       'UX Research',
       'Web Design',

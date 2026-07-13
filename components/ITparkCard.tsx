@@ -8,36 +8,24 @@ import { useTheme } from './ThemeProvider'
 
 function ITParkLogo({ dark, size = 80 }: { dark: boolean; size?: number }) {
   const s = size / 80
+  const badgeSize = Math.round(24 * s)
+  const badgeOffset = Math.round(7 * s)
   return (
-    <div style={{
-      width: size, height: size, borderRadius: Math.round(14 * s),
-      background: 'linear-gradient(150deg, #5abf5a 0%, #2e8b2e 100%)',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0, position: 'relative',
-      padding: `${Math.round(10 * s)}px ${Math.round(8 * s)}px`, gap: Math.round(3 * s),
-    }}>
-      <svg width={Math.round(36 * s)} height={Math.round(26 * s)} viewBox="0 0 36 26" fill="none" aria-hidden="true">
-        <circle cx="18" cy="5" r="4.5" fill="white" />
-        <path d="M9 13 C9 13 9 22 18 22 C27 22 27 13 27 13" fill="white" />
-        <rect x="7" y="11.5" width="22" height="3" rx="1.5" fill="white" />
-      </svg>
-      <span style={{ fontSize: Math.round(7.5 * s * 10) / 10, fontWeight: 800, color: 'white', letterSpacing: 1.2 * s, lineHeight: 1 }}>IT PARK</span>
-      <span style={{ fontSize: Math.round(5 * s * 10) / 10, color: 'rgba(255,255,255,0.72)', letterSpacing: 0.4, lineHeight: 1 }}>START local &amp; GO global</span>
+    <div style={{ width: size, height: size, flexShrink: 0, position: 'relative' }}>
+      {/* Official IT Park logo mark */}
+      <Image
+        src="/it-park-mark.webp"
+        alt="IT Park"
+        width={size}
+        height={size}
+        style={{
+          width: size, height: size,
+          borderRadius: Math.round(16 * s),
+          display: 'block',
+          objectFit: 'cover',
+        }}
+      />
 
-      {/* Orange verified badge */}
-      <div style={{
-        position: 'absolute', top: Math.round(-7 * s), right: Math.round(-7 * s),
-        width: Math.round(24 * s), height: Math.round(24 * s), borderRadius: '50%',
-        background: 'linear-gradient(135deg, #f5a623, #e8820c)',
-        border: `2.5px solid ${dark ? '#0a0a12' : '#f0f1f8'}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: '0 2px 8px rgba(230,120,10,0.5)',
-      }}>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-          <path d="M2 6 L5 9 L10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
     </div>
   )
 }
@@ -110,12 +98,10 @@ function CertModal({ onClose, dark }: { onClose: () => void; dark: boolean }) {
           <div className="flex items-center" style={{ gap: 14 }}>
             <div style={{
               width: 44, height: 44, borderRadius: '50%',
-              background: 'linear-gradient(135deg, #f5a623, #e8820c)',
+              background: 'linear-gradient(135deg, #1a50cc 0%, #3b7ef6 100%)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="12" cy="8" r="4" /><path d="M4 20v-1a8 8 0 0 1 16 0v1" /><polyline points="9 11 12 14 22 4" />
-              </svg>
+              <Award width={20} height={20} color="white" strokeWidth={1.8} aria-hidden="true" />
             </div>
             <div>
               <h2 className="font-display font-semibold" style={{ fontSize: 'clamp(16px, 3vw, 20px)', color: headingColor, margin: 0 }}>
@@ -205,7 +191,7 @@ function CertModal({ onClose, dark }: { onClose: () => void; dark: boolean }) {
 
             {/* Bullet list */}
             <div>
-              <p className="font-mono" style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(245,166,35,0.85)', textTransform: 'uppercase', marginBottom: 14 }}>
+              <p className="font-mono" style={{ fontSize: 10, letterSpacing: 2, color: mutedColor, textTransform: 'uppercase', marginBottom: 14 }}>
                 {t('What this means for you')}
               </p>
               <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -213,12 +199,12 @@ function CertModal({ onClose, dark }: { onClose: () => void; dark: boolean }) {
                   <li key={i} className="flex items-start" style={{ gap: 10 }}>
                     <div style={{
                       width: 20, height: 20, borderRadius: '50%', flexShrink: 0, marginTop: 1,
-                      background: 'rgba(245,166,35,0.12)',
-                      border: '1px solid rgba(245,166,35,0.35)',
+                      background: 'rgba(52,82,202,0.12)',
+                      border: '1px solid rgba(52,82,202,0.3)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
                       <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                        <path d="M2 5L4 7L8 3" stroke="#f5a623" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M2 5L4 7L8 3" stroke="#3b7ef6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
                     <span className="font-body" style={{ fontSize: 13, color: bulletColor, lineHeight: 1.55 }}>{b}</span>
@@ -278,18 +264,6 @@ export default function ITparkCard() {
         gap: 'clamp(12px, 3vw, 20px)',
         position: 'relative', overflow: 'hidden',
       }}>
-        {/* Amber bottom glow */}
-        <div style={{
-          position: 'absolute', bottom: 0, left: '5%', right: '5%', height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(230,120,10,0.65), transparent)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute', bottom: 0, left: '15%', right: '15%', height: 20,
-          background: 'radial-gradient(ellipse at 50% 100%, rgba(230,120,10,0.18) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-
         {/* Logo — 56px on mobile, 80px on sm+ */}
         <div className="hidden sm:block flex-shrink-0">
           <ITParkLogo dark={dark} size={80} />
@@ -302,8 +276,8 @@ export default function ITparkCard() {
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
           {/* Badge */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#f5a623', flexShrink: 0 }} />
-            <span className="font-mono" style={{ fontSize: 10, letterSpacing: 1.5, color: 'rgba(245,166,35,0.9)', textTransform: 'uppercase' }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#6dbf22', flexShrink: 0 }} />
+            <span className="font-mono" style={{ fontSize: 10, letterSpacing: 1.5, color: 'rgba(109,191,34,0.9)', textTransform: 'uppercase' }}>
               {t('Official Resident')}
             </span>
           </div>
@@ -325,10 +299,10 @@ export default function ITparkCard() {
               gap: 8,
               padding: '10px 18px',
               borderRadius: 10, border: 'none',
-              background: 'linear-gradient(135deg, #f5a623 0%, #e8820c 100%)',
-              color: 'white', fontSize: 14,
+              background: 'var(--footer-btn-bg)',
+              color: 'var(--footer-btn-color)', fontSize: 14,
               cursor: 'pointer', whiteSpace: 'nowrap',
-              boxShadow: '0 4px 18px rgba(230,120,10,0.35)',
+              boxShadow: 'var(--card-shadow)',
             }}
           >
             <Award style={{ width: 14, height: 14 }} aria-hidden="true" />

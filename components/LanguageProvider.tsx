@@ -38,7 +38,8 @@ export default function LanguageProvider({
 
   const t = useCallback(
     (s: string) => {
-      if (lang === 'en') return s
+      // English overrides live in translations.en (keyed by the source literal);
+      // anything not overridden falls back to the literal itself.
       return translations[lang]?.[s] ?? s
     },
     [lang]

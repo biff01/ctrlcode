@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Check } from 'lucide-react'
+import { ArrowUpRight, Check, Rocket, Briefcase, Building2, type LucideIcon } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 import { useTheme } from './ThemeProvider'
 
 type Plan = {
   id: string
+  Icon: LucideIcon
   name: string
   subtitle: string
   price: string
@@ -21,7 +22,8 @@ type Plan = {
 const ALL_PLANS: Plan[] = [
   {
     id: 'start',
-    name: '🚀 Start',
+    Icon: Rocket,
+    name: 'Start',
     subtitle: 'Perfect for small businesses and startups.',
     price: '$1,500',
     badge: null,
@@ -38,7 +40,8 @@ const ALL_PLANS: Plan[] = [
   },
   {
     id: 'pro',
-    name: '💼 Pro',
+    Icon: Briefcase,
+    name: 'Pro',
     subtitle: 'Ideal for growing businesses.',
     price: '$3,500',
     badge: 'Most Popular',
@@ -55,7 +58,8 @@ const ALL_PLANS: Plan[] = [
   },
   {
     id: 'premium',
-    name: '🏢 Premium',
+    Icon: Building2,
+    name: 'Premium',
     subtitle: 'For enterprises and complex digital products.',
     price: '$7,500',
     badge: null,
@@ -159,7 +163,10 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, position: 'relative' }}>
           <div className="flex flex-wrap items-center justify-between" style={{ rowGap: 8 }}>
             <div className="flex items-center" style={{ gap: 8 }}>
-              <span style={{ color: showAmber ? '#e8a020' : '#fff', fontSize: 18 }}>•</span>
+              <plan.Icon
+                style={{ width: 16, height: 16, color: showAmber ? '#e8a020' : '#fff', flexShrink: 0 }}
+                strokeWidth={1.8}
+              />
               <span className="font-display font-semibold" style={{ fontSize: 'clamp(14px, 3.5vw, 17px)', color: '#fff' }}>
                 {t(plan.name)}
               </span>

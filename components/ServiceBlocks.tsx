@@ -25,6 +25,7 @@ const SERVICES = [
     price: 'from $1,500',
     title: 'Web Development',
     desc: 'Corporate websites, e-commerce and complex web applications on modern stacks. Fast to load, easy to manage, built to convert.',
+    tags: ['React', 'Next.js', 'TypeScript', 'CMS', 'SEO'],
     accordion: [
       { label: 'Corporate websites & landing pages', detail: 'Conversion-focused sites with a CMS your team can update without a developer.' },
       { label: 'E-commerce with local payments', detail: 'Full storefronts wired to Payme, Click and Uzum, with inventory and order management.' },
@@ -37,12 +38,17 @@ const SERVICES = [
     cardDate: 'Jan 2025',
     cardSlug: 'darsly',
     cardLeft: true,
+    visualHeight: 'clamp(180px, 32vw, 252px)',
+    textFlex: '1.3',
+    cardFlex: '1',
+    sectionPad: 'clamp(56px, 8vw, 80px)',
   },
   {
     num: '02',
     price: 'from $3,500',
     title: 'Mobile Apps',
     desc: 'Native-quality apps for iOS and Android from a single codebase — designed for retention and shipped to both stores.',
+    tags: ['Flutter', 'React Native', 'iOS', 'Android'],
     accordion: [
       { label: 'Flutter & React Native', detail: 'One codebase, two native apps — faster to build and cheaper to maintain.' },
       { label: 'App Store / Play Market publishing', detail: 'We handle store setup, review guidelines and release management end to end.' },
@@ -55,12 +61,17 @@ const SERVICES = [
     cardDate: 'Mar 2025',
     cardSlug: 'mobile-application',
     cardLeft: false,
+    visualHeight: 'clamp(200px, 36vw, 280px)',
+    textFlex: '1',
+    cardFlex: '1.3',
+    sectionPad: 'clamp(48px, 7vw, 68px)',
   },
   {
     num: '03',
     price: 'from $5,000',
     title: 'CRM & ERP Systems',
     desc: 'Custom internal systems that mirror how your business actually works — sales, warehouse, finance and telephony in one place.',
+    tags: ['CRM', 'ERP', 'Warehouse', 'Telephony', 'Telegram'],
     accordion: [
       { label: 'Sales & lead management', detail: 'Pipelines, tasks and automations that mirror how your sales team actually sells.' },
       { label: 'Warehouse and finance modules', detail: 'Stock, invoicing and reporting unified inside one internal system.' },
@@ -73,12 +84,17 @@ const SERVICES = [
     cardDate: 'Feb 2025',
     cardSlug: undefined,
     cardLeft: true,
+    visualHeight: 'clamp(160px, 28vw, 220px)',
+    textFlex: '1.5',
+    cardFlex: '1',
+    sectionPad: 'clamp(52px, 7.5vw, 76px)',
   },
   {
     num: '04',
     price: 'from $2,000',
     title: 'AI Solutions',
     desc: 'Practical AI that removes repetitive work: assistants, document automation and integrations with the models you already trust.',
+    tags: ['Claude AI', 'OpenAI', 'OCR', 'LLM APIs'],
     accordion: [
       { label: 'Custom chatbots & assistants', detail: 'Assistants trained on your data that handle support and internal questions.' },
       { label: 'Document & data automation', detail: 'Extract, classify and route documents without manual data entry.' },
@@ -91,12 +107,17 @@ const SERVICES = [
     cardDate: 'Apr 2025',
     cardSlug: undefined,
     cardLeft: false,
+    visualHeight: 'clamp(190px, 34vw, 264px)',
+    textFlex: '1',
+    cardFlex: '1',
+    sectionPad: 'clamp(48px, 7vw, 68px)',
   },
   {
     num: '05',
     price: 'from $800',
     title: 'Creative & Branding',
     desc: 'Identity, product design and motion that make your company look as good as it works.',
+    tags: ['Figma', 'Motion', '3D', 'Design System'],
     accordion: [
       { label: 'Logo & brand identity', detail: 'A complete identity system: logo, colors, type and usage guidelines.' },
       { label: 'UI/UX design systems', detail: 'Reusable components and tokens that keep every screen consistent.' },
@@ -109,18 +130,16 @@ const SERVICES = [
     cardDate: 'Jun 2025',
     cardSlug: 'brand-identity',
     cardLeft: true,
+    visualHeight: 'clamp(175px, 30vw, 244px)',
+    textFlex: '1',
+    cardFlex: '1.35',
+    sectionPad: 'clamp(52px, 7.5vw, 72px)',
   },
 ]
 
 // ─── ANIMATED SERVICE VISUALS ─────────────────────────────────────────────────
 
 // Static data outside components to avoid recreation on every render
-
-const WEB_SCHEMES = [
-  { bg: '#0d2e2e', accent: '#2dd4bf', blockCol: '#a7f3d0' },
-  { bg: '#060d21', accent: BRAND_BLUE, blockCol: '#93c5fd' },
-  { bg: '#f5f4ff', accent: '#7c3aed', blockCol: '#7c3aed' },
-] as const
 
 const CRM_BARS = [65, 80, 50, 90, 70, 85]
 
@@ -139,85 +158,209 @@ const AI_BUBBLES = ['Processing request…', 'Analyzing data…', 'Done — here
 const BRAND_LOGO_LABELS = ['Geometric', 'Initial Mark', 'Minimal']
 const BRAND_LOGO_COLORS = [BRAND_BLUE, '#7c3aed', '#2dd4bf']
 
-// 1. Web Platform — browser chrome cycling through 3 color schemes
+// 1. Web Platform — staggered hero build-in with ambient glow, loops every 5s
+const WEB_STATS = [
+  { val: '48+', color: BRAND_BLUE, delay: 0.88 },
+  { val: '5yr', color: '#22c55e', delay: 1.02 },
+  { val: '98%', color: '#f59e0b', delay: 1.16 },
+] as const
+
 function WebPlatformVisual() {
-  const [current, setCurrent] = useState(0)
+  const [cycle, setCycle] = useState(0)
   useEffect(() => {
-    const id = setInterval(() => setCurrent(c => (c + 1) % WEB_SCHEMES.length), 3000)
+    const id = setInterval(() => setCycle(c => c + 1), 5000)
     return () => clearInterval(id)
   }, [])
 
-  const s = WEB_SCHEMES[current]
-
   return (
-    <div style={{ width: '100%', height: '100%', background: '#111', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ width: '100%', height: '100%', background: '#0d0d14', display: 'flex', flexDirection: 'column' }}>
       {/* Browser chrome */}
       <div style={{
-        background: '#1c1c1c',
-        padding: '7px 10px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        flexShrink: 0,
-        borderBottom: '1px solid #2a2a2a',
+        background: '#17171f', padding: '7px 10px',
+        display: 'flex', alignItems: 'center', gap: 8,
+        flexShrink: 0, borderBottom: '1px solid #22222e',
       }}>
         <div style={{ display: 'flex', gap: 5 }}>
           {(['#FF5F57', '#FFBD2E', '#28C840'] as const).map(col => (
-            <div key={col} style={{ width: 8, height: 8, borderRadius: '50%', background: col }} />
+            <div key={col} style={{ width: 9, height: 9, borderRadius: '50%', background: col }} />
           ))}
         </div>
         <div style={{
-          flex: 1,
-          background: '#2a2a2a',
-          borderRadius: 4,
-          height: 16,
-          display: 'flex',
-          alignItems: 'center',
-          padding: '0 6px',
-          gap: 4,
+          flex: 1, background: '#1f1f2a', borderRadius: 5, height: 18,
+          display: 'flex', alignItems: 'center', padding: '0 8px', gap: 5,
         }}>
-          <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#555' }} />
-          <div style={{ width: '50%', height: 3, background: '#444', borderRadius: 2 }} />
+          <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#3a9a3a', opacity: 0.9 }} />
+          <span style={{ fontSize: 8, color: '#4a4a6a', fontFamily: 'monospace' }}>ctrlcode.uz</span>
+        </div>
+        <div style={{ display: 'flex', gap: 5 }}>
+          {[16, 14].map((w, i) => (
+            <div key={i} style={{ width: w, height: 4, background: '#2a2a3a', borderRadius: 2 }} />
+          ))}
         </div>
       </div>
 
-      {/* Site mockup area — crossfades between schemes */}
-      <AnimatePresence mode="wait">
+      {/* Page */}
+      <div style={{ flex: 1, background: '#07101e', overflow: 'hidden', position: 'relative' }}>
+        {/* Dot grid */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: `radial-gradient(circle, ${BRAND_BLUE}18 1px, transparent 1px)`,
+          backgroundSize: '14px 14px',
+          pointerEvents: 'none',
+        }} />
+
+        {/* Ambient glow blobs — always running */}
         <motion.div
-          key={current}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.42 }}
-          style={{ flex: 1, background: s.bg, padding: '10px 12px', overflow: 'hidden' }}
-        >
-          {/* Nav bar */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <div style={{ width: 40, height: 8, background: s.accent, borderRadius: 3, opacity: 0.9 }} />
-            <div style={{ display: 'flex', gap: 6 }}>
-              {[30, 22, 22].map((w, i) => (
-                <div key={i} style={{ width: w, height: 5, background: s.accent, borderRadius: 2, opacity: 0.35 }} />
+          animate={{ scale: [1, 1.2, 1], opacity: [0.18, 0.32, 0.18] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute', width: 200, height: 140, top: -50, right: -30,
+            background: `radial-gradient(ellipse, ${BRAND_BLUE}55 0%, transparent 70%)`,
+            pointerEvents: 'none',
+          }}
+        />
+        <motion.div
+          animate={{ scale: [1, 1.15, 1], opacity: [0.08, 0.16, 0.08] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          style={{
+            position: 'absolute', width: 140, height: 100, bottom: -10, left: -10,
+            background: 'radial-gradient(ellipse, #2dd4bf2a 0%, transparent 70%)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Content — re-mounts each cycle to replay stagger */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={cycle}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.38 }}
+            style={{ padding: '10px 13px', position: 'relative', zIndex: 1 }}
+          >
+            {/* Nav */}
+            <motion.div
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.28, delay: 0.05 }}
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 13 }}
+            >
+              <div style={{ width: 34, height: 7, background: BRAND_BLUE, borderRadius: 3 }} />
+              <div style={{ display: 'flex', gap: 6 }}>
+                {[20, 18, 18, 30].map((w, i) => (
+                  <div key={i} style={{ width: w, height: 4, background: '#1e2d45', borderRadius: 2 }} />
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Badge pill */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.82 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: 0.18, ease: EASE }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                background: `${BRAND_BLUE}16`, border: `1px solid ${BRAND_BLUE}28`,
+                borderRadius: 20, padding: '2px 7px', marginBottom: 8,
+              }}
+            >
+              <motion.div
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.6, repeat: Infinity }}
+                style={{ width: 4, height: 4, borderRadius: '50%', background: '#22c55e' }}
+              />
+              <div style={{ width: 38, height: 3, background: `${BRAND_BLUE}60`, borderRadius: 2 }} />
+            </motion.div>
+
+            {/* Headline — expands from left */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.6, delay: 0.28, ease: EASE }}
+              style={{
+                height: 10, width: '88%',
+                background: `linear-gradient(90deg, #ffffff 0%, ${BRAND_BLUE} 100%)`,
+                borderRadius: 3, marginBottom: 5, opacity: 0.88,
+                transformOrigin: 'left center',
+              }}
+            />
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.5, delay: 0.42, ease: EASE }}
+              style={{
+                height: 10, width: '64%',
+                background: `linear-gradient(90deg, #8898cc 0%, ${BRAND_BLUE}80 100%)`,
+                borderRadius: 3, marginBottom: 8, opacity: 0.65,
+                transformOrigin: 'left center',
+              }}
+            />
+
+            {/* Subtitle lines */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.32, delay: 0.58 }}
+            >
+              <div style={{ width: '70%', height: 4, background: '#1e2d45', borderRadius: 2, marginBottom: 4 }} />
+              <div style={{ width: '54%', height: 4, background: '#1e2d45', borderRadius: 2, marginBottom: 10 }} />
+            </motion.div>
+
+            {/* CTA buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.28, delay: 0.72, ease: EASE }}
+              style={{ display: 'flex', gap: 6, marginBottom: 12 }}
+            >
+              <div style={{ width: 50, height: 13, background: BRAND_BLUE, borderRadius: 6, opacity: 0.92 }} />
+              <div style={{ width: 42, height: 13, border: `1px solid ${BRAND_BLUE}40`, borderRadius: 6 }} />
+            </motion.div>
+
+            {/* Stat cards */}
+            <div style={{ display: 'flex', gap: 5 }}>
+              {WEB_STATS.map(s => (
+                <motion.div
+                  key={s.val}
+                  initial={{ opacity: 0, y: 7 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.32, delay: s.delay, ease: EASE }}
+                  style={{
+                    flex: 1, background: '#0b1624',
+                    border: `1px solid ${s.color}18`,
+                    borderRadius: 5, padding: '5px 6px',
+                  }}
+                >
+                  <div style={{ fontSize: 10, fontWeight: 700, color: s.color, fontFamily: 'monospace', marginBottom: 3, lineHeight: 1 }}>{s.val}</div>
+                  <div style={{ width: '60%', height: 3, background: '#162030', borderRadius: 2 }} />
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
+        </AnimatePresence>
 
-          {/* Hero headline blocks */}
-          <div style={{ marginBottom: 10 }}>
-            <div style={{ width: '72%', height: 11, background: s.accent, borderRadius: 3, opacity: 0.85, marginBottom: 5 }} />
-            <div style={{ width: '55%', height: 7, background: s.blockCol, borderRadius: 2, opacity: 0.4, marginBottom: 4 }} />
-            <div style={{ width: '44%', height: 7, background: s.blockCol, borderRadius: 2, opacity: 0.28, marginBottom: 10 }} />
-            {/* CTA pill */}
-            <div style={{ width: 54, height: 14, background: s.accent, borderRadius: 5, opacity: 0.88 }} />
-          </div>
-
-          {/* Feature cards */}
-          <div style={{ display: 'flex', gap: 6 }}>
-            {[0.16, 0.24, 0.32].map((op, i) => (
-              <div key={i} style={{ flex: 1, height: 30, background: s.accent, borderRadius: 4, opacity: op }} />
-            ))}
-          </div>
+        {/* Floating toast notification */}
+        <motion.div
+          animate={{ opacity: [0, 0, 1, 1, 0], y: [12, 12, 0, 0, -6] }}
+          transition={{ duration: 5, repeat: Infinity, times: [0, 0.35, 0.46, 0.82, 1], ease: 'easeOut' }}
+          style={{
+            position: 'absolute', bottom: 10, right: 10,
+            background: '#0e1a2e', border: `1px solid ${BRAND_BLUE}28`,
+            borderRadius: 6, padding: '4px 8px',
+            display: 'flex', alignItems: 'center', gap: 5,
+            boxShadow: '0 4px 18px rgba(0,0,0,0.45)',
+            zIndex: 2,
+          }}
+        >
+          <motion.div
+            animate={{ scale: [1, 1.4, 1] }}
+            transition={{ duration: 1.2, repeat: Infinity, delay: 2.4 }}
+            style={{ width: 5, height: 5, borderRadius: '50%', background: '#22c55e' }}
+          />
+          <div style={{ width: 44, height: 4, background: '#1e3050', borderRadius: 2 }} />
         </motion.div>
-      </AnimatePresence>
+      </div>
     </div>
   )
 }
@@ -729,6 +872,8 @@ function ServiceCard({
   date,
   slug,
   priority = false,
+  cardFlex = '1',
+  visualHeight = 'clamp(160px, 30vw, 240px)',
 }: {
   image?: string
   visual?: ReactNode
@@ -737,6 +882,8 @@ function ServiceCard({
   date: string
   slug?: string
   priority?: boolean
+  cardFlex?: string
+  visualHeight?: string
 }) {
   const { t } = useLang()
   const [hovered, setHovered] = useState(false)
@@ -761,7 +908,7 @@ function ServiceCard({
       <div
         style={{
           position: 'relative',
-          height: 'clamp(160px, 30vw, 240px)',
+          height: visualHeight,
           overflow: 'hidden',
           flexShrink: 0,
           background: visual ? '#0f0f0f' : 'var(--surface-2)',
@@ -857,12 +1004,13 @@ function ServiceCard({
       whileTap={{ scale: 0.98, transition: { duration: 0.12, ease: [0.22, 1, 0.36, 1] } }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      className="max-md:w-full md:flex-1"
+      className="max-md:w-full"
       style={{
         display: 'flex',
         borderRadius: 16,
         overflow: 'hidden',
         boxShadow: '0 2px 0 rgba(255,255,255,0), 0 12px 40px rgba(0,0,0,0)',
+        flex: cardFlex,
       }}
     >
       {slug ? (
@@ -970,24 +1118,26 @@ const FADE_UP = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.52, ease: [0.22, 1, 0.36, 1] } },
 }
 
-function ServiceText({ num, price, title, desc, accordion }: {
+function ServiceText({ num, price, title, desc, accordion, tags, textFlex }: {
   num: string
   price: string
   title: string
   desc: string
   accordion: AccordionItem[]
+  tags?: string[]
+  textFlex: string
 }) {
   const { t } = useLang()
   // Only one row per service block is open; clicking the open row closes it.
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   return (
     <motion.div
-      className="max-md:w-full md:flex-1"
+      className="max-md:w-full"
       variants={{ hidden: { opacity: 1 }, visible: { transition: { staggerChildren: 0.08 } } }}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: '-80px' }}
-      style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
+      style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: textFlex }}
     >
       {/* Num + Price Row */}
       <motion.div variants={FADE_UP} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -1023,6 +1173,29 @@ function ServiceText({ num, price, title, desc, accordion }: {
           {t(desc)}
         </p>
       </motion.div>
+
+      {/* Tech tags */}
+      {tags && tags.length > 0 && (
+        <motion.div variants={FADE_UP} style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+          {tags.map(tag => (
+            <span
+              key={tag}
+              className="font-mono"
+              style={{
+                fontSize: 11,
+                color: 'var(--text-tertiary)',
+                background: 'var(--badge-bg)',
+                border: '1px solid var(--badge-border)',
+                borderRadius: 6,
+                padding: '4px 10px',
+                letterSpacing: '0.04em',
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </motion.div>
+      )}
 
       {/* Accordion — opt out of scroll anchoring so the browser doesn't correct
           scroll position on every frame of the height animation. */}
@@ -1085,7 +1258,7 @@ export default function ServiceBlocks() {
             className={svc.cardLeft
               ? 'flex flex-col gap-10 md:flex-row-reverse md:items-center lg:gap-[72px]'
               : 'flex flex-col gap-10 md:flex-row md:items-center lg:gap-[72px]'}
-            style={{ padding: 'clamp(48px, 8vw, 72px) 0' }}
+            style={{ padding: `${svc.sectionPad} 0` }}
           >
             <ServiceText
               num={svc.num}
@@ -1093,6 +1266,8 @@ export default function ServiceBlocks() {
               title={svc.title}
               desc={svc.desc}
               accordion={svc.accordion}
+              tags={svc.tags}
+              textFlex={svc.textFlex}
             />
             <ServiceCard
               image={svc.image}
@@ -1102,6 +1277,8 @@ export default function ServiceBlocks() {
               date={svc.cardDate}
               slug={svc.cardSlug}
               priority={i === 0}
+              cardFlex={svc.cardFlex}
+              visualHeight={svc.visualHeight}
             />
           </div>
           {/* Divider between blocks */}
