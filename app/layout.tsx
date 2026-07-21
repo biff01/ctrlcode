@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import ThemeProvider from "@/components/ThemeProvider";
+import Script from "next/script";
+import ThemeProvider, { THEME_INIT_SCRIPT } from "@/components/ThemeProvider";
 import MotionProvider from "@/components/MotionProvider";
 import LanguageProvider from "@/components/LanguageProvider";
 import SkipLink from "@/app/SkipLink";
@@ -51,6 +52,13 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable}`}
     >
+      <head>
+        {/* Sets data-theme from storage before first paint. Without this the page
+            paints with the :root (dark) tokens and snaps to light on hydration. */}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {THEME_INIT_SCRIPT}
+        </Script>
+      </head>
       <body>
         <SkipLink />
         <ThemeProvider>

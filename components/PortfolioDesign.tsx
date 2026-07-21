@@ -125,7 +125,7 @@ const STEPS: Step[] = [
   },
   {
     num: '06',
-    title: 'Growth & Support',
+    title: 'Support',
     desc: 'Ongoing maintenance, feature evolution, and performance optimization post-launch.',
     details: [
       'Monthly performance reports — traffic, conversions, Core Web Vitals',
@@ -232,7 +232,7 @@ function ProjectCard({
 function Header({ active, onChange }: { active: string; onChange: (f: string) => void }) {
   const { t } = useLang()
   return (
-    <section style={{ background: BG, padding: 'clamp(56px, 9vw, 80px) 0 clamp(40px, 7vw, 64px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <section style={{ background: BG, padding: 'clamp(96px, 15vw, 140px) 0 clamp(40px, 7vw, 64px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{ width: 1200, maxWidth: '100%', padding: '0 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 'clamp(24px, 4vw, 40px)', flexWrap: 'wrap' }}>
           <motion.div
@@ -244,7 +244,7 @@ function Header({ active, onChange }: { active: string; onChange: (f: string) =>
           >
             <span className="font-mono" style={{ fontSize: 11, color: KICKER, letterSpacing: 1.5 }}>{t('SELECTED WORK')}</span>
             <BlurIn className="font-display font-bold" style={{ fontSize: 'clamp(32px, 8vw, 72px)', lineHeight: 'clamp(34px, 8.4vw, 75px)', letterSpacing: 'clamp(-1.5px, -0.3vw, -1px)', color: TEXT, overflowWrap: 'break-word', wordBreak: 'break-word' }} duration={0.9}>
-              {t('Work that speaks')}<br />{t('for itself.')}
+              {t('Work that')}<br />{t('speaks for itself.')}
             </BlurIn>
             <p className="font-body" style={{ fontSize: 15, lineHeight: 1.6, color: SUB, width: 520, maxWidth: '100%' }}>
               {t('A collection of products, platforms, and digital systems built with clarity, speed, and purpose.')}
@@ -416,19 +416,27 @@ function ProcessStep({ s, isOpen, onToggle }: { s: Step; isOpen: boolean; onTogg
   const { t } = useLang()
   return (
     <div>
-      <button
+      <motion.button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={`process-panel-${s.num}`}
         className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--text-primary)] rounded-sm"
+        initial="rest"
+        whileHover="hovered"
+        transition={{ duration: 0.2, ease: 'easeOut' }}
         style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}
       >
-        <div
+        <motion.div
           className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-2 lg:flex lg:justify-between lg:gap-8"
+          variants={{ rest: { x: 0 }, hovered: { x: 4, transition: { duration: 0.35, ease: SMOOTH } } }}
           style={{ padding: 'clamp(20px, 3.5vw, 28px) 0' }}
         >
-          <span className="font-mono" style={{ fontSize: 13, color: KICKER, letterSpacing: 2, width: 40, flexShrink: 0 }}>{s.num}</span>
+          <motion.span
+            className="font-mono"
+            variants={{ rest: { color: KICKER }, hovered: { color: TEXT, transition: { duration: 0.25, ease: SMOOTH } } }}
+            style={{ fontSize: 13, letterSpacing: 2, width: 40, flexShrink: 0 }}
+          >{s.num}</motion.span>
           <span className="font-display font-bold lg:min-w-[200px] lg:max-w-[280px]" style={{ fontSize: 'clamp(22px, 4.5vw, 28px)', letterSpacing: -0.5, color: TEXT }}>{t(s.title)}</span>
           <p className="font-body col-span-2 lg:min-w-0 lg:flex-1" style={{ fontSize: 15, lineHeight: 1.64, color: SUB }}>{t(s.desc)}</p>
           <motion.div
@@ -445,8 +453,8 @@ function ProcessStep({ s, isOpen, onToggle }: { s: Step; isOpen: boolean; onTogg
               <ArrowRight aria-hidden={true} style={{ width: 16, height: 16 }} />
             </motion.span>
           </motion.div>
-        </div>
-      </button>
+        </motion.div>
+      </motion.button>
 
       <AnimatePresence initial={false}>
         {isOpen && (
@@ -656,6 +664,11 @@ const ISSUES = [
 
 const WS_EASE = [0.22, 1, 0.36, 1] as const
 
+/* Blur stays under ~32px: the 720px showcase box clips at its edges, and a wider
+   blur's tail gets cut mid-falloff and reads as a hard line. */
+const LIFT_SHADOW =
+  '0 1px 2px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.06), 0 10px 20px rgba(0,0,0,0.07), 0 18px 32px rgba(0,0,0,0.07)'
+
 function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
   return (
     <div style={{ position: 'relative', width: 720, height: 760, background: 'var(--hero-band-bg)', overflow: 'hidden', flexShrink: 0, transform: 'scale(min(1, calc(100vw / 720px)))', transformOrigin: 'top left' }}>
@@ -667,33 +680,55 @@ function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
       />
       <div style={{ position: 'absolute', left: 50, top: 190, width: 620, height: 380 }}>
         <motion.div
-          style={{ position: 'absolute', inset: 0, transformOrigin: '60px 190px' }}
+          style={{ position: 'absolute', inset: 0, transformOrigin: '60px 190px', pointerEvents: 'none' }}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={show ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 130, damping: 20, mass: 0.9, delay: 0.05 }}
         >
-          <div style={{ position: 'absolute', left: -6, top: 124, width: 132, height: 132, borderRadius: '50%', border: '1px solid #FFFFFF0B' }} />
-          {/* First circle: IDEA (lightbulb) */}
+          {/* IDEA hover group — ring + button scale as one unit */}
           <motion.div
-            whileHover={{ scale: 1.06, boxShadow: '0 14px 56px rgba(0,0,0,0.6)', transition: { duration: 0.5, ease: SMOOTH } }}
-            style={{ position: 'absolute', left: 0, top: 130, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', boxShadow: '0 10px 50px rgba(0,0,0,0.33)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            variants={{
+              rest: { scale: 1 },
+              hovered: { scale: 1.06, transition: { duration: 0.5, ease: SMOOTH } },
+            }}
+            initial="rest"
+            whileHover="hovered"
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            style={{ position: 'absolute', left: -6, top: 124, width: 132, height: 132, borderRadius: '50%', pointerEvents: 'auto' }}
           >
-            <svg viewBox="0 0 48 48" width="60" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M24 6C17.373 6 12 11.373 12 18c0 4.314 2.2 8.116 5.6 10.4.267.186.4.5.4.824V32a1 1 0 001 1h10a1 1 0 001-1v-2.776c0-.324.133-.638.4-.824C33.8 26.116 36 22.314 36 18c0-6.627-5.373-12-12-12z" stroke="#FFFFFF" strokeWidth="2" strokeLinejoin="round"/>
-              <path d="M19 36h10M20.5 40h7" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="24" y1="6" x2="24" y2="3" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="12" y1="12" x2="10" y2="10" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="36" y1="12" x2="38" y2="10" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="8" y1="18" x2="5" y2="18" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="40" y1="18" x2="43" y2="18" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            {/* orbit ring */}
+            <motion.div
+              variants={{
+                rest: { borderColor: 'rgba(255,255,255,0.04)' },
+                hovered: { borderColor: 'rgba(255,255,255,0.18)', transition: { duration: 0.5, ease: SMOOTH } },
+              }}
+              style={{ position: 'absolute', inset: 0, borderRadius: '50%', borderWidth: 1, borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.04)' }}
+            />
+            {/* IDEA button */}
+            <motion.div
+              variants={{
+                rest: { boxShadow: '0 10px 50px rgba(0,0,0,0.33)' },
+                hovered: { boxShadow: '0 14px 56px rgba(0,0,0,0.6)', filter: 'brightness(1.14)', transition: { duration: 0.5, ease: SMOOTH } },
+              }}
+              style={{ position: 'absolute', left: 6, top: 6, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <svg viewBox="0 0 48 48" width="60" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 6C17.373 6 12 11.373 12 18c0 4.314 2.2 8.116 5.6 10.4.267.186.4.5.4.824V32a1 1 0 001 1h10a1 1 0 001-1v-2.776c0-.324.133-.638.4-.824C33.8 26.116 36 22.314 36 18c0-6.627-5.373-12-12-12z" stroke="#FFFFFF" strokeWidth="2" strokeLinejoin="round"/>
+                <path d="M19 36h10M20.5 40h7" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="24" y1="6" x2="24" y2="3" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="12" y1="12" x2="10" y2="10" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="36" y1="12" x2="38" y2="10" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="8" y1="18" x2="5" y2="18" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="40" y1="18" x2="43" y2="18" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </motion.div>
           </motion.div>
           {/* IDEA label */}
           <span className="font-mono" style={{ position: 'absolute', left: 0, top: 258, width: 120, textAlign: 'center', fontSize: 11, fontWeight: 600, color: dark ? 'rgba(255,255,255,0.88)' : '#000000', letterSpacing: 2, pointerEvents: 'none' }}>IDEA</span>
         </motion.div>
 
         <motion.div
-          style={{ position: 'absolute', left: 125, top: 0, width: 375, height: 380, transformOrigin: '50% 50%' }}
+          style={{ position: 'absolute', left: 125, top: 0, width: 375, height: 380, transformOrigin: '50% 50%', pointerEvents: 'none' }}
           animate={show ? { scaleY: [1, 1.06, 1] } : {}}
           transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
         >
@@ -719,7 +754,7 @@ function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
         </motion.div>
 
         <motion.div
-          style={{ position: 'absolute', inset: 0, transformOrigin: '560px 190px' }}
+          style={{ position: 'absolute', inset: 0, transformOrigin: '560px 190px', pointerEvents: 'none' }}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={show ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 130, damping: 20, mass: 0.9, delay: 0.5 }}
@@ -728,7 +763,7 @@ function WorkHero({ dark, show }: { dark: boolean; show: boolean }) {
           {/* Second circle: WEBSITE (browser/monitor) */}
           <motion.div
             whileHover={{ scale: 1.06, filter: 'brightness(1.14)', boxShadow: '0 14px 56px rgba(0,0,0,0.6)', transition: { duration: 0.5, ease: SMOOTH } }}
-            style={{ position: 'absolute', left: 500, top: 130, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', boxShadow: '0 10px 50px rgba(0,0,0,0.33)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ position: 'absolute', left: 500, top: 130, width: 120, height: 120, borderRadius: 60, background: '#0F0F1B', border: '1px solid #FFFFFF14', boxShadow: '0 10px 50px rgba(0,0,0,0.33)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'auto' }}
           >
             <svg viewBox="0 0 48 48" width="58" height="58" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="6" y="10" width="36" height="26" rx="3" stroke="#FFFFFF" strokeWidth="2"/>
@@ -822,25 +857,31 @@ function WorkShowcase({ dark, show }: { dark: boolean; show: boolean }) {
         initial={{ opacity: 0, x: -16 }}
         animate={show ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
         transition={{ duration: 0.7, delay: 0.85, ease: WS_EASE }}
-        style={{ position: 'absolute', left: 40, top: 260, width: 240, display: 'flex', flexDirection: 'column', gap: 14, padding: 20, background: '#181818', border: '1px solid #2A2A2A', borderRadius: 18, zIndex: 1 }}
+        style={{ position: 'absolute', left: 40, top: 260, zIndex: 1 }}
       >
-        {[
-          { label: 'New Issue', glyph: <path d="M2 2l16 0 0 3-11 10 11 0 0 3-16 0 0-3 11-10-11 0z" fill="#FFFFFF" /> },
-          { label: 'Create Issue', glyph: <path d="M3 3h6v6H3zM11 3h6v6h-6zM3 11h6v6H3zM11 11h6v6h-6z" fill="#FFFFFF" /> },
-        ].map((r, i) => (
-          <motion.div
-            key={r.label}
-            initial={{ opacity: 0, y: 8 }}
-            animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-            transition={{ duration: 0.5, delay: 0.98 + i * 0.1, ease: WS_EASE }}
-            style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', background: '#222222', borderRadius: 10 }}
-          >
-            <div style={{ position: 'relative', width: 36, height: 36, background: '#111111', borderRadius: 8, flexShrink: 0 }}>
-              <svg viewBox="0 0 20 20" style={{ position: 'absolute', left: 8, top: 8, width: 20, height: 20 }}>{r.glyph}</svg>
-            </div>
-            <span className="font-body" style={{ fontSize: 15, color: '#FFFFFF', fontWeight: 500 }}>{t(r.label)}</span>
-          </motion.div>
-        ))}
+        <motion.div
+          whileHover={{ scale: 1.06, filter: 'brightness(1.14)', boxShadow: LIFT_SHADOW, transition: { duration: 0.5, ease: SMOOTH } }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+          style={{ width: 240, display: 'flex', flexDirection: 'column', gap: 14, padding: 20, background: '#181818', border: '1px solid #2A2A2A', borderRadius: 18 }}
+        >
+          {[
+            { label: 'New Issue', glyph: <path d="M2 2l16 0 0 3-11 10 11 0 0 3-16 0 0-3 11-10-11 0z" fill="#FFFFFF" /> },
+            { label: 'Create Issue', glyph: <path d="M3 3h6v6H3zM11 3h6v6h-6zM3 11h6v6H3zM11 11h6v6h-6z" fill="#FFFFFF" /> },
+          ].map((r, i) => (
+            <motion.div
+              key={r.label}
+              initial={{ opacity: 0, y: 8 }}
+              animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+              transition={{ duration: 0.5, delay: 0.98 + i * 0.1, ease: WS_EASE }}
+              style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', background: '#222222', borderRadius: 10 }}
+            >
+              <div style={{ position: 'relative', width: 36, height: 36, background: '#111111', borderRadius: 8, flexShrink: 0 }}>
+                <svg viewBox="0 0 20 20" style={{ position: 'absolute', left: 8, top: 8, width: 20, height: 20 }}>{r.glyph}</svg>
+              </div>
+              <span className="font-body" style={{ fontSize: 15, color: '#FFFFFF', fontWeight: 500 }}>{t(r.label)}</span>
+            </motion.div>
+          ))}
+        </motion.div>
       </motion.div>
 
       {ISSUES.map((it, i) => (
@@ -849,19 +890,25 @@ function WorkShowcase({ dark, show }: { dark: boolean; show: boolean }) {
           initial={{ opacity: 0, x: 26, scale: 0.97 }}
           animate={show ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: 26, scale: 0.97 }}
           transition={{ duration: 0.65, delay: 1.3 + i * 0.15, ease: WS_EASE }}
-          style={{ position: 'absolute', left: 360, top: it.top, width: 300, display: 'flex', flexDirection: 'column', gap: 10, padding: '16px 20px', background: '#181818', border: '1px solid #282828', borderRadius: 14, overflow: 'hidden', zIndex: 2 }}
+          style={{ position: 'absolute', left: 360, top: it.top, zIndex: 2 }}
         >
-          <span className="font-mono" style={{ fontSize: 12, color: '#555555', letterSpacing: 0.5 }}>{it.code}</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <motion.div
-              style={{ display: 'flex', flexShrink: 0 }}
-              animate={show ? { scale: [1, 1.3, 1], filter: ['drop-shadow(0 0 0 rgba(99,102,241,0))', 'drop-shadow(0 0 6px rgba(99,102,241,0.6))', 'drop-shadow(0 0 0 rgba(99,102,241,0))'] } : {}}
-              transition={{ duration: 0.9, ease: 'easeInOut', repeat: Infinity, repeatDelay: 2.3, delay: 3.0 + i * 0.16 }}
-            >
-              <StatusDot kind={it.status} />
-            </motion.div>
-            <span className="font-body" style={{ fontSize: 'clamp(15px, 1.5vw, 18px)', color: '#CCCCCC' }}>{t(it.title)}</span>
-          </div>
+          <motion.div
+            whileHover={{ scale: 1.06, filter: 'brightness(1.14)', boxShadow: LIFT_SHADOW, transition: { duration: 0.5, ease: SMOOTH } }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            style={{ width: 300, display: 'flex', flexDirection: 'column', gap: 10, padding: '16px 20px', background: '#181818', border: '1px solid #282828', borderRadius: 14, overflow: 'hidden' }}
+          >
+            <span className="font-mono" style={{ fontSize: 12, color: '#555555', letterSpacing: 0.5 }}>{it.code}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <motion.div
+                style={{ display: 'flex', flexShrink: 0 }}
+                animate={show ? { scale: [1, 1.3, 1], filter: ['drop-shadow(0 0 0 rgba(99,102,241,0))', 'drop-shadow(0 0 6px rgba(99,102,241,0.6))', 'drop-shadow(0 0 0 rgba(99,102,241,0))'] } : {}}
+                transition={{ duration: 0.9, ease: 'easeInOut', repeat: Infinity, repeatDelay: 2.3, delay: 3.0 + i * 0.16 }}
+              >
+                <StatusDot kind={it.status} />
+              </motion.div>
+              <span className="font-body" style={{ fontSize: 'clamp(15px, 1.5vw, 18px)', color: '#CCCCCC' }}>{t(it.title)}</span>
+            </div>
+          </motion.div>
         </motion.div>
       ))}
     </div>

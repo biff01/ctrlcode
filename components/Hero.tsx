@@ -24,7 +24,7 @@ const STAT_TRANSITION_BASE = { duration: 0.66, ease: [0.22, 1, 0.36, 1] } as con
 export default function Hero() {
   const statsRef = useRef<HTMLDivElement>(null)
   const [statsVisible, setStatsVisible] = useState(false)
-  const { t, lang } = useLang()
+  const { t } = useLang()
 
   useEffect(() => {
     const el = statsRef.current
@@ -42,18 +42,12 @@ export default function Hero() {
     return () => observer.disconnect()
   }, [])
 
-  // Russian runs ~40% wider than EN/UZ, so "цифровой реальности." overflows the
-  // ~560px headline column at 76px and wraps to a 3rd line. Size it down to fit.
-  // Below desktop the clamp scales fluidly and saturates at these caps by 1024px.
-  const headlineSize = lang === 'ru' ? 52 : 76
-  const headlineMin = lang === 'ru' ? 30 : 36
-
   const headlineStyle = useMemo<React.CSSProperties>(() => ({
-    fontSize: `clamp(${headlineMin}px, 9vw, ${headlineSize}px)`,
+    fontSize: 'clamp(36px, 9vw, 76px)',
     letterSpacing: 'clamp(-2.8px, -0.28vw, -1.4px)',
     lineHeight: 1.08,
     color: 'var(--text-primary)',
-  }), [headlineMin, headlineSize])
+  }), [])
 
   return (
     <section

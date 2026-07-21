@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
+  allowedDevOrigins: ["10.252.4.197"],
 };
 
 export default nextConfig;

@@ -981,7 +981,6 @@ function ServiceCard({
             justifyContent: 'center',
             flexShrink: 0,
             transition: 'background 0.22s ease, border-color 0.22s ease',
-            opacity: slug ? 1 : 0.4,
           }}
         >
           <ArrowUpRight
@@ -1000,7 +999,7 @@ function ServiceCard({
 
   return (
     <motion.div
-      whileHover={{ y: -4, boxShadow: '0 2px 0 rgba(255,255,255,0.06), 0 12px 40px rgba(0,0,0,0.38)', transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
+      whileHover={{ y: -4, boxShadow: '0 12px 40px rgba(0,0,0,0.38)', transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
       whileTap={{ scale: 0.98, transition: { duration: 0.12, ease: [0.22, 1, 0.36, 1] } }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
@@ -1009,7 +1008,7 @@ function ServiceCard({
         display: 'flex',
         borderRadius: 16,
         overflow: 'hidden',
-        boxShadow: '0 2px 0 rgba(255,255,255,0), 0 12px 40px rgba(0,0,0,0)',
+        boxShadow: '0 12px 40px rgba(0,0,0,0)',
         flex: cardFlex,
       }}
     >

@@ -38,14 +38,19 @@ const IconYoutube = ({ size = 16 }: { size?: number }) => (
   </svg>
 )
 
-const NAV_LINKS = [
+const NAV_LINKS_COL1 = [
   { label: 'Home',      href: '/' },
   { label: 'Services',  href: '/services' },
   { label: 'Portfolio', href: '/portfolio' },
+]
+
+const NAV_LINKS_COL2 = [
   { label: 'Price',     href: '/pricing' },
   { label: 'Security',  href: '/security' },
   { label: 'Contact',   href: '/contact' },
 ]
+
+const NAV_LINKS = [...NAV_LINKS_COL1, ...NAV_LINKS_COL2]
 
 const SOCIAL = [
   { icon: <Mail aria-hidden={true} style={{ width: 16, height: 16 }} />, href: 'mailto:info@ctrlcode.uz', label: 'Email' },
@@ -223,10 +228,20 @@ const copyrightBarStyle = {
   borderTop: '1px solid var(--footer-divider)',
   padding: '16px 0',
   display: 'flex' as const,
-  justifyContent: 'space-between' as const,
+  justifyContent: 'center' as const,
   alignItems: 'center' as const,
-  flexWrap: 'wrap' as const,
+}
+
+const copyrightPillStyle = {
+  display: 'inline-flex' as const,
+  alignItems: 'center' as const,
   gap: 8,
+  background: 'var(--footer-social-bg)',
+  border: '1px solid var(--footer-divider)',
+  borderRadius: 999,
+  padding: '8px 20px',
+  flexWrap: 'wrap' as const,
+  justifyContent: 'center' as const,
 }
 
 const copyrightTextStyle = {
@@ -234,9 +249,11 @@ const copyrightTextStyle = {
   color: 'var(--footer-muted)',
 }
 
-const legalLinksRowStyle = {
-  display: 'flex' as const,
-  gap: 16,
+const copyrightDotStyle = {
+  fontSize: 13,
+  color: 'var(--footer-muted)',
+  opacity: 0.4,
+  userSelect: 'none' as const,
 }
 
 const legalLinkStyle = {
@@ -308,35 +325,58 @@ export default function Footer() {
             <NewsletterForm />
           </motion.div>
 
-          {/* Pages */}
-          <motion.div
-            style={pagesColumnStyle}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <span className="font-display font-semibold" style={columnLabelStyle}>
-              {t('Pages')}
-            </span>
-            {NAV_LINKS.map(({ label, href }, index) => (
-              <motion.div
-                key={label}
-                initial={{ opacity: 0, y: 8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.1 + index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <Link
-                  href={href}
-                  className="font-body nav-link"
-                  style={navLinkStyle}
+          {/* Pages — two sub-columns */}
+          <div style={{ display: 'flex', gap: 40 }}>
+            <motion.div
+              style={pagesColumnStyle}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <span className="font-display font-semibold" style={columnLabelStyle}>
+                {t('Pages')}
+              </span>
+              {NAV_LINKS_COL1.map(({ label, href }, index) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.1 + index * 0.06, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {t(label)}
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+                  <Link href={href} className="font-body nav-link" style={navLinkStyle}>
+                    {t(label)}
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            <motion.div
+              style={pagesColumnStyle}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <span className="font-display font-semibold" style={{ ...columnLabelStyle, visibility: 'hidden' }}>
+                {t('Pages')}
+              </span>
+              {NAV_LINKS_COL2.map(({ label, href }, index) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.15 + index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Link href={href} className="font-body nav-link" style={navLinkStyle}>
+                    {t(label)}
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
 
           {/* Contact */}
           <motion.div
@@ -430,11 +470,13 @@ export default function Footer() {
 
         {/* ── Copyright ── */}
         <div style={copyrightBarStyle}>
-          <span className="font-body" style={copyrightTextStyle}>
-            © {new Date().getFullYear()} Ctrl Code. {t('All rights reserved.')}
-          </span>
-          <div style={legalLinksRowStyle}>
+          <div style={copyrightPillStyle}>
+            <span className="font-body" style={copyrightTextStyle}>
+              © {new Date().getFullYear()} Ctrl Code. {t('All rights reserved.')}
+            </span>
+            <span aria-hidden="true" style={copyrightDotStyle}>·</span>
             <Link href="/privacy-policy" className="font-body nav-link" style={legalLinkStyle}>{t('Privacy Policy')}</Link>
+            <span aria-hidden="true" style={copyrightDotStyle}>·</span>
             <Link href="/terms" className="font-body nav-link" style={legalLinkStyle}>{t('Terms')}</Link>
           </div>
         </div>

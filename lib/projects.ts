@@ -55,6 +55,8 @@ export interface Project {
   liveUrl?: string
   /** When present, the "View Live Product" button opens an in-site showcase instead of a new tab. */
   showcase?: Showcase
+  /** When present, the hero h1 renders these as separate lines instead of project.name. */
+  heroTitleLines?: [string, string]
   portfolioImage: string
   portfolioCategory: string
   portfolioDate: string
@@ -556,6 +558,7 @@ const PROJECTS: Project[] = [
   {
     slug: 'brand-identity',
     name: 'Brand Identity System',
+    heroTitleLines: ['Brand Identity', 'System'],
     tagline: 'A complete visual identity built from scratch — logo, typography, color, and a full brand guidelines document.',
     description: 'A complete visual identity built from scratch — logo, typography, color, and a full brand guidelines document.',
     tags: ['Branding', 'Design', 'Identity'],

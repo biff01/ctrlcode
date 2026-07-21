@@ -71,31 +71,35 @@ export default function Why() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.78, ease: [0.22, 1, 0.36, 1] }}
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 'clamp(40px, 5vw, 56px)' }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, marginBottom: 'clamp(36px, 4vw, 48px)' }}
         >
           <span
             className="font-mono"
-            style={{ fontSize: 11, letterSpacing: 2, color: 'var(--text-tertiary)' }}
+            style={{ fontSize: 12, letterSpacing: 1.5, color: 'var(--kicker)' }}
           >
             {t('WHY CTRL CODE')}
           </span>
           <h2
             id="why-heading"
             className="font-display font-semibold text-center"
-            style={{ fontSize: 'clamp(28px, 6vw, 44px)', letterSpacing: 'clamp(-1.5px, -0.2vw, -0.75px)', color: 'var(--text-primary)' }}
+            style={{ fontSize: 'clamp(28px, 6vw, 44px)', letterSpacing: 'clamp(-1.4px, -0.2vw, -0.75px)', color: 'var(--text-primary)' }}
           >
             {t('Built to be your unfair advantage.')}
           </h2>
         </motion.div>
 
-        {/* Grid wrapper — 1 col mobile, 2 cols tablet, 3 cols desktop, 1px gaps */}
+        {/* Unified grid block — 1px gutters show the wrapper fill through as hairline dividers */}
         <div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px"
           style={{
-            borderRadius: 18,
+            padding: 1,
+            borderRadius: 20,
             overflow: 'hidden',
+            background: 'var(--surface-2)',
             border: '1px solid var(--why-cell-border)',
-            background: 'var(--why-gap)',
+            boxShadow: dark
+              ? '0 2px 8px rgba(0,0,0,0.32), 0 16px 40px rgba(0,0,0,0.24)'
+              : '0 2px 8px rgba(13,27,75,0.04), 0 16px 40px rgba(13,27,75,0.024)',
           }}
         >
           {FEATURES.map((feat, idx) => {
@@ -106,18 +110,18 @@ export default function Why() {
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
-                whileHover={{ y: -4 }}
-                whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.6, delay: idx * 0.11, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                  padding: `clamp(24px, 3.13vw, 32px) clamp(24px, 3.13vw, 32px) clamp(28px, 3.2vw, 32px)`,
-                  background: 'linear-gradient(180deg, var(--surface-2) 0%, var(--why-cell) 100%)',
+                  padding: `clamp(24px, 3.13vw, 32px) clamp(24px, 3.13vw, 32px) clamp(28px, 3.2vw, 36px)`,
+                  background: dark
+                    ? 'linear-gradient(180deg, var(--surface-2) 0%, var(--why-cell) 100%)'
+                    : 'linear-gradient(180deg, #ffffff 0%, #F4F6FC 100%)',
                   borderTop: '1px solid var(--why-cell-border)',
+                  boxShadow: dark ? '0 2px 6px rgba(0,0,0,0.24)' : '0 2px 6px rgba(13,27,75,0.024)',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 16,
+                  gap: 14,
                   cursor: 'default',
-                  willChange: 'transform',
                 }}
               >
                 <div style={{ display: 'inline-block' }}>
@@ -125,13 +129,13 @@ export default function Why() {
                 </div>
                 <h3
                   className="font-display font-semibold"
-                  style={{ fontSize: 'clamp(20px, 2.2vw, 24px)', lineHeight: 1.3, color: 'var(--text-primary)', letterSpacing: -0.2 }}
+                  style={{ fontSize: 17, lineHeight: 1.3, color: 'var(--text-primary)', letterSpacing: -0.2 }}
                 >
                   {t(feat.title)}
                 </h3>
                 <p
                   className="font-body"
-                  style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--text-secondary)' }}
+                  style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-secondary)' }}
                 >
                   {t(feat.desc)}
                 </p>

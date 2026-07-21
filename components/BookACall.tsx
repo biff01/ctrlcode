@@ -226,33 +226,6 @@ export default function BookACall() {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-        >
-          <Link
-            href="/contact"
-            className="btn-lift press"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 10,
-              padding: '14px 32px',
-              borderRadius: 100,
-              background: dark ? '#ffffff' : '#0D1B4B',
-              color: dark ? '#0a0a0a' : '#ffffff',
-              fontSize: 15,
-              fontWeight: 600,
-              letterSpacing: -0.2,
-              textDecoration: 'none',
-            }}
-          >
-            {t('Book a call')} <ArrowUpRight style={{ width: 16, height: 16 }} />
-          </Link>
-        </motion.div>
-
         {/* Bottom content */}
         <motion.div
           initial="hidden"

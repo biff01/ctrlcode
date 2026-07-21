@@ -105,7 +105,7 @@ const separatorStyle = {
 }
 
 export default function FinalCTA() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   return (
     <section className="cta-section" style={sectionStyle}>
       <div className="book-overlay" style={overlay1Style} />
@@ -126,7 +126,7 @@ export default function FinalCTA() {
         >
           <h2
             className="font-display font-bold"
-            style={{ fontSize: 'clamp(34px, 7.5vw, 56px)', letterSpacing: '-1.5px', lineHeight: 1.1, color: 'var(--text-primary)' }}
+            style={{ fontSize: lang === 'uz' ? 'clamp(28px, 6vw, 48px)' : 'clamp(34px, 7.5vw, 56px)', letterSpacing: '-1.5px', lineHeight: 1.1, color: 'var(--text-primary)' }}
           >
             {t('Have an idea?')}<br />{t("Let's ship it together.")}
           </h2>

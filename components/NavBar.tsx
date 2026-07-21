@@ -73,25 +73,15 @@ const NAV_LINKS = [
 
 const LANG_ORDER: Array<'uz' | 'en' | 'ru'> = ['uz', 'en', 'ru']
 
-const DARK_PILL_SHADOW = 'inset 0 3px 8px rgba(0,0,0,0.75), inset 0 1px 3px rgba(0,0,0,0.6)'
-
-// Dome surface: bright white at centre, visible mid-grey fade at the full rim.
-// Centre highlight sits at 34% (above midpoint) for natural top-down lighting.
-const WHITE_INDICATOR_BG =
-  'radial-gradient(circle at 50% 34%, #ffffff 0%, #f5f5f5 45%, #d2d2d2 100%)'
-
-// Neumorphic raised-disc shadow stack:
-//   outer  — lifts disc clearly off the dark pill
-//   inset 0 0 12px — zero-offset vignette: equal blur on every inner edge simultaneously
-//   inset spread   — hair-thin inner ring defines the disc edge cleanly
-//   inset bottom   — directional shade deepens the convex belly
-const WHITE_INDICATOR_SHADOW = [
-  '0 2px 9px rgba(0,0,0,0.38)',
-  '0 1px 2px rgba(0,0,0,0.26)',
-  'inset 0 0 12px rgba(0,0,0,0.18)',
-  'inset 0 0 0 1px rgba(0,0,0,0.07)',
-  'inset 0 -3px 6px rgba(0,0,0,0.14)',
-].join(', ')
+// Nav chrome reads from theme tokens (globals.css) so light mode can invert the
+// pair: dark trough + white disc becomes white trough + navy disc.
+const DARK_PILL_SHADOW = 'var(--nav-trough-shadow)'
+const TROUGH_BG = 'var(--nav-trough-bg)'
+const WHITE_INDICATOR_BG = 'var(--nav-disc-bg)'
+const WHITE_INDICATOR_SHADOW = 'var(--nav-disc-shadow)'
+const DISC_FG = 'var(--nav-disc-fg)'
+const TROUGH_FG = 'var(--nav-trough-fg)'
+const RING_BG = 'var(--nav-ring-bg)'
 
 const SEG_W = 48
 const PILL_H = 48
@@ -104,11 +94,12 @@ const TOGGLE_BTN = PILL_H - TOGGLE_RING * 2
 const NAV_INNER_STYLE = {
   maxWidth: 1200,
   background: 'var(--nav-glass)',
-  backdropFilter: 'blur(50px)',
-  WebkitBackdropFilter: 'blur(50px)',
-  border: '1px solid var(--border)',
+  backdropFilter: 'blur(28px) saturate(var(--nav-saturate))',
+  WebkitBackdropFilter: 'blur(28px) saturate(var(--nav-saturate))',
+  border: 'var(--nav-glass-border)',
+  boxShadow: 'var(--nav-glass-shadow)',
   padding: '8px 16px 8px 20px',
-  transition: 'background 0.25s ease, border-color 0.25s ease',
+  transition: 'background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease',
 }
 
 const SOCIAL_LINKS = [
@@ -119,7 +110,7 @@ const SOCIAL_LINKS = [
 
 export default function NavBar() {
   const pathname = usePathname()
-  const { theme, toggle } = useTheme()
+  const { toggle } = useTheme()
   const { lang, setLang, t } = useLang()
   const [menuOpen, setMenuOpen] = useState(false)
   const [hoveredLinkIdx, setHoveredLinkIdx] = useState<number | null>(null)
@@ -236,7 +227,7 @@ export default function NavBar() {
           className="hidden lg:flex items-center gap-1 rounded-full"
           style={{
             position: 'relative',
-            background: '#1a1a1a',
+            background: TROUGH_BG,
             padding: '4px 8px',
             boxShadow: DARK_PILL_SHADOW,
             flexShrink: 1,
@@ -283,7 +274,7 @@ export default function NavBar() {
                   padding: '8px 16px',
                   fontSize: 13,
                   fontWeight: 600,
-                  color: active ? '#111111' : 'rgba(255,255,255,0.58)',
+                  color: active ? DISC_FG : TROUGH_FG,
                   textDecoration: 'none',
                   display: 'inline-block',
                   transition: 'color 0.25s ease',
@@ -309,7 +300,7 @@ export default function NavBar() {
               height: PILL_H,
               padding: PAD,
               borderRadius: 999,
-              background: '#1a1a1a',
+              background: TROUGH_BG,
               boxShadow: DARK_PILL_SHADOW,
             }}
           >
@@ -366,7 +357,7 @@ export default function NavBar() {
                     letterSpacing: 0.8,
                     textTransform: 'uppercase',
                     fontWeight: active ? 800 : 500,
-                    color: active ? '#111111' : 'rgba(255,255,255,0.58)',
+                    color: active ? DISC_FG : TROUGH_FG,
                     transition: 'color 0.25s ease',
                   }}
                 >
@@ -386,7 +377,7 @@ export default function NavBar() {
               width: PILL_H,
               height: PILL_H,
               borderRadius: 999,
-              background: 'rgba(14,14,14,0.5)',
+              background: RING_BG,
               boxShadow: DARK_PILL_SHADOW,
               flexShrink: 0,
             }}
@@ -409,21 +400,15 @@ export default function NavBar() {
                 flexShrink: 0,
               }}
             >
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={theme}
-                  initial={{ rotate: -90, opacity: 0, scale: 0.7 }}
-                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                  exit={{ rotate: 90, opacity: 0, scale: 0.7 }}
-                  transition={{ duration: 0.23, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ display: 'flex' }}
-                >
-                  {theme === 'dark'
-                    ? <Sun style={{ width: 17, height: 17, color: '#0e0e0e' }} />
-                    : <Moon style={{ width: 17, height: 17, color: '#0e0e0e' }} />
-                  }
-                </motion.span>
-              </AnimatePresence>
+              {/* Both icons render; globals.css reveals the one matching the active
+                  theme so the icon is right on first paint rather than after
+                  ThemeProvider mounts — same approach as the logo lockups above.
+                  Keying this off React state instead rendered the Sun during SSR
+                  regardless of the real theme. */}
+              <span className="theme-icon">
+                <Sun className="theme-icon-dark" />
+                <Moon className="theme-icon-light" />
+              </span>
             </button>
           </div>
 
@@ -436,7 +421,7 @@ export default function NavBar() {
               width: PILL_H,
               height: PILL_H,
               borderRadius: 999,
-              background: 'rgba(14,14,14,0.5)',
+              background: RING_BG,
               boxShadow: DARK_PILL_SHADOW,
               flexShrink: 0,
             }}
@@ -475,8 +460,8 @@ export default function NavBar() {
                     style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   >
                     {menuOpen
-                      ? <X style={{ width: 18, height: 18, color: '#0e0e0e' }} />
-                      : <Menu style={{ width: 18, height: 18, color: '#0e0e0e' }} />
+                      ? <X style={{ width: 18, height: 18, color: DISC_FG }} />
+                      : <Menu style={{ width: 18, height: 18, color: DISC_FG }} />
                     }
                   </motion.span>
                 </AnimatePresence>
@@ -697,7 +682,7 @@ export default function NavBar() {
               width: PILL_H,
               height: PILL_H,
               borderRadius: 999,
-              background: 'rgba(14,14,14,0.5)',
+              background: RING_BG,
               boxShadow: DARK_PILL_SHADOW,
               display: 'flex',
               alignItems: 'center',
@@ -726,7 +711,7 @@ export default function NavBar() {
                 flexShrink: 0,
               }}
             >
-              <X style={{ width: 18, height: 18, color: '#0e0e0e' }} />
+              <X style={{ width: 18, height: 18, color: DISC_FG }} />
             </button>
           </motion.div>
         )}

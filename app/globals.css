@@ -71,7 +71,16 @@
   --card-border: rgba(255,255,255,0.11);
   --card-shadow: 0 2px 12px rgba(0,0,0,0.28), 0 1px 3px rgba(0,0,0,0.16);
 
-  --nav-glass: rgba(255,255,255,0.06);
+  /* Frosted glass: a top-lit gradient fill (never a flat wash) over the blur,
+     a bright rim, and an inset top highlight so the edge catches light while
+     the outer shadow lifts the bar off the page. */
+  --nav-glass: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.035) 100%);
+  --nav-glass-border: 1px solid rgba(255,255,255,0.13);
+  --nav-glass-shadow:
+    0 8px 32px rgba(0,0,0,0.44),
+    0 2px 8px rgba(0,0,0,0.26),
+    inset 0 1px 0 rgba(255,255,255,0.13),
+    inset 0 -1px 0 rgba(0,0,0,0.22);
   --nav-pill: #1a1a1a;
   --nav-active-bg: #ffffff;
   --nav-active-color: #111111;
@@ -79,6 +88,18 @@
   --nav-btn: #1a1a1a;
   --nav-divider: #333333;
   --nav-accent: #6ea6ff;
+
+  /* Nav chrome — the recessed pill trough, the floating indicator disc that
+     rides in it, and the text/icons on each. Light mode inverts the pair:
+     white trough, dark disc. See :root[data-theme="light"]. */
+  --nav-saturate: 180%;
+  --nav-trough-bg: #1a1a1a;
+  --nav-trough-shadow: inset 0 3px 8px rgba(0,0,0,0.75), inset 0 1px 3px rgba(0,0,0,0.6);
+  --nav-ring-bg: rgba(14,14,14,0.5);
+  --nav-disc-bg: radial-gradient(circle at 50% 34%, #ffffff 0%, #f5f5f5 45%, #d2d2d2 100%);
+  --nav-disc-shadow: none;
+  --nav-disc-fg: #111111;
+  --nav-trough-fg: rgba(255,255,255,0.58);
   --brand-cta-gradient: linear-gradient(135deg, #1a50cc 0%, #3b7ef6 100%);
   --brand-cta-shadow: 0 4px 20px rgba(26,80,204,0.35);
 
@@ -93,6 +114,10 @@
   --btn-primary-bg: #ffffff;
   --btn-primary-color: #0a0a0a;
   --btn-primary-shadow: 0 6px 24px rgba(255,255,255,0.13);
+  /* Arrow disc on a primary button. The button is white here, so the disc has to
+     be an opaque dark fill — a translucent white one would vanish into it. */
+  --btn-primary-disc-bg: #1A1A1A;
+  --btn-primary-disc-fg: #FFFFFF;
   --btn-secondary-bg: rgba(255,255,255,0.04);
   --btn-secondary-border: #2a2a2a;
   --btn-secondary-color: #ffffff;
@@ -209,7 +234,16 @@
   --card-border: #E2E4EF;
   --card-shadow: 0 1px 3px rgba(13,27,75,0.05), 0 4px 20px rgba(13,27,75,0.08);
 
-  --nav-glass: rgba(255,255,255,0.88);
+  /* Alpha stays low enough that the saturated blur behind it still reads; a flat
+     0.88 wash was opaque enough to kill it. The gradient falls off toward the
+     bottom so the bar looks lit from above rather than uniformly tinted. */
+  --nav-glass: linear-gradient(180deg, rgba(255,255,255,0.70) 0%, rgba(255,255,255,0.42) 100%);
+  --nav-glass-border: 1px solid rgba(255,255,255,0.75);
+  --nav-glass-shadow:
+    0 8px 32px rgba(13,27,75,0.10),
+    0 2px 8px rgba(13,27,75,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    inset 0 -1px 0 rgba(13,27,75,0.04);
   --nav-pill: #EEF0F8;
   --nav-active-bg: #0D1B4B;
   --nav-active-color: #ffffff;
@@ -217,6 +251,18 @@
   --nav-btn: #EEF0F8;
   --nav-divider: #E2E4EF;
   --nav-accent: #1a50cc;
+
+  /* Inverted from dark: the trough is white and the disc is navy. The trough
+     keeps its inset shadow so it still reads as carved into the glass rather
+     than vanishing against it. */
+  --nav-saturate: 180%;
+  --nav-trough-bg: #ffffff;
+  --nav-trough-shadow: inset 0 3px 8px rgba(13,27,75,0.14), inset 0 1px 3px rgba(13,27,75,0.10);
+  --nav-ring-bg: rgba(255,255,255,0.55);
+  --nav-disc-bg: #000000;
+  --nav-disc-shadow: none;
+  --nav-disc-fg: #ffffff;
+  --nav-trough-fg: #536080;
   --brand-cta-gradient: linear-gradient(135deg, #1a50cc 0%, #3b7ef6 100%);
   --brand-cta-shadow: 0 4px 20px rgba(26,80,204,0.25);
 
@@ -231,6 +277,9 @@
   --btn-primary-bg: #0D1B4B;
   --btn-primary-color: #ffffff;
   --btn-primary-shadow: 0 6px 24px rgba(13,27,75,0.18);
+  /* The navy button lets a translucent white disc read as a lighter inset. */
+  --btn-primary-disc-bg: rgba(255,255,255,0.19);
+  --btn-primary-disc-fg: #FFFFFF;
   --btn-secondary-bg: rgba(13,27,75,0.05);
   --btn-secondary-border: #E2E4EF;
   --btn-secondary-color: #0D1B4B;
@@ -552,6 +601,64 @@ h3 {
   }
   :root:not([data-theme="dark"]) .logo-light {
     display: block;
+  }
+}
+
+/* ── Theme toggle icon ────────────────────────────── */
+/* Both icons live in the DOM and CSS reveals the active one, so the icon matches
+   the theme on first paint. Driving it from React state instead meant SSR always
+   emitted the Sun, which flashed against light chrome until hydration.
+   The cross-fade + rotate reproduces the previous framer-motion swap. */
+.theme-icon {
+  position: relative;
+  display: block;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.theme-icon > svg {
+  position: absolute;
+  inset: 0;
+  width: 17px;
+  height: 17px;
+  color: var(--nav-disc-fg);
+  transition:
+    opacity 0.23s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.23s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Dark is the default token set, so the Sun (the switch-to-light affordance) shows. */
+.theme-icon-dark {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.theme-icon-light {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.7);
+}
+
+:root[data-theme="light"] .theme-icon-dark {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.7);
+}
+
+:root[data-theme="light"] .theme-icon-light {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* System-preference fallback, mirroring the logo rules above: correct icon even
+   if the inline theme script never runs (JS disabled). */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .theme-icon-dark {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.7);
+  }
+  :root:not([data-theme="dark"]) .theme-icon-light {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
   }
 }
 

@@ -25,15 +25,10 @@ export function useTheme() {
   return useContext(ThemeCtx)
 }
 
-export function ThemeScript() {
-  return (
-    <script
-      dangerouslySetInnerHTML={{
-        __html: `(function(){var t=localStorage.getItem('theme')||localStorage.getItem('ctrlcode-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})()`,
-      }}
-    />
-  )
-}
+/** Applies data-theme before first paint so the page never renders with the wrong
+ *  token set. Root layout injects this via next/script strategy="beforeInteractive".
+ *  Keep the storage keys here in sync with LOCAL_THEME_KEY / CTRLCODE_THEME_KEY. */
+export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme')||localStorage.getItem('ctrlcode-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}})()`
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark')

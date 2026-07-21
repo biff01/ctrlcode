@@ -44,9 +44,9 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
 
     // ── Hero ──
     'From idea to': 'От идеи до',
-    'digital reality.': 'цифровой реальности.',
+    'digital reality.': 'реальности.',
     'We design and build web platforms, mobile apps, CRM systems and AI products for ambitious companies — fast, reliable and beautifully engineered.':
-      'Мы проектируем и создаём веб-платформы, мобильные приложения, CRM-системы и AI-продукты для амбициозных компаний — быстро, надёжно и с безупречной инженерией.',
+      'Разработка ПО от идеи до запуска. Ctrl Code — современная студия разработки, где AI встроен на каждом этапе: от планирования и дизайна до сборки и запуска.',
     'OFFICIAL IT PARK UZBEKISTAN RESIDENT': 'ОФИЦИАЛЬНЫЙ РЕЗИДЕНТ IT PARK UZBEKISTAN',
     'Start a project': 'Начать проект',
     'View our work': 'Наши работы',
@@ -58,7 +58,7 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
     // ── Services ──
     'A new species of product tool.': 'Разработка ПО от идеи до запуска.',
     'Purpose-built for modern teams with AI workflows at its core, Ctrl Code sets a new standard for planning and building products.':
-      'Ctrl Code — современная студия разработки, где AI встроен на каждом этапе: от планирования и дизайна до сборки и запуска.',
+      'Ctrl Code — студия разработки, где AI встроен на каждом этапе продукта: от планирования и дизайна до сборки и запуска.',
     'Built for purpose': 'Осмысленный подход',
     'Ctrl Code is shaped by the practices and principles of world-class product teams — every decision serves the outcome.':
       'Каждый проект следует практикам инженерных команд мирового класса — каждое решение работает на результат.',
@@ -71,7 +71,7 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
 
     // ── Work ──
     'SELECTED WORK': 'ИЗБРАННЫЕ РАБОТЫ',
-    'Work that speaks for itself.': 'Работы, которые говорят сами за себя.',
+    'Work that speaks for itself.': 'Работы говорят сами за себя.',
     'A collection of products, platforms, and digital systems built with clarity, speed, and precision.':
       'Коллекция продуктов, платформ и цифровых систем, созданных ясно, быстро и точно.',
     'All projects': 'Все проекты',
@@ -227,7 +227,7 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
     'How do payments work?': 'Как происходит оплата?',
     '50% to start, 50% on delivery. Larger projects are split into milestone payments tied to demos you can actually see.':
       '50% в начале, 50% при сдаче. Крупные проекты разбиваются на поэтапные платежи, привязанные к демо, которые вы можете видеть.',
-    'Do you provide support after launch?': 'Предоставляете ли вы поддержку после запуска?',
+    'Do you provide support after launch?': 'Есть поддержка после запуска?',
     'Yes — every plan includes 30 days of free support. Ongoing care plans with monitoring and updates start at $200/mo.':
       'Да — каждый план включает 30 дней бесплатной поддержки. Планы сопровождения с мониторингом и обновлениями от $200/мес.',
     'Can you take over an existing project?': 'Можете ли вы взять существующий проект?',
@@ -432,6 +432,10 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
     'Branding': 'Брендинг',
     'No projects in this category yet.': 'В этой категории пока нет проектов.',
     'Brand Identity System': 'Система фирменного стиля',
+    'Brand Identity': 'Фирменный стиль',
+    'System': 'Система',
+    'A complete visual identity built from scratch — logo, typography, color, and a full brand guidelines document.':
+      'Полноценный фирменный стиль с нуля — логотип, типографика, цвет и полное руководство по бренду.',
     'E-Commerce': 'E-Commerce',
 
     // ── StatsStrip ──
@@ -551,8 +555,8 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
     'Passwords do not match.': 'Пароли не совпадают.',
 
     // ── Work Page ──
-    'Work that speaks': 'Работа, которая говорит',
-    'for itself.': 'сама за себя.',
+    'Work that': 'Работа,',
+    'speaks for itself.': 'которая говорит сама за себя.',
     'A collection of products, platforms, and digital systems built with clarity, speed, and purpose.':
       'Коллекция продуктов, платформ и цифровых систем, созданных ясно, быстро и осмысленно.',
     'Websites': 'Веб-сайты',
@@ -573,7 +577,7 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
     'Engineering': 'Разработка',
     'QA & Testing': 'QA и тестирование',
     'Launch': 'Запуск',
-    'Growth & Support': 'Рост и поддержка',
+    'Support': 'Поддержка',
     'Stakeholder interviews, competitive analysis, technical scoping, and goal alignment.':
       'Интервью со стейкхолдерами, анализ конкурентов, техническая оценка и согласование целей.',
     'Wireframes, interactive prototypes, and pixel-perfect designs anchored in user behavior.':
@@ -862,7 +866,7 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
     'How do payments work?': "To'lovlar qanday amalga oshiriladi?",
     '50% to start, 50% on delivery. Larger projects are split into milestone payments tied to demos you can actually see.':
       "Boshida 50%, topshirishda 50%. Yirik loyihalar siz ko'ra oladigan demolarga bog'langan bosqichli to'lovlarga bo'linadi.",
-    'Do you provide support after launch?': "Ishga tushgandan keyin qo'llab-quvvatlaysizmi?",
+    'Do you provide support after launch?': "Ishga tushgach yordam berasizmi?",
     'Yes — every plan includes 30 days of free support. Ongoing care plans with monitoring and updates start at $200/mo.':
       "Ha — har bir reja 30 kunlik bepul qo'llab-quvvatlashni o'z ichiga oladi. Monitoring va yangilanishlar bilan doimiy xizmat rejalari $200/oydan boshlanadi.",
     'Can you take over an existing project?': 'Mavjud loyihani qabul qila olasizmi?',
@@ -1067,6 +1071,10 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
     'Branding': 'Brending',
     'No projects in this category yet.': "Bu toifada hali loyihalar yo'q.",
     'Brand Identity System': 'Brend identifikatsiya tizimi',
+    'Brand Identity': 'Brend identifikatsiyasi',
+    'System': 'Tizimi',
+    'A complete visual identity built from scratch — logo, typography, color, and a full brand guidelines document.':
+      "Noldan to'liq vizual identifikatsiya — logotip, tipografiya, rang va to'liq brend bo'yicha qo'llanma.",
     'E-Commerce': 'E-Commerce',
 
     // ── StatsStrip ──
@@ -1186,8 +1194,8 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
     'Passwords do not match.': 'Parollar mos kelmadi.',
 
     // ── Work Page ──
-    'Work that speaks': "O'zi haqida gapiradigan",
-    'for itself.': 'ishlar.',
+    'Work that': "O'zi haqida",
+    'speaks for itself.': 'gapiradigan ishlar.',
     'A collection of products, platforms, and digital systems built with clarity, speed, and purpose.':
       "Aniqlik, tezlik va maqsad bilan yaratilgan mahsulotlar, platformalar va raqamli tizimlar to'plami.",
     'Websites': 'Veb-saytlar',
@@ -1208,7 +1216,7 @@ export const translations: Partial<Record<Lang, Record<string, string>>> = {
     'Engineering': 'Muhandislik',
     'QA & Testing': 'QA va sinov',
     'Launch': 'Ishga tushirish',
-    'Growth & Support': "O'sish va qo'llab-quvvatlash",
+    'Support': "Qo'llab-quvvatlash",
     'Stakeholder interviews, competitive analysis, technical scoping, and goal alignment.':
       'Manfaatdor tomonlar bilan suhbatlar, raqobat tahlili, texnik baholash va maqsadlarni moslashtirish.',
     'Wireframes, interactive prototypes, and pixel-perfect designs anchored in user behavior.':

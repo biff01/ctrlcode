@@ -108,7 +108,11 @@ function HeroSection({ project, t }: SectionProps) {
             variants={fadeUp}
             style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(40px, 10vw, 72px)', letterSpacing: 'clamp(-3px, -0.3vw, -1.5px)', lineHeight: 1.0, color: 'var(--text-primary)', margin: 0 }}
           >
-            {project.name}.
+            {project.heroTitleLines ? (
+              <>{t(project.heroTitleLines[0])}<br />{t(project.heroTitleLines[1])}.</>
+            ) : (
+              <>{t(project.name)}.</>
+            )}
           </motion.h1>
 
           {/* Description */}
@@ -116,7 +120,7 @@ function HeroSection({ project, t }: SectionProps) {
             variants={fadeUp}
             style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.65, color: 'var(--text-secondary)', margin: 0, maxWidth: 420 }}
           >
-            {project.description}
+            {t(project.description)}
           </motion.p>
 
           {/* Buttons */}

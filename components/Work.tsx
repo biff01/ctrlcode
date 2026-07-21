@@ -6,23 +6,17 @@ import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 
-/* ---------- identical constants to PortfolioDesign ---------- */
-
-const OVERLAY = 'linear-gradient(180deg, transparent 0%, transparent 32%, rgba(0,0,0,0.12) 50%, rgba(0,0,0,0.58) 68%, rgba(0,0,0,0.84) 84%, rgba(0,0,0,0.96) 100%)'
-const CARD_TITLE = '#FFFFFF'
-const CARD_NUM = 'var(--card-num-color)'
-
 const SMOOTH = [0.16, 1, 0.3, 1] as const
 
 const cardVariants = {
-  rest: { y: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.12), 0 8px 32px rgba(0,0,0,0.08)' },
-  hover: { y: -4, boxShadow: '0 4px 16px rgba(0,0,0,0.18), 0 12px 40px rgba(0,0,0,0.14)', transition: { duration: 0.5, ease: SMOOTH } },
-  tap: { scale: 0.97, transition: { duration: 0.15 } },
+  rest: { y: 0 },
+  hover: { y: -4, transition: { duration: 0.5, ease: SMOOTH } },
+  tap: { scale: 0.98, transition: { duration: 0.15 } },
 }
 
 const arrowVariants = {
-  rest: { x: 0, y: 0, background: '#FFFFFF0A' },
-  hover: { x: 1, y: -1, background: '#FFFFFF18', transition: { duration: 0.4, ease: SMOOTH } },
+  rest: { x: 0, y: 0 },
+  hover: { x: 2, y: -2, transition: { duration: 0.4, ease: SMOOTH } },
 }
 
 const IMG = (id: string) =>
@@ -33,77 +27,105 @@ const SHOT = (slug: string) => `/showcase/${slug}-desktop.webp`
 interface Project {
   name: string
   category: string
-  num: string
+  date: string
   image: string
   bgPosition?: string
   slug: string
 }
 
-/* Same 6 projects as the Portfolio page — single source of truth */
 const PROJECTS: Project[] = [
-  { name: 'Nano Medical',       category: 'Healthcare',  num: '01', image: IMG('photo-1738778578755-87e3caccd36d'),  slug: 'healthcare-website' },
-  { name: 'UZAUTO Motors',      category: 'Automotive',  num: '02', image: SHOT('real-estate-platform'), bgPosition: 'top center', slug: 'real-estate-platform' },
-  { name: 'Darsly',             category: 'E-Learning',  num: '03', image: SHOT('darsly'),              bgPosition: 'top center', slug: 'darsly' },
-  { name: 'Education Platform', category: 'E-Commerce',  num: '04', image: SHOT('education-platform'),  bgPosition: 'top center', slug: 'education-platform' },
-  { name: 'SOFTMS',             category: 'CRM',         num: '05', image: SHOT('logistics-management'), bgPosition: 'top center', slug: 'logistics-management' },
-  { name: 'Sello Brand',        category: 'Branding',    num: '06', image: IMG('photo-1718670013988-c6e3edb92345'), slug: 'brand-identity' },
+  { name: 'Nano Medical',       category: 'Healthcare',  date: 'Feb 2025', image: IMG('photo-1738778578755-87e3caccd36d'),   slug: 'healthcare-website'   },
+  { name: 'UZAUTO Motors',      category: 'Automotive',  date: 'Jun 2024', image: SHOT('real-estate-platform'), bgPosition: 'top center', slug: 'real-estate-platform'  },
+  { name: 'Darsly',             category: 'E-Learning',  date: 'Nov 2024', image: SHOT('darsly'),               bgPosition: 'top center', slug: 'darsly'               },
+  { name: 'Education Platform', category: 'E-Commerce',  date: 'Sep 2024', image: SHOT('education-platform'),   bgPosition: 'top center', slug: 'education-platform'   },
+  { name: 'SOFTMS',             category: 'CRM',         date: 'Mar 2024', image: SHOT('logistics-management'), bgPosition: 'top center', slug: 'logistics-management' },
+  { name: 'Sello Brand',        category: 'Branding',    date: 'Dec 2024', image: IMG('photo-1718670013988-c6e3edb92345'), slug: 'brand-identity'       },
 ]
-
-/* ---------- identical ProjectCard to PortfolioDesign ---------- */
 
 function ProjectCard({
   project,
-  heightClass,
-  pad,
+  imageHeight,
   titleSize,
   titleLs,
-  numSize,
 }: {
   project: Project
-  heightClass: string
-  pad: number | string
+  imageHeight: string
   titleSize: number | string
   titleLs: number | string
-  numSize: number
 }) {
   const { t } = useLang()
   return (
-    <Link href={`/portfolio/${project.slug}`} style={{ display: 'block', textDecoration: 'none' }} aria-label={project.name}>
+    <Link href={`/portfolio/${project.slug}`} style={{ display: 'block', textDecoration: 'none', height: '100%' }} aria-label={project.name}>
       <motion.div
         variants={cardVariants}
         initial="rest"
         whileHover="hover"
         whileTap="tap"
-        className={heightClass}
-        style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', cursor: 'pointer' }}
+        style={{
+          borderRadius: 16,
+          overflow: 'hidden',
+          background: 'var(--card-bg)',
+          border: '1px solid var(--card-border)',
+          boxShadow: 'var(--card-shadow)',
+          cursor: 'pointer',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
       >
-        <Image
-          src={project.image}
-          alt={project.name}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          style={{ objectFit: 'cover', objectPosition: project.bgPosition ?? 'center' }}
-        />
-        <div style={{ position: 'absolute', inset: 0, background: OVERLAY, zIndex: 0 }} />
-
-        {/* Category chip — glassmorphism only here */}
-        <div style={{ position: 'absolute', left: pad, top: pad, padding: '8px 16px', borderRadius: 100, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', zIndex: 1 }}>
-          <span className="font-body" style={{ fontSize: 14, color: CARD_TITLE }}>{t(project.category)}</span>
+        {/* Image — clean, no overlay */}
+        <div style={{ position: 'relative', height: imageHeight, overflow: 'hidden', flexShrink: 0 }}>
+          <Image
+            src={project.image}
+            alt={project.name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            style={{ objectFit: 'cover', objectPosition: project.bgPosition ?? 'center' }}
+          />
         </div>
 
-        <motion.div
-          variants={arrowVariants}
-          className="flex items-center justify-center"
-          style={{ position: 'absolute', right: pad, top: pad, width: 48, height: 48, borderRadius: 10, border: '1px solid #FFFFFF22', zIndex: 2 }}
-        >
-          <ArrowUpRight aria-hidden={true} style={{ width: 16, height: 16, color: '#FFFFFF' }} />
-        </motion.div>
+        {/* Content */}
+        <div style={{ padding: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 0 }}>
+            <span className="font-body" style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
+              {t(project.category)}
+            </span>
+            <span
+              className="font-display font-bold"
+              style={{ fontSize: titleSize, letterSpacing: titleLs, color: 'var(--text-primary)', lineHeight: 1.15 }}
+            >
+              {t(project.name)}
+            </span>
+            <span
+              className="font-body"
+              style={{
+                display: 'inline-block',
+                alignSelf: 'flex-start',
+                padding: '5px 14px',
+                borderRadius: 100,
+                background: 'var(--surface)',
+                fontSize: 13,
+                color: 'var(--text-secondary)',
+              }}
+            >
+              {project.date}
+            </span>
+          </div>
 
-        <div style={{ position: 'absolute', left: pad, bottom: pad, display: 'flex', flexDirection: 'column', gap: 8, zIndex: 3 }}>
-          <span className="font-mono" style={{ fontSize: numSize, color: CARD_NUM, letterSpacing: 2 }}>{project.num}</span>
-          <span className="font-display font-bold" style={{ fontSize: titleSize, letterSpacing: titleLs, color: CARD_TITLE, lineHeight: 1.05 }}>
-            {t(project.name)}
-          </span>
+          <motion.div
+            variants={arrowVariants}
+            className="flex items-center justify-center"
+            style={{
+              width: 68,
+              height: 68,
+              borderRadius: 12,
+              background: 'var(--btn-secondary-bg)',
+              border: '1px solid var(--card-border)',
+              flexShrink: 0,
+            }}
+          >
+            <ArrowUpRight style={{ width: 24, height: 24, color: 'var(--text-primary)' }} />
+          </motion.div>
         </div>
       </motion.div>
     </Link>
@@ -137,7 +159,7 @@ export default function Work() {
 
       <div
         className="px-5 md:px-8 lg:px-0"
-        style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 4vw, 24px)' }}
+        style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 56 }}
       >
         {/* Section header */}
         <motion.div
@@ -146,7 +168,6 @@ export default function Work() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-0"
-          style={{ marginBottom: 8 }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <span className="font-mono" style={{ fontSize: 11, letterSpacing: 1.5, color: 'var(--text-tertiary)' }}>
@@ -174,47 +195,48 @@ export default function Work() {
           </Link>
         </motion.div>
 
-        {/* Row 1 — featured (PROJECTS[0]) */}
-        <motion.div
-          initial={{ opacity: 0, y: 36 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <ProjectCard
-            project={PROJECTS[0]}
-            heightClass="aspect-[4/3] md:aspect-auto md:h-[420px] lg:h-[460px]"
-            pad="clamp(16px, 3vw, 24px)"
-            titleSize="clamp(28px, 7vw, 44px)"
-            titleLs="clamp(-1.5px, -0.25vw, -0.75px)"
-            numSize={12}
-          />
-        </motion.div>
+        {/* Row 1: featured left (780fr) + right column (400fr) with 2 stacked cards */}
+        <div className="flex flex-col lg:flex-row" style={{ gap: 20 }}>
+          {/* Featured */}
+          <motion.div
+            initial={{ opacity: 0, y: 36 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            style={{ flex: 780 }}
+          >
+            <ProjectCard
+              project={PROJECTS[0]}
+              imageHeight="clamp(220px, 45vw, 460px)"
+              titleSize="clamp(22px, 3.5vw, 32px)"
+              titleLs="clamp(-1.5px, -0.2vw, -0.75px)"
+            />
+          </motion.div>
 
-        {/* Row 2 — two columns (PROJECTS[1], [2]) */}
-        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 16 }}>
-          {[PROJECTS[1], PROJECTS[2]].map((p, i) => (
-            <motion.div
-              key={p.name}
-              initial={{ opacity: 0, y: 36 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <ProjectCard
-                project={p}
-                heightClass="aspect-[4/3] md:aspect-auto md:h-[320px] lg:h-[340px]"
-                pad="clamp(14px, 2.6vw, 20px)"
-                titleSize="clamp(24px, 6vw, 34px)"
-                titleLs="clamp(-1px, -0.18vw, -0.5px)"
-                numSize={12}
-              />
-            </motion.div>
-          ))}
+          {/* Right column — 2 stacked cards */}
+          <div className="flex flex-col" style={{ flex: 400, gap: 20 }}>
+            {[PROJECTS[1], PROJECTS[2]].map((p, i) => (
+              <motion.div
+                key={p.name}
+                initial={{ opacity: 0, y: 36 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                className="flex-1 lg:flex-none"
+              >
+                <ProjectCard
+                  project={p}
+                  imageHeight="clamp(160px, 30vw, 200px)"
+                  titleSize="clamp(16px, 2.5vw, 20px)"
+                  titleLs="clamp(-0.5px, -0.1vw, -0.4px)"
+                />
+              </motion.div>
+            ))}
+          </div>
         </div>
 
-        {/* Row 3 — three columns (PROJECTS[3], [4], [5]) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: 16 }}>
+        {/* Row 2: three equal cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: 20 }}>
           {[PROJECTS[3], PROJECTS[4], PROJECTS[5]].map((p, i) => (
             <motion.div
               key={p.name}
@@ -226,11 +248,9 @@ export default function Work() {
             >
               <ProjectCard
                 project={p}
-                heightClass="aspect-[4/3] md:aspect-auto md:h-[300px]"
-                pad={16}
-                titleSize="clamp(20px, 5vw, 22px)"
+                imageHeight="clamp(160px, 28vw, 240px)"
+                titleSize="clamp(16px, 2vw, 18px)"
                 titleLs="clamp(-0.5px, -0.1vw, -0.25px)"
-                numSize={11}
               />
             </motion.div>
           ))}

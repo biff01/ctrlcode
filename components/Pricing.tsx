@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Check, Rocket, Briefcase, Building2, type LucideIcon } from 'lucide-react'
+import { ArrowUpRight, Rocket, Briefcase, Building2, type LucideIcon } from 'lucide-react'
 import { useLang } from './LanguageProvider'
 import { useTheme } from './ThemeProvider'
 
@@ -14,10 +14,11 @@ type Plan = {
   subtitle: string
   price: string
   badge: string | null
-  gradient: string
   features: string[]
   cta: string
 }
+
+const CARD_GRADIENT = 'linear-gradient(135deg, #080a18 0%, #171717 50%, #454545 100%)'
 
 const ALL_PLANS: Plan[] = [
   {
@@ -27,7 +28,6 @@ const ALL_PLANS: Plan[] = [
     subtitle: 'Perfect for small businesses and startups.',
     price: '$1,500',
     badge: null,
-    gradient: 'linear-gradient(135deg, #080a18 0%, #0d1b40 50%, #1a3070 100%)',
     features: [
       'Single-page website',
       'Basic UI/UX Design',
@@ -45,7 +45,6 @@ const ALL_PLANS: Plan[] = [
     subtitle: 'Ideal for growing businesses.',
     price: '$3,500',
     badge: 'Most Popular',
-    gradient: 'linear-gradient(145deg, #0c0800 0%, #1e1100 28%, #3a2000 54%, #6a3a00 76%, #9a5a00 100%)',
     features: [
       'Corporate Website',
       'Admin Panel',
@@ -63,7 +62,6 @@ const ALL_PLANS: Plan[] = [
     subtitle: 'For enterprises and complex digital products.',
     price: '$7,500',
     badge: null,
-    gradient: 'linear-gradient(135deg, #080a18 0%, #171717 50%, #454545 100%)',
     features: [
       'Custom Web Platform',
       'CRM / ERP Integration',
@@ -81,23 +79,10 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
   const [hovered, setHovered] = useState(false)
   const router = useRouter()
   const { t } = useLang()
-  const isPro = plan.id === 'pro'
-  const showAmber = isPro && dark
-
-  const cardShadow = showAmber
-    ? hovered
-      ? '0 0 0 1px rgba(200,140,30,0.45), 0 14px 48px rgba(140,80,0,0.28), 0 4px 18px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,200,80,0.08)'
-      : '0 0 0 1px rgba(200,140,30,0.12), 0 10px 40px rgba(140,80,0,0.16), 0 2px 10px rgba(0,0,0,0.14)'
-    : 'var(--card-shadow)'
-
   const cardBorder = hovered
-    ? showAmber
-      ? '1px solid rgba(200,140,30,0.55)'
-      : dark
+    ? dark
       ? '1px solid rgba(255,255,255,0.08)'
       : '1px solid rgba(13,27,75,0.09)'
-    : showAmber
-    ? '1px solid rgba(200,140,30,0.35)'
     : dark ? '1px solid transparent' : '1px solid rgba(13,27,75,0.07)'
 
   return (
@@ -121,29 +106,19 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
         overflow: 'hidden',
         position: 'relative',
         border: cardBorder,
-        boxShadow: cardShadow,
+        boxShadow: 'var(--card-shadow)',
         transition: 'box-shadow 0.5s cubic-bezier(0.16,1,0.3,1), border-color 0.5s cubic-bezier(0.16,1,0.3,1)',
         cursor: 'default',
       }}
     >
-      {showAmber && (
-        <div style={{
-          position: 'absolute',
-          top: 0, left: '10%', right: '10%',
-          height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(220,160,40,0.9), transparent)',
-          borderRadius: 1,
-        }} />
-      )}
-
       {/* Gradient hero */}
       <div
         style={{
           borderRadius: 14,
-          background: plan.gradient,
+          background: CARD_GRADIENT,
           padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 24px) clamp(14px, 3.5vw, 20px)',
           marginBottom: 'clamp(14px, 3vw, 20px)',
-          minHeight: isPro ? 224 : 200,
+          minHeight: 200,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -151,20 +126,11 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
           overflow: 'hidden',
         }}
       >
-        {showAmber && (
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'radial-gradient(ellipse at 80% 20%, rgba(180,100,0,0.35) 0%, transparent 60%)',
-            pointerEvents: 'none',
-          }} />
-        )}
-
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, position: 'relative' }}>
           <div className="flex flex-wrap items-center justify-between" style={{ rowGap: 8 }}>
             <div className="flex items-center" style={{ gap: 8 }}>
               <plan.Icon
-                style={{ width: 16, height: 16, color: showAmber ? '#e8a020' : '#fff', flexShrink: 0 }}
+                style={{ width: 16, height: 16, color: '#fff', flexShrink: 0 }}
                 strokeWidth={1.8}
               />
               <span className="font-display font-semibold" style={{ fontSize: 'clamp(14px, 3.5vw, 17px)', color: '#fff' }}>
@@ -209,19 +175,7 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
       <ul style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1, padding: '0 8px', listStyle: 'none', margin: 0 }}>
         {plan.features.map((f) => (
           <li key={f} className="flex items-start" style={{ gap: 12 }}>
-            {showAmber ? (
-              <div style={{
-                width: 18, height: 18, borderRadius: '50%',
-                background: 'rgba(200,140,30,0.15)',
-                border: '1px solid rgba(200,140,30,0.4)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0, marginTop: 1,
-              }}>
-                <Check style={{ width: 10, height: 10, color: '#e8a020' }} />
-              </div>
-            ) : (
-              <span style={{ color: 'var(--text-secondary)', fontSize: 14, flexShrink: 0, marginTop: 1 }}>•</span>
-            )}
+            <span style={{ color: 'var(--text-secondary)', fontSize: 14, flexShrink: 0, marginTop: 1 }}>•</span>
             <span className="font-body" style={{ fontSize: 'clamp(12px, 2.5vw, 13.5px)', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
               {t(f)}
             </span>
@@ -235,17 +189,13 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
         whileHover={{
           y: -2,
           filter: 'brightness(1.18)',
-          boxShadow: showAmber
-            ? '0 8px 28px rgba(180,100,0,0.6)'
-            : '0 6px 20px rgba(13,27,75,0.35)',
+          boxShadow: '0 6px 20px rgba(13,27,75,0.35)',
         }}
         whileTap={{ y: 0, filter: 'brightness(0.95)' }}
         transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-        className="flex items-center font-body font-semibold w-full justify-between"
+        className="flex items-center font-body font-semibold"
         style={{
-          background: showAmber
-            ? 'linear-gradient(135deg, #a06000 0%, #d48000 50%, #e09500 100%)'
-            : 'var(--btn-primary-bg)',
+          background: 'var(--btn-primary-bg)',
           color: 'var(--btn-primary-color)',
           fontSize: 'clamp(13px, 3vw, 15px)',
           borderRadius: 99,
@@ -254,8 +204,9 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
           gap: 12,
           border: 'none',
           cursor: 'pointer',
-          boxShadow: showAmber ? '0 4px 24px rgba(180,100,0,0.45)' : 'none',
+          boxShadow: 'none',
           filter: 'brightness(1)',
+          alignSelf: 'flex-start',
         }}
       >
         {t(plan.cta)}
@@ -263,7 +214,7 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
           aria-hidden="true"
           style={{
             width: 38, height: 38, borderRadius: '50%',
-            background: showAmber ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.19)',
+            background: 'var(--btn-primary-disc-bg)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
             transition: 'background 0.25s ease',
@@ -271,7 +222,7 @@ function PricingCard({ plan, i, dark }: { plan: Plan; i: number; dark: boolean }
         >
           <ArrowUpRight
             style={{
-              width: 16, height: 16, color: '#FFFFFF',
+              width: 16, height: 16, color: 'var(--btn-primary-disc-fg)',
               transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1)',
               transform: hovered ? 'translate(2px, -2px)' : 'translate(0,0)',
             }}
